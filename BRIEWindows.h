@@ -80,11 +80,12 @@ class FileWindow : public BWindow
 	    ~FileWindow();
     	virtual bool QuitRequested();
 	    virtual void MessageReceived(BMessage *message);
-	    void SetProject(const char *projectname, const char *shortprojectname);
+	    
 	private:
 		void InitWindow(void);
-	    void CompileGCC(void);
+	    void CompileGCC(const char *prjname, const char *prjpath);
 	    void CreateMakeFile(void);
+	    void SetProject(const char *prjname);
 	    FileWindowView* 	ptrFileWindowView;
 		
 	    FileWindow*			ptrFileWindow;

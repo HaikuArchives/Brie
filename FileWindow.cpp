@@ -70,9 +70,10 @@ const uint32 MENU_HELP_ABOUT = 'Mhab';
 const uint32 TOOLBAR_BTN_NEW_PROJECT = 'Tbnp';
 const uint32 TOOLBAR_BTN_LOAD_PROJECT = 'Tblp';
 // ---------------------------------------------------------------------------------------------------------- //
+
 char *kProjectName = "ProjectName";
-char *kProjectTitle = "ProjectTitle";
-char *kProjectShortTitle = "ProjectShortTitle";
+//char *kProjectTitle = "ProjectTitle";
+//char *kProjectShortTitle = "ProjectShortTitle";
 
 
 // TopOfScreen -- Places the BWindow starting from the top of the Current Screen
@@ -92,9 +93,9 @@ static void TopOfScreen(BWindow* w)
 
 
 // FileWindow - Constructor
-FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.3", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
+FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.32", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
-	//ptrFileWindow = this;
+	ptrFileWindow = this;
 	InitWindow();
 	TopOfScreen(this);
 	Show();
@@ -250,15 +251,13 @@ void FileWindow::InitWindow(void)
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
-void FileWindow::SetProject(const char *projectname, const char *shortprojectname)
+
+void FileWindow::SetProject(const char *prjname)
 {
 	char newtitle[256];
-	//sprintf(CurrentProjectName,"%s",projectname);
-	sprintf(newtitle,"%s%s - [ %s ]",projtitle,projversion,shortprojectname);
+	sprintf(newtitle,"%s%s - [ %s ]",projtitle,projversion,prjname);
 	//(new BAlert("",newtitle,"debug"))->Go();
-	//fileWindow->SetTitle(newtitle);
-	//ptrFileWindow->
-	SetTitle(newtitle);
+	ptrFileWindow->SetTitle(newtitle);
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -279,26 +278,24 @@ void FileWindow::CreateMakeFile(void)
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-void FileWindow::CompileGCC(void)
+void FileWindow::CompileGCC(const char *prjname, const char *prjpath)
 {
-	if (ProjectName != "Untitled")
+	if (prjname != "Untitled")
 	{
 		// check to see if the makefile exists
 		char cmd[256];
-		sprintf(cmd,"%s/projects/%s/makefile",ProjectPath,ProjectName);
+		sprintf(cmd,"%s/projects/%s/makefile",prjpath,prjname);
 		FILE *f;	
-    	if (!(f = fopen(cmd, "r"))) {
-			//(new BAlert("","Found","debug"))->Go();
-		} else {
+    	if ((f = fopen(cmd, "r"))) {
 			(new BAlert("","No Makefile Found.\n\nWe MUST create a new one.","Okay"))->Go();
 			CreateMakeFile();
 		}
 		fclose(f);
 		
 		// now run make
-		sprintf(cmd,"Terminal %s/projects/%s/make",ProjectPath,ProjectName);
+		sprintf(cmd,"Terminal %s/projects/%s/make",prjpath,prjname);
 		(new BAlert("",cmd,"cmd"))->Go();
-		system(cmd);
+		//system(cmd);
 	}
 }
 // ---------------------------------------------------------------------------------------------------------- //
@@ -352,7 +349,16 @@ void FileWindow::MessageReceived (BMessage *message)
 			{
 				//SaveProject();
 				//Lock();
-				CompileGCC();
+				app_info	daInfo;
+				be_app->GetAppInfo(&daInfo);
+				BEntry	daEntry(&daInfo.ref);
+				daEntry.GetParent(&daEntry);
+				BPath	pPath(&daEntry);
+				char	apath[256];
+				::memcpy(apath, pPath.Path(), 256);	
+				ProjectPath = apath;
+				
+				CompileGCC(ProjectName,ProjectPath);
 				//UnLock();
 			}	
 			break;	
@@ -365,6 +371,7 @@ void FileWindow::MessageReceived (BMessage *message)
 				} else {
 					ptrProjectWindow->Show();
 					ShowWinProj = 1;
+					Activate();
 				}	
 			}
 			break;
@@ -377,6 +384,7 @@ void FileWindow::MessageReceived (BMessage *message)
 				} else {
 					ptrPropertiesWindow->Show();
 					ShowWinProp = 1;
+					Activate();
 				}	
 			}
 			break;
@@ -389,9 +397,17 @@ void FileWindow::MessageReceived (BMessage *message)
 				} else {
 					ptrToolboxWindow->Show();
 					ShowWinTool = 1;
+					Activate();
 				}	
 			}
-			break;						
+			break;
+		case SET_PROJECT_TITLE:
+			{
+				const char *tmp;
+				message->FindString(kProjectName, &tmp);
+				SetProject(tmp);
+			}
+			break;							
 		default:
 			BWindow::MessageReceived(message);
 			break;

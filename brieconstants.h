@@ -16,33 +16,34 @@ extern char *kProjectName;
 extern char *kAuthor;
 extern bool *kNotSaved;
 
-extern char *kProjectTitle;
-extern char *kProjectShortTitle;
+//extern char *kProjectTitle;
+//extern char *kProjectShortTitle;
 
 extern char *kDontShowAgain;
 
 // bmessages
-const uint32 SET_PROJECT_NAME = 'setp';
+const uint32 SET_PROJECT_TITLE = 'spjt';
+const uint32 SET_PROJECT_NAME = 'spjn';
 const uint32 BTN_OKAY = 'BOky';
 const uint32 CHK_DONTSHOWAGAIN = 'chkd';
 
 // pointers to windows
-//extern FileWindow*     ptrFileWindow;
+extern FileWindow*       ptrFileWindow;
 extern ToolboxWindow*    ptrToolboxWindow;
 extern ProjectWindow*    ptrProjectWindow;
 extern PropertiesWindow* ptrPropertiesWindow;
 
 // product name
 const char projtitle[]="BeOS Rapid Integrated Environment";
-const char projversion[]="v0.3";
+const char projversion[]="v0.32";
 
 extern char *ProjectName; // globals ...
 extern char *ProjectPath; // this is the current directory where brie is /projects/
-extern int ShowWinProj;
-extern int ShowWinProp;
-extern int ShowWinTool;
+extern int  ShowWinProj;
+extern int  ShowWinProp;
+extern int  ShowWinTool;
 
 // uses with HelpTipWindow
-extern int TipNumber;
+extern int  TipNumber;
 
 #endif

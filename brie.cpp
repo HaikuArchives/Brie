@@ -41,6 +41,7 @@ int ShowWinTool = 1;
 PropertiesWindow* ptrPropertiesWindow;
 ToolboxWindow*    ptrToolboxWindow;
 ProjectWindow*    ptrProjectWindow;
+FileWindow*       ptrFileWindow;
 char *ProjectName;
 char *ProjectPath;
 

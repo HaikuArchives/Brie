@@ -547,11 +547,11 @@ void NewProjectWindow::CreateNewProject(void)
 	fclose(f);
 	
 	// 7) Send Messages to other Windows to update
-	//BMessage msg(SET_PROJECT_NAME);
-	//msg.AddString(kProjectName, AppName);
+	BMessage msg(SET_PROJECT_TITLE);
+	msg.AddString(kProjectName, AppName);
 	//msg.AddBool(kNotSaved, true); // make this false later - true for debug purposes
-	//BMessenger(ptrProjectWindow).SendMessage(&msg);
-	//BMessenger(ptrProjectWindow).SendMessage(new BMessage(SET_PROJECT_NAME));
+	BMessenger(ptrFileWindow).SendMessage(&msg);
+	//BMessenger(ptrFileWindow).SendMessage(new BMessage(SET_PROJECT_TITLE));
 	
 	ProjectName = AppName;
 	ProjectPath = apath;
