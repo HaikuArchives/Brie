@@ -62,6 +62,12 @@ class AboutWindowView : public BView
     	AboutWindowView(BRect frame);
 };
 
+class MenuCreatorView : public BView
+{
+	public:
+		MenuCreatorView(BRect frame);
+};
+
 class NewProjectWindowView : public BView
 {
 	public:

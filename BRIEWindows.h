@@ -28,6 +28,7 @@ class AboutWindowView;
 class BRIEIconView;
 class HelpTipView;
 class InputBoxView;
+class MenuCreatorView;
 
 
 class ProjectWindow : public BWindow
@@ -128,6 +129,25 @@ class FileWindow : public BWindow
 };
 
 
+class MenuCreator : public BWindow
+{
+	public:
+		MenuCreator(BRect frame);
+		~MenuCreator();
+		virtual bool QuitRequested();
+		virtual void MessageReceived(BMessage *message);
+		virtual void AddMenuItem(BString NewMenuItem);
+	private:
+		void InitWindow(void);
+		MenuCreatorView*	ptrMenuCreatorView;
+		
+		BPictureButton		*btnMenuAdd;
+		BButton				*btnCreateMenu;
+		BButton				*btnClose;
+	    BListView			*lsvMenuItems;
+};
+
+
 class NewProjectWindow : public BWindow
 {
 	public:
@@ -135,12 +155,15 @@ class NewProjectWindow : public BWindow
 	    ~NewProjectWindow();
 	    virtual void MessageReceived(BMessage *message);
 	    void ShowTracker(char apath[256],char AppName[256]);
+	    
 	private:
 		void InitWindow(void);
 		void CreateNewProject(void);
 		void CreateExistingProject(void);
 	    NewProjectWindowView*		ptrNewProjectWindowView;
-	    	    
+	    
+	    MenuCreator*				ptrMenuCreator;	    
+	    
 	    BButton         		    *btnAdd;  // alias Create
 	    BButton         		    *btnCancel;
 	    BTextControl                *txtNewProject;
@@ -206,6 +229,7 @@ class HelpTipWindow : public BWindow
 	    BCheckBox		*chkDontShowAgain;
 };
 
+
 class InputBoxWindow : public BWindow
 {
 	public:
@@ -213,12 +237,15 @@ class InputBoxWindow : public BWindow
 		~InputBoxWindow();
 		virtual bool QuitRequested();
 		virtual void MessageReceived(BMessage *message);
+		virtual void SetTo(BString IBTitle, BString IBQuestion, BString IBDefault, BString IBAnswer);
 	private:
 		void InitWindow(void);
-		InputBoxView*	ptrInputBoxView;
+		InputBoxView*		ptrInputBoxView;
+		InputBoxWindow*		ptrInputBoxWindow;
 		
-		BButton			*btnOkay;
-	    BTextControl    *txtQuestion;
+		BButton				*btnOkay;
+	    BTextControl    	*txtQuestion;
 };
+
 
 #endif

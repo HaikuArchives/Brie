@@ -32,6 +32,9 @@ extern ToolboxWindow*    ptrToolboxWindow;
 extern ProjectWindow*    ptrProjectWindow;
 extern PropertiesWindow* ptrPropertiesWindow;
 
+extern MenuCreator*      ptrMenuCreator;
+extern InputBoxWindow*   ptrInputBoxWindow;
+
 // product name
 const char projtitle[]="BeOS Rapid Integrated Environment";
 const char projversion[]="v0.38";

@@ -29,7 +29,7 @@ Released under the MIT license.
 #include <iostream.h>
 #include <fstream.h>
 
-//#include "brie.h"
+#include "brie.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
 #include "brieconstants.h"
@@ -434,6 +434,13 @@ void NewProjectWindow::CreateNewProject(void)
 		x = fputs("#include <FindDirectory.h>\n",f);
 	}	
 	
+	// add menubar includes (if checked)
+	if (chkMenuBar->Value() == B_CONTROL_ON) {
+		x = fputs("#include <MenuBar.h>\n",f);
+		x = fputs("#include <Menu.h>\n",f);
+		x = fputs("#include <MenuItem.h>\n",f);
+	}
+	
 	x = fputs("#include <Path.h>\n",f);
 	x = fputs("#include <Screen.h>\n",f);
 	x = fputs("#include <ScrollView.h>\n",f);
@@ -501,6 +508,27 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs("{\n",f);
 	x = fputs("\tBRect r;\n",f);
 	x = fputs("\tr = Bounds(); // the whole view\n",f);
+		
+	// add MenuBar (if checked)
+	if (chkMenuBar->Value() == B_CONTROL_ON) {
+		ptrMenuCreator = new MenuCreator(BRect(367.0, 268.0, 657.0, 500.0));
+		x = fputs("\n",f);
+		x = fputs("\t// MenuBar - Created by BRIE Menu Creator\n",f);
+		x = fputs("\tBMenu *menu;\n",f);
+		x = fputs("\tBRect rMenuBar;\n\n",f);
+		x = fputs("\trMenuBar = Bounds();\n",f);
+		x = fputs("\trMenuBar.top = 20;\n\n",f);
+		x = fputs("\t// Add the menu bar\n",f);
+		x = fputs("\trMenuBar.top = 0;\n",f);
+		x = fputs("\trMenuBar.bottom = 19;\n",f);
+		x = fputs("\tmenubar = new BMenuBar(rMenuBar, \"menu_bar\");\n",f);
+		x = fputs("\tAddChild(menubar);\n",f);
+		x = fputs("\n",f);
+		x = fputs("\t// ### INSERT MENU HERE FROM MENU CREATOR ### \n",f);
+		x = fputs("\n",f);
+		x = fputs("\t// EndMenuBar (please do not remove this line)\n\n",f);
+	}
+	
 	x = fputs("\t// Create the Views\n",f);
 	sprintf(tmp,"\tAddChild(ptr%sView = new %sView(r));\n",AppName,AppName);
 	x = fputs(tmp,f);

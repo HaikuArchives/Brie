@@ -43,6 +43,10 @@ PropertiesWindow* ptrPropertiesWindow;
 ToolboxWindow*    ptrToolboxWindow;
 ProjectWindow*    ptrProjectWindow;
 FileWindow*       ptrFileWindow;
+
+MenuCreator*	  ptrMenuCreator; // not sure if this is needed here ... remove later if not
+InputBoxWindow*   ptrInputBoxWindow;
+
 BString ProjectName;
 BString ProjectPath;
 BString ProjectAuthor;

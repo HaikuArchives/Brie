@@ -26,9 +26,9 @@ Released under the MIT license.
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
 #include "brieconstants.h"
+
 // Constants ---------------------------------------------------------------------------------------- //
-
-
+const uint32 TXT_OKAY = 'TOky';
 // -------------------------------------------------------------------------------------------------- //
 
 
@@ -48,6 +48,7 @@ static void CenterWindowOnScreen(BWindow* w)
 // InputBoxWindow - Constructor
 InputBoxWindow::InputBoxWindow(BRect frame) : BWindow (frame, "InputBox", B_MODAL_WINDOW, B_NORMAL_WINDOW_FEEL , 0)
 {
+	ptrInputBoxWindow = this;
 	InitWindow();
 	CenterWindowOnScreen(this);
 	Show();
@@ -56,7 +57,7 @@ InputBoxWindow::InputBoxWindow(BRect frame) : BWindow (frame, "InputBox", B_MODA
 
 
 // InputBoxWindow - Destructor
-InputBoxWindow::~HelpTipWindow()
+InputBoxWindow::~InputBoxWindow()
 {
 	//exit(0);
 }
@@ -77,9 +78,11 @@ void InputBoxWindow::InitWindow(void)
 	float OkayButtonSize = 70;
 	float OkayLeftMargin = RightMargin - OkayButtonSize - 10;
 	
-	txtQuestion = new BTextControl(BRect(LeftMarginText, TextTop, RightMargin, TextTop+10), "txtQuestion", "Your Question:", "Value", TXT_OKAY);
+	txtQuestion = new BTextControl(BRect(LeftMarginText, TextTop, RightMargin, TextTop+10), "txtQuestion",
+					"Your Question:", "Value", new BMessage(TXT_OKAY), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
 		
-  	btnOkay = new BButton(BRect (OkayLeftMargin,r.bottom-35,OkayLeftMargin+OkayButtonSize,r.bottom-15),"Okay","Okay", new BMessage(BTN_OKAY), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+  	btnOkay = new BButton(BRect (OkayLeftMargin,r.bottom-35,OkayLeftMargin+OkayButtonSize,r.bottom-15),"Okay",
+  					"Okay", new BMessage(BTN_OKAY), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
   	btnOkay->MakeDefault(true);
   	
   	AddChild(txtQuestion);
@@ -87,6 +90,13 @@ void InputBoxWindow::InitWindow(void)
     
 	// Create the Views
 	AddChild(ptrInputBoxView = new InputBoxView(r));
+}
+// -------------------------------------------------------------------------------------------------- //
+
+void InputBoxWindow::SetTo(BString IBTitle, BString IBQuestion, BString IBDefault, BString IBAnswer)
+{
+	ptrInputBoxWindow->txtQuestion->SetText(IBQuestion.String());
+	printf("SetTo %s",IBQuestion.String());
 }
 // -------------------------------------------------------------------------------------------------- //
 

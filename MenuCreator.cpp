@@ -2,11 +2,11 @@
 
 BeOS Rapid Integrated Environment (BRIE)
 
-ProjectWindow by Sikosis
+MenuCreator by Sikosis
 
 Released under the MIT license.
 
-(C) 2002-2003 http://brie.sf.net/
+(C) 2003 http://brie.sf.net/
 
 */
 
@@ -32,7 +32,7 @@ Released under the MIT license.
 #include <View.h>
 
 // Toolbar
-#include "Bitmaps-Project-Toolbar.h"
+#include "Bitmaps-MenuCreator-Toolbar.h"
 
 #include "brie.h"
 #include "BRIEWindows.h"
@@ -40,46 +40,44 @@ Released under the MIT license.
 #include "brieconstants.h"
 
 // ---------------------------------------------------------------------------------------------------------- //
-const uint32 TOOLBAR_BTN_ADD_FILE_TO_PROJECT = 'tbaf';
-const uint32 TOOLBAR_BTN_REMOVE_FILE_FROM_PROJECT = 'tbrf';
+const uint32 TOOLBAR_BTN_ADD_MENU_ITEM = 'tbam';
+const uint32 TOOLBAR_BTN_REMOVE_MENU_ITEM = 'tbrm';
 
-
-// TopOfScreen -- Places the BWindow starting from the top of the Current Screen
-static void TopOfScreen(BWindow* w)
+// CenterWindowOnScreen -- Centers the BWindow to the Current Screen
+static void CenterWindowOnScreen(BWindow* w)
 {
-	BRect	screenFrame = (BScreen(B_MAIN_SCREEN_ID).Frame());
-	BPoint 	pt;
-	pt.x = screenFrame.Width() - 350;
-	pt.y = 110;
+	BRect	screenFrame = (BScreen(B_MAIN_SCREEN_ID).Frame());	BPoint	pt;
+	pt.x = screenFrame.Width()/2 - w->Bounds().Width()/2;
+	pt.y = screenFrame.Height()/2 - w->Bounds().Height()/2;
 
 	if (screenFrame.Contains(pt))
 		w->MoveTo(pt);
 }
-// ---------------------------------------------------------------------------------------------------------- //
+// -------------------------------------------------------------------------------------------------- //
 
 
-// ProjectWindow - Constructor
-ProjectWindow::ProjectWindow(BRect frame) : BWindow (frame, "Project Window", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
+// MenuCreator - Constructor
+MenuCreator::MenuCreator(BRect frame) : BWindow (frame, "BRIE Simple Menu Creator", B_TITLED_WINDOW , B_NOT_RESIZABLE , 0)
 {
-	// Set ProjectWindow Pointer
-	ptrProjectWindow = this;
+	// Set MenuCreator Pointer
+	ptrMenuCreator = this;
 	InitWindow();
-	TopOfScreen(this);
+	CenterWindowOnScreen(this);
 	Show();
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-// ProjectWindow - Destructor
-ProjectWindow::~ProjectWindow()
+// MenuCreator - Destructor
+MenuCreator::~MenuCreator()
 {
 	//exit(0);
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-// ProjectWindow::InitWindow -- Initialization Commands here
-void ProjectWindow::InitWindow(void)
+// MenuCreator::InitWindow -- Initialization Commands here
+void MenuCreator::InitWindow(void)
 {
 	BRect r;
 	r = Bounds();
@@ -88,7 +86,7 @@ void ProjectWindow::InitWindow(void)
 	int TopMargin = 11;
 	
     // Add Controls
-    stvProjectName = new BStringView(BRect(LeftMargin+1, TopMargin, RightMargin, TopMargin+10), "Project Name", "Untitled");
+    //stvProjectName = new BStringView(BRect(LeftMargin+1, TopMargin, RightMargin, TopMargin+10), "Project Name", "Untitled");
     
     // Toolbar to Add / Remove Project Files
     int ToolbarButtonMargin = 167;
@@ -104,28 +102,29 @@ void ProjectWindow::InitWindow(void)
   	
   	AddChild(tmpBPictureView);
   	
-  	BBitmap *addfilestoprojectpicture = new BBitmap(BitmapFrame,B_RGB32);
-	addfilestoprojectpicture->SetBits(projectplusicon,1728,0,B_RGB32);
+  	BBitmap *menupluspicture = new BBitmap(BitmapFrame,B_RGB32);
+	menupluspicture->SetBits(menuplusicon,1728,0,B_RGB32);
   	tmpBPictureView->SetLowColor(toolbar_button_background);
   	tmpBPictureView->BeginPicture(new BPicture);
-  	tmpBPictureView->DrawBitmap(addfilestoprojectpicture,BPoint(0,0));
+  	tmpBPictureView->DrawBitmap(menupluspicture,BPoint(0,0));
   	tmpBPicture = tmpBPictureView->EndPicture();
   	
   	tmpBPictureView->RemoveSelf();
     AddChild(tmpBPictureView);
   	
-  	BBitmap *addfilestoprojectpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
-	addfilestoprojectpicture_state2->SetBits(projectplusiconinverse,1728,0,B_RGB32);
+  	BBitmap *menupluspicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	menupluspicture_state2->SetBits(menuplusiconinverse,1728,0,B_RGB32);
 	tmpBPictureView->SetLowColor(toolbar_button_background);
   	tmpBPictureView->BeginPicture(new BPicture);
-  	tmpBPictureView->DrawBitmap(addfilestoprojectpicture_state2,BPoint(0,0));
+  	tmpBPictureView->DrawBitmap(menupluspicture_state2,BPoint(0,0));
   	tmpBPicture2 = tmpBPictureView->EndPicture();
   		
- 	btnAddFileToProjectList = new BPictureButton(BRect (ToolbarButtonMargin,3,ToolbarButtonMargin+ToolbarButtonWidth,26),
- 							  "New Project",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_ADD_FILE_TO_PROJECT),B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	btnMenuAdd = new BPictureButton(BRect (ToolbarButtonMargin,3,ToolbarButtonMargin+ToolbarButtonWidth,26),
+ 							  "Add Menu Item",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_ADD_MENU_ITEM),
+ 							  B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
  	
 	tmpBPictureView->RemoveSelf();
-	AddChild(tmpBPictureView);
+	/*AddChild(tmpBPictureView);
 	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
     
     // Remove File from Project
@@ -154,70 +153,85 @@ void ProjectWindow::InitWindow(void)
 	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
     
        
-    lsvProjectFiles = new BListView(BRect(6,29,r.right-6,r.bottom-6), "ltvProjectFiles",
-					  B_SINGLE_SELECTION_LIST, B_FOLLOW_LEFT | B_FOLLOW_TOP,
-					  B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS);
+    
 
     AddChild(btnRemoveFileFromProjectList);
     AddChild(btnAddFileToProjectList);
     AddChild(stvProjectName);
-
-    // Add the Drawing View
-    ptrProjectWindowView = new ProjectWindowView(r);
-    ptrProjectWindowView->AddChild(lsvProjectFiles);
-    //ptrProjectWindowView->AddChild(new BScrollView("ScrollViewProjectFiles",lsvProjectFiles, B_FOLLOW_LEFT | B_FOLLOW_TOP, 0, true, false));
-	AddChild(ptrProjectWindowView);
+    
+    
+    //ptrProjectWindowView->AddChild(new BScrollView("ScrollViewProjectFiles",lsvProjectFiles, B_FOLLOW_LEFT | B_FOLLOW_TOP, 0, true, false)); */
+	
+	lsvMenuItems = new BListView(BRect(6,29,r.right-6,r.bottom-6), "lsvMenuItems",
+					  B_SINGLE_SELECTION_LIST, B_FOLLOW_LEFT | B_FOLLOW_TOP,
+					  B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS);
+		
+	// Add the Drawing View
+    ptrMenuCreatorView = new MenuCreatorView(r);
+    ptrMenuCreatorView->AddChild(lsvMenuItems);
+    ptrMenuCreatorView->AddChild(btnMenuAdd);
+    
+	AddChild(ptrMenuCreatorView);
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-// ProjectWindow::QuitRequested -- Post a message to the app to quit
-bool ProjectWindow::QuitRequested()
+// MenuCreator::QuitRequested -- Post a message to the app to quit
+bool MenuCreator::QuitRequested()
 {
    return true;
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-// ProjectWindow::AddProjectFile
-void ProjectWindow::AddProjectFile(BString tmp)
+// MenuCreator::AddMenuItem
+void MenuCreator::AddMenuItem(BString NewMenuItem)
 {
 	int32 newselection;
 	
 	Lock();
-	lsvProjectFiles->DeselectAll();
-	tmp.Prepend(" ");
-	lsvProjectFiles->AddItem(new BStringItem(tmp.String()));
-	newselection = lsvProjectFiles->CountItems() - 1;
-	lsvProjectFiles->Select(newselection,true);
+	lsvMenuItems->DeselectAll();
+	NewMenuItem.Prepend(" ");
+	lsvMenuItems->AddItem(new BStringItem(NewMenuItem.String()));
+	newselection = lsvMenuItems->CountItems() - 1;
+	lsvMenuItems->Select(newselection,true);
 	Unlock();
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-//void ProjectWindow::ShowProjectFiles(BMessage *msg)
-//{
-	// Clear Current List
-	//lsvProjectFiles->MakeEmpty();
-		
-	// Read ProjectFiles BMessage
-	//int TotalProjectFiles;
-	//msg->FindInt32("FileCount",TotalProjectFiles);
-	//printf("%i\n",TotalProjectFiles);
-	//ProjectFiles->FindString(kProjectName, &prjname);
-	//stvProjectName->SetText(prjname.String());
-	
-	// Show Files eg.  lsvProjectFiles->AddItem(new BStringItem("Test.cpp"));
-//}
-// ---------------------------------------------------------------------------------------------------------- //
-
-
-// ProjectWindow::MessageReceived -- receives messages
-void ProjectWindow::MessageReceived (BMessage *message)
+// MenuCreator::MessageReceived -- receives messages
+void MenuCreator::MessageReceived (BMessage *message)
 {
 	switch(message->what)
 	{
-		case TOOLBAR_BTN_ADD_FILE_TO_PROJECT:
+		case BTN_OKAY:
+		{
+			QuitRequested();
+		}
+			break;
+		
+		case TOOLBAR_BTN_ADD_MENU_ITEM:
+		{
+			BString IBTitle;
+			BString IBQuestion;
+			BString IBDefault;
+			BString IBAnswer;
+			IBTitle.SetTo("Add Menu Item");
+			IBQuestion.SetTo("Enter the Menu Item Name:");
+			IBDefault.SetTo("Value"); // debug
+			
+			printf("About to Create InputBoxWindow\n"); // debug
+			ptrInputBoxWindow = new InputBoxWindow(BRect(0,0,350,120));
+			printf("Now about to SetTo the InputBoxWindow\n"); // debug
+			ptrInputBoxWindow->SetTo(IBTitle, IBQuestion, IBDefault, IBAnswer);
+			printf("After InputBoxWindow\n"); // debug
+			printf("IBAnswer = %s\n\n",IBAnswer.String()); // debug
+			//AddMenuItem(&IBAnswer);
+		}
+			break;
+			
+		/*case TOOLBAR_BTN_ADD_FILE_TO_PROJECT:
 			{
 				// first check that a project exists ...
 				if (ProjectName.Length() !=0 && ProjectName.Compare("Untitled") != 0) {
@@ -252,25 +266,17 @@ void ProjectWindow::MessageReceived (BMessage *message)
 			{
 				int32 TotalMessages = message->CountNames(B_ANY_TYPE);
 				int32 Counter = 0;
-				//printf("Total Messages %i\n",TotalMessages);
+				printf("Total Messages %i\n",TotalMessages);
 				while (TotalMessages > Counter)
 				{
 					BString tmp;
 					message->FindString(kProjectFile, Counter, &tmp);
 					AddProjectFile(tmp);
-					//printf("Counter is %i and tmp is %s\n",TotalMessages,tmp.String());	
+					printf("Counter is %i and tmp is %s\n",TotalMessages,tmp.String());	
 					Counter++;
 				}
 			}
-			break;	
-		case SET_PROJECT_TITLE:
-			{
-				BString prjname;
-				message->FindString(kProjectName, &prjname);
-				stvProjectName->SetText(prjname.String());
-				//ShowProjectFiles(&ProjectFiles);
-			}
-			break;
+			break;	*/
 		default:
 			{
 				BWindow::MessageReceived(message);
@@ -279,3 +285,4 @@ void ProjectWindow::MessageReceived (BMessage *message)
 	}
 }
 // ---------------------------------------------------------------------------------------------------------- //
+
