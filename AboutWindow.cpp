@@ -4,7 +4,7 @@ BRIE - AboutWindow by Sikosis
 
 Released under the MIT license.
 
-(C)2002
+(C)2002-2003
 
 */
 
@@ -55,6 +55,7 @@ AboutWindow::AboutWindow(BRect frame) : BWindow (frame, "About BRIE ...", B_FLOA
 	CenterWindowOnScreen(this);
 	Show();
 }
+// ---------------------------------------------------------------------------------------------------------- //
 
 
 // AboutWindow - Destructor
@@ -62,6 +63,7 @@ AboutWindow::~AboutWindow()
 {
 	//exit(0);
 }
+// ---------------------------------------------------------------------------------------------------------- //
 
 
 // AboutWindow::InitWindow
@@ -70,24 +72,22 @@ void AboutWindow::InitWindow(void)
 	BRect r;
 	r = Bounds(); // the whole view
 	
-	int LeftMarginTitles = 55;
-	int LeftMargin = 6;
+	float LeftMarginTitles = 55;
+	float LeftMargin = 6;
+	float LeftMarginDescription = 26;
 	float RightMargin = r.right;
-	int DescriptionTop = 80;
-	int OkayButtonSize = 130;
-	int OkayLeftMargin = (RightMargin / 2) - (OkayButtonSize / 2);
-	int WebSiteSize = 126;
-	int WebSiteMargin = (RightMargin / 2) - (WebSiteSize / 2);
-	
-	
+	float DescriptionTop = 80;
+	float OkayButtonSize = 130;
+	float OkayLeftMargin = (RightMargin / 2) - (OkayButtonSize / 2);
+	float WebSiteSize = 126;
+	float WebSiteMargin = (RightMargin / 2) - (WebSiteSize / 2);
 	rgb_color AppNameFontColor = { 0,0,0,0 };	
 	
 	stvAppName = new BStringView(BRect(LeftMarginTitles, 16, LeftMarginTitles+300, 40), "AppName", "BeOS Rapid Integrated Environment (BRIE)");
 	stvAppName->SetFont(be_bold_font);
 	stvAppName->SetFontSize(18.0);
 	stvAppName->SetHighColor(AppNameFontColor);
-	
-	
+		
 	/*
 	SetFontAndColor(int32 start, int32 finish, 
       const BFont *font, uint32 properties = B_FONT_ALL, rgb_color *color = NULL) 
@@ -109,12 +109,12 @@ void AboutWindow::InitWindow(void)
 	urlEmail->AddAttribute("META:state", "QLD");
 	urlEmail->AddAttribute("META:country", "Australia");
   	
-	stvDescription = new BStringView(BRect(LeftMargin, DescriptionTop, RightMargin, DescriptionTop+10), "Description", "BRIE is a IDE environment for rapid development of native BeOS applications.");
-	stvDescription2 = new BStringView(BRect(LeftMargin, DescriptionTop+12, RightMargin, DescriptionTop+22), "Description2", "");
-	stvDescription3 = new BStringView(BRect(LeftMargin, DescriptionTop+26, RightMargin, DescriptionTop+36), "Description3", "All code is generated in C/C++ using the BeAPI plus a few extras.");
-	stvDescription4 = new BStringView(BRect(LeftMargin, DescriptionTop+38, RightMargin, DescriptionTop+48), "Description4", "");
-	stvDescription5 = new BStringView(BRect(LeftMargin, DescriptionTop+50, RightMargin, DescriptionTop+60), "Description5", "If you would like to help out with this project or have feedback,");
-	stvDescription6 = new BStringView(BRect(LeftMargin, DescriptionTop+68, RightMargin, DescriptionTop+78), "Description6", "please visit our web site or email us.");
+	stvDescription = new BStringView(BRect(LeftMarginDescription, DescriptionTop, RightMargin, DescriptionTop+10), "Description", "BRIE is an IDE for rapid development of native BeOS applications.");
+	stvDescription2 = new BStringView(BRect(LeftMarginDescription, DescriptionTop+16, RightMargin, DescriptionTop+26), "Description2", "All code is generated in C/C++ using the BeAPI plus a few extras.");
+	stvDescription3 = new BStringView(BRect(LeftMarginDescription, DescriptionTop+28, RightMargin, DescriptionTop+38), "Description3", "We may look at supporting other languages such as Python/Bethon,");
+	stvDescription4 = new BStringView(BRect(LeftMarginDescription, DescriptionTop+40, RightMargin, DescriptionTop+50), "Description4", "Pascal, BASIC, etc.");
+	stvDescription5 = new BStringView(BRect(LeftMarginDescription, DescriptionTop+58, RightMargin, DescriptionTop+68), "Description5", "If you would like to help out with this project or have feedback,");
+	stvDescription6 = new BStringView(BRect(LeftMarginDescription, DescriptionTop+70, RightMargin, DescriptionTop+80), "Description6", "please visit our web site or email us.");
 		
   	btnOkay = new BButton(BRect (OkayLeftMargin,r.bottom-60,OkayLeftMargin+OkayButtonSize,r.bottom-30),"Okay","Okay", new BMessage(BTN_OKAY), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
   	btnOkay->MakeDefault(true);
@@ -164,7 +164,7 @@ void AboutWindow::MessageReceived (BMessage *message)
 	switch(message->what)
 	{
 		case BTN_OKAY:
-			Hide(); // Quit(); // exit(0); // change later 
+			Hide(); // change later if necessary
 			break;
 		default:
 			BWindow::MessageReceived(message);
@@ -172,5 +172,3 @@ void AboutWindow::MessageReceived (BMessage *message)
 	}
 }
 // ---------------------------------------------------------------------------------------------------------- //
-
-
