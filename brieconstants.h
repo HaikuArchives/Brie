@@ -13,6 +13,7 @@ Released under the MIT license.
 
 // used for our messaging between windows
 extern char *kProjectName;
+extern char *kProjectFile;
 extern char *kAuthor;
 extern bool *kNotSaved;
 
@@ -21,6 +22,7 @@ extern char *kDontShowAgain;
 // bmessages
 const uint32 SET_PROJECT_TITLE = 'spjt';
 //const uint32 SET_PROJECT_NAME = 'spjn';
+const uint32 ADD_PROJECT_FILE = 'adpf';
 const uint32 BTN_OKAY = 'BOky';
 const uint32 CHK_DONTSHOWAGAIN = 'chkd';
 
@@ -32,16 +34,16 @@ extern PropertiesWindow* ptrPropertiesWindow;
 
 // product name
 const char projtitle[]="BeOS Rapid Integrated Environment";
-const char projversion[]="v0.33";
+const char projversion[]="v0.35";
 
-extern BString ProjectName;
-//extern char *ProjectName; // globals ...
-extern BString ProjectPath; // this is the current directory where brie is /projects/
-extern BString ProjectAuthor;
-extern int  ShowWinProj;
-extern int  ShowWinProp;
-extern int  ShowWinTool;
-extern int  PanelType;
+extern BString  ProjectName;
+extern BString  ProjectPath; // this is the current directory where brie is minus the /projects/
+extern BString  ProjectAuthor;
+extern BMessage ProjectFiles;
+extern int ShowWinProj;
+extern int ShowWinProp;
+extern int ShowWinTool;
+extern int PanelType;
 
 // uses with HelpTipWindow
 extern int  TipNumber;

@@ -74,6 +74,7 @@ const uint32 TOOLBAR_BTN_PRINT_PROJECT = 'Tbpt';
 // ---------------------------------------------------------------------------------------------------------- //
 
 char *kProjectName = "ProjectName";
+char *kProjectFile = "ProjectFile";
 //char *kProjectTitle = "ProjectTitle";
 //char *kProjectShortTitle = "ProjectShortTitle";
 
@@ -95,7 +96,7 @@ static void TopOfScreen(BWindow* w)
 
 
 // FileWindow - Constructor
-FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.33", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
+FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.35", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
 	ptrFileWindow = this;
 	InitWindow();

@@ -46,6 +46,7 @@ FileWindow*       ptrFileWindow;
 BString ProjectName;
 BString ProjectPath;
 BString ProjectAuthor;
+BMessage ProjectFiles(ADD_PROJECT_FILE);
 
 // Default Window Size - even though we centre the form to the current screen size
 float FormTopDefault = 30;

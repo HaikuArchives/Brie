@@ -36,13 +36,16 @@ class ProjectWindow : public BWindow
 	    ~ProjectWindow();
     	virtual bool QuitRequested();
 	    virtual void MessageReceived(BMessage *message);
-	    
-	    //void SetProjectTitle(const char *title);
+	    void AddProjectFile(BString tmp);
 	    BStringView        *stvProjectName;
 	private:
-		
 		void InitWindow(void);
+		void ShowProjectFiles(BMessage *msg);
 	    ProjectWindowView* ptrProjectWindowView;
+	    
+	    BListView       	*lsvProjectFiles;
+	    BPictureButton      *btnAddFileToProjectList;
+	    BPictureButton      *btnRemoveFileFromProjectList;
 };
 
 
@@ -148,6 +151,8 @@ class ToolboxWindow : public BWindow
 	private:
 		void InitWindow(void);
 	    ToolboxWindowView* ptrToolboxWindowView;
+	    
+	    BPictureButton		*btnBrieStringView; // aka Label
 };
 
 

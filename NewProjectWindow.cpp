@@ -522,6 +522,34 @@ void NewProjectWindow::CreateNewProject(void)
 	//msg.AddBool("NotSaved",true);
 	//ptrProjectWindow->PostMessage(&msg);
 	
+	// Create our ProjectFiles BMessage
+	BMessage pfmsg(ADD_PROJECT_FILE);
+	BString ProgName;
+	ProgName.SetTo(AppName);
+	ProgName.Append(".cpp");
+	pfmsg.AddString(kProjectFile, ProgName.String());
+	BMessenger(ptrProjectWindow).SendMessage(&pfmsg);
+	
+	pfmsg.MakeEmpty();
+	ProgName.SetTo(AppName);
+	ProgName.Append("Window.cpp");
+	pfmsg.AddString(kProjectFile, ProgName.String());
+	BMessenger(ptrProjectWindow).SendMessage(&pfmsg);
+	
+	pfmsg.MakeEmpty();
+	ProgName.SetTo(AppName);
+	ProgName.Append("View.cpp");
+	pfmsg.AddString(kProjectFile, ProgName.String());
+	BMessenger(ptrProjectWindow).SendMessage(&pfmsg);
+	
+	///sprintf(tmp,"%s.cpp",AppName);
+	//pfmsg.AddString(kProjectFile, tmp);
+	//sprintf(tmp,"%sWindow.cpp",AppName);
+	//pfmsg.AddString(kProjectFile, tmp);
+	//sprintf(tmp,"%sView.cpp",AppName);
+	//pfmsg.AddString(kProjectFile, tmp);
+	//BMessenger(ptrProjectWindow).SendMessage(&pfmsg);
+	
 	// 6) Create makefile for compilation
 	sprintf(FileName,"%s/projects/%s/makefile",apath,AppName);
 	f = fopen(FileName,"w");
@@ -615,7 +643,7 @@ void NewProjectWindow::ShowTracker(char apath[256],char AppName[256])
 void NewProjectWindow::CreateExistingProject(void) 
 {
 	char tmp[256];
-	char cmd[256];
+	//char cmd[256];
 	BAlert *alert;
     long result;
     
