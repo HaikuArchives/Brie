@@ -73,6 +73,7 @@ BRIE::BRIE() : BApplication (APP_SIGNATURE)
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
+
 // BRIE::MessageReceived -- handles incoming messages
 void BRIE::MessageReceived (BMessage *message)
 {
@@ -82,29 +83,6 @@ void BRIE::MessageReceived (BMessage *message)
     	    BApplication::MessageReceived(message); // pass it along ... 
         	break;
     }
-}
-// ---------------------------------------------------------------------------------------------------------- //
-
-// BRIE::ReadyToRun
-void BRIE::ReadyToRun (void)
-{
-	BDeskbar deskbar;
-
-	/*if (! deskbar.HasItem(HOUDINI_REPLICANT))
-	{
-		entry_ref	ref;
-		be_roster->FindApp(HOUDINI_APP_SIG, & ref);
-		deskbar.AddItem(& ref);
-	}
-	else
-		deskbar.RemoveItem(HOUDINI_REPLICANT);
-	*/
-}
-
-// BRIE::RefsReceived
-void BRIE::RefsReceived (BMessage */*message*/)
-{
-
 }
 // ---------------------------------------------------------------------------------------------------------- //
 

@@ -20,8 +20,8 @@ class BRIE : public BApplication
 	public:
     	BRIE();
 	    virtual void MessageReceived(BMessage *message);
-	    virtual void ReadyToRun (void);
-	    virtual void RefsReceived (BMessage *message);
+	    //virtual void ReadyToRun (void);
+	    //virtual void RefsReceived (BMessage *message);
 	private:
 	    FileWindow			*fileWindow;
 		ProjectWindow		*projectWindow;
