@@ -4,7 +4,7 @@ BRIEConstants by Sikosis
 
 Released under the MIT license.
 
-(C) 2002-2003 http://brie.gravity24hr.com/
+(C) 2002-2004 http://brie.sf.net/
 
 */
 
@@ -41,6 +41,7 @@ extern InputBoxWindow*   ptrInputBoxWindow;
 // product name
 const char projtitle[]="BeOS Rapid Integrated Environment";
 const char projversion[]="v0.4";
+const char projcreation[]="Created using BRIE (http://brie.sf.net/";
 
 extern BString  ProjectName;
 extern BString  ProjectPath; // this is the current directory where brie is minus the /projects/

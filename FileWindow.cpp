@@ -110,12 +110,12 @@ FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Env
 	InitWindow();
 	TopOfScreen(this);
 	
-	// new title
+	// Change Window Title to reflect Current Version
 	BString WindowCaption;
 	WindowCaption.SetTo(projtitle);
 	WindowCaption.Append(" ");
 	WindowCaption.Append(projversion);
-	printf ("WindowCaption is %s\n\n",WindowCaption.String()); // debug
+	//printf ("WindowCaption is %s\n\n",WindowCaption.String()); // debug
 	SetTitle(WindowCaption.String());
 	
 	// add load settings here
@@ -811,7 +811,6 @@ void FileWindow::MessageReceived (BMessage *message)
 					GetCurrentPath();
 				}
 				if (ProjectAuthor.Length() == 0) { ProjectAuthor.SetTo("DeveloperName"); }
-				ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text());
 				CreateMakeFile();
 			}
 			break;
@@ -820,7 +819,6 @@ void FileWindow::MessageReceived (BMessage *message)
 			{
 				if (ProjectPath.Length() == 0) { GetCurrentPath(); }
 				if (ProjectAuthor.Length() == 0) { ProjectAuthor.SetTo("DeveloperName"); }
-				ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text());
 				CreateJamFile();
 			}
 			break;	
@@ -829,21 +827,15 @@ void FileWindow::MessageReceived (BMessage *message)
 			{
 				if (ProjectPath.Length() == 0) { GetCurrentPath(); }
 				if (ProjectAuthor.Length() == 0) { ProjectAuthor.SetTo("DeveloperName"); }
-				//Save Project First
-				//if (ptrProjectWindow == NULL) {
-				//	(new BAlert("","Can not Compile.\n\nYou must create a New Project first."," OK "))->Go();
-				//} else {
-				//	printf ("MENU_TOOLS_COMPILE: %s\n",ptrProjectWindow->stvProjectName->Text()); // debug
 				//	ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text()); // crashing - seg violation
-					CompileGCC();
-				//}
+				CompileGCC();
 			}	
 			break;	
 		case MENU_WIN_PROJ:
 			{
 				if (ShowWinProj == 1) {
-					ShowWinProj = 0;
 					ptrProjectWindow->Hide();  // why does this code crash it ?
+					ShowWinProj = 0;
 				} else {
 					ptrProjectWindow->Show();  // why does this code crash it ?
 					ShowWinProj = 1;
@@ -853,8 +845,7 @@ void FileWindow::MessageReceived (BMessage *message)
 			break;
 		case MENU_WIN_PROP:
 			{
-				if (ShowWinProp == 1)
-				{
+				if (ShowWinProp == 1) {
 					ptrPropertiesWindow->Hide();
 					ShowWinProp = 0;
 				} else {
@@ -866,8 +857,7 @@ void FileWindow::MessageReceived (BMessage *message)
 			break;
 		case MENU_WIN_TOOL:
 			{
-				if (ShowWinTool == 1)
-				{
+				if (ShowWinTool == 1) {
 					ptrToolboxWindow->Hide();
 					ShowWinTool = 0;
 				} else {

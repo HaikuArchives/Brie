@@ -125,6 +125,7 @@ class NewProjectWindow : public BWindow
 	    ~NewProjectWindow();
 	    virtual void MessageReceived(BMessage *message);
 	    void ShowTracker(char apath[256],char AppName[256]);
+	    void CreateFile(char FileName[256], char FileTitle[256], BString contents);
 	    
 	private:
 		void InitWindow(void);

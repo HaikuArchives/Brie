@@ -6,7 +6,7 @@ NewProjectWindow by Sikosis
 
 Released under the MIT license.
 
-(C) 2002-2003 http://brie.sf.net/
+(C) 2002-2004 http://brie.sf.net/
 
 */
 
@@ -151,12 +151,55 @@ void NewProjectWindow::InitWindow(void)
 // ---------------------------------------------------------------------------------------------------------- //
 
 
+void NewProjectWindow::CreateFile(char FileName[256], char FileTitle[256], BString contents) 
+{
+	int x;
+	FILE *f;
+	//char AppName[256];
+	char tmp[300];
+	int CurrentYear = 2004; // fix this later ***********************************************************************
+	ProjectName.SetTo(txtNewProject->Text());
+	
+	f = fopen(FileName,"w");
+	x = fputs("/*\n\n",f);
+	sprintf(tmp,"%s %s\n\n",ProjectName.String(),FileTitle);
+	x = fputs(tmp,f);
+	sprintf(tmp,"Author: %s\n\n",txtAuthor->Text());
+	x = fputs(tmp,f);
+	sprintf(tmp,"(C)%i %s)\n\n",CurrentYear,projcreation);
+	x = fputs(tmp,f);
+	x = fputs("*/\n\n",f);
+	x = fputs(contents.String(),f);
+	//sprintf(tmp,"#ifndef __%sCONSTANTS_H__\n",ProjectName.String());
+	//x = fputs(tmp,f);
+	//sprintf(tmp,"#define __%sCONSTANTS_H__\n\n",ProjectName.String());
+	//x = fputs(tmp,f);
+	//x = fputs("// Pointers to BWindows\n",f);
+	//sprintf(tmp,"extern %sWindow* ptr%sWindow;\n\n",ProjectName.String(),ProjectName.String());
+	//x = fputs(tmp,f);
+	//x = fputs("#endif\n",f);
+	fclose(f);
+}
+// ---------------------------------------------------------------------------------------------------------- //
+
+// CreateNewProject - create all the text files for the new project
 void NewProjectWindow::CreateNewProject(void)
 {
-	char tmp[300];
+	// Set Project Name and Various other settings
+	char tmp[300];       // this will be removed when all references are gone 
 	char cmd[256];
-	// add code to quickly create a new project under cur_dir/projects/
+	int x;               // this will be removed when all references are gone
+	FILE *f;             // this will be removed when all references are gone
+	char FileName[256];
+	char AppName[256];   // this will be removed when all references are gone
+	BString FileContents;
+	BString UpperProjectName;
 	
+	ProjectName.SetTo(txtNewProject->Text());
+	UpperProjectName.SetTo(ProjectName.String());
+	UpperProjectName.ToUpper();
+	sprintf(AppName,"%s",ProjectName.String());  // this will be removed when all references are gone
+		
 	// 1) Get Current Directory
 	app_info	daInfo;
 	be_app->GetAppInfo(&daInfo);
@@ -167,112 +210,146 @@ void NewProjectWindow::CreateNewProject(void)
 	::memcpy(apath, pPath.Path(), 256);			
 			
 	// 2) Create New Directory
-	sprintf(cmd,"mkdir %s/projects/%s",apath,txtNewProject->Text());
-	//(new BAlert("",cmd,"cmd"))->Go(); // debug
+	sprintf(cmd,"mkdir %s/projects/%s",apath,ProjectName.String());
 	system(cmd);
 			
 	// 3) Create Basic Files for a Default App
-	int x;
-	FILE *f;
-	char FileName[256];
-	char AppName[256];
-	sprintf(AppName,"%s",txtNewProject->Text());
-	sprintf(FileName,"%s/projects/%s/%s.h",apath,AppName,AppName);
-	f = fopen(FileName,"w");
-	x = fputs("/*\n\n",f);
-	sprintf(tmp,"%s Header\n\n",AppName);
-	x = fputs(tmp,f);
-	sprintf(tmp,"Author: %s\n\n",txtAuthor->Text());
-	x = fputs(tmp,f);
-	x = fputs("(C)2003 Created using BRIE (http://brie.sf.net/)\n\n",f);
-	x = fputs("*/\n\n",f);
-	//toupper(AppName); // *************************************************** FIX LATER
-	sprintf(tmp,"#ifndef __%s_H__\n",AppName);
-	x = fputs(tmp,f);
-	sprintf(tmp,"#define __%s_H__\n\n",AppName);
-	x = fputs(tmp,f);
-	x = fputs("extern const char *APP_SIGNATURE;\n\n",f);
-	sprintf(tmp,"class %s : public BApplication\n",AppName);
-	x = fputs(tmp,f);
-	x = fputs("{\n",f);
-	x = fputs("\tpublic:\n",f);
-	sprintf(tmp,"\t\t%s();\n",AppName);
-	x = fputs(tmp,f);
-	x = fputs("\t\tvirtual void MessageReceived(BMessage *message);\n",f);
-	x = fputs("\tprivate:\n\n",f);
-	x = fputs("};\n\n",f);
-	x = fputs("#endif\n",f);
-	fclose(f);
-			
-	// Constants.h
-	sprintf(FileName,"%s/projects/%s/%sConstants.h",apath,AppName,AppName);
-	f = fopen(FileName,"w");
-	x = fputs("/*\n\n",f);
-	sprintf(tmp,"%s Constants\n\n",AppName);
-	x = fputs(tmp,f);
-	sprintf(tmp,"Author: %s\n\n",txtAuthor->Text());
-	x = fputs(tmp,f);
-	x = fputs("(C)2003 Created using BRIE (http://brie.sf.net/)\n\n",f);
-	x = fputs("*/\n\n",f);
-	sprintf(tmp,"#ifndef __%sCONSTANTS_H__\n",AppName);
-	x = fputs(tmp,f);
-	sprintf(tmp,"#define __%sCONSTANTS_H__\n\n",AppName);
-	x = fputs(tmp,f);
-	x = fputs("// Pointers to BWindows\n",f);
-	sprintf(tmp,"extern %sWindow* ptr%sWindow;\n\n",AppName,AppName);
-	x = fputs(tmp,f);
-	x = fputs("#endif\n",f);
-	fclose(f);
+	
+	// Application Header
+	sprintf(FileName,"%s/projects/%s/%s.h",apath,ProjectName.String(),ProjectName.String());
+	FileContents.SetTo("#ifndef __");
+	FileContents.Append(UpperProjectName.String());
+	FileContents.Append("_H__\n");
+	FileContents.Append("#define __");
+	FileContents.Append(UpperProjectName.String());
+	FileContents.Append("_H__\n\n");
+	FileContents.Append("extern const char *APP_SIGNATURE;\n\n");
+	FileContents.Append("class ");
+	FileContents.Append(ProjectName.String());
+	FileContents.Append(" : public BApplication\n{\n\tpublic:\n\t\t");
+	FileContents.Append(ProjectName.String());
+	FileContents.Append("();\n");
+	FileContents.Append("\t\tvirtual void MessageReceived(BMessage *message);\n");
+	FileContents.Append("\tprivate:\n\n};\n\n");
+	FileContents.Append("#endif\n");
+	CreateFile(FileName,"Header",FileContents);
+		
+	// Application Constants.h
+	sprintf(FileName,"%s/projects/%s/%sConstants.h",apath,ProjectName.String(),ProjectName.String());
+	FileContents.SetTo("#ifndef __");
+	FileContents.Append(UpperProjectName.String());
+	FileContents.Append("CONSTANTS_H__\n");
+	FileContents.Append("#define __");
+	FileContents.Append(UpperProjectName.String());
+	FileContents.Append("CONSTANTS_H__\n\n");
+	FileContents.Append("// Pointers to BWindows\n");
+	FileContents.Append("extern ");
+	FileContents.Append(ProjectName.String());
+	FileContents.Append("Window* ptr");
+	FileContents.Append(ProjectName.String());
+	FileContents.Append("Window;\n\n");
+	FileContents.Append("// Product Name and Properties\n");
+	FileContents.Append("const char projtitle[]=\"");
+	FileContents.Append(ProjectName.String());
+	FileContents.Append("\";\nconst char projversion[]=\"v0.1\";\nconst char projauthor[]=\"");
+	FileContents.Append(txtAuthor->Text());
+	FileContents.Append("\";\n\n");
+	
+	FileContents.Append("#endif\n");
+	CreateFile(FileName,"Constants",FileContents);
 	
 	// Windows Header
-	sprintf(FileName,"%s/projects/%s/%sWindows.h",apath,AppName,AppName);
-	f = fopen(FileName,"w");
-	x = fputs("/*\n\n",f);
-	sprintf(tmp,"%s Windows Header\n\n",AppName);
-	x = fputs(tmp,f);
-	sprintf(tmp,"Author: %s\n\n",txtAuthor->Text());
-	x = fputs(tmp,f);
-	x = fputs("(C)2003 Created using BRIE (http://brie.sf.net/)\n\n",f);
-	x = fputs("*/\n\n",f);
-	sprintf(tmp,"#ifndef __%sWINDOWS_H__\n",AppName);
-	x = fputs(tmp,f);
-	sprintf(tmp,"#define __%sWINDOWS_H__\n\n",AppName);
-	x = fputs(tmp,f);
-	sprintf(tmp,"#include \"%s.h\"\n",AppName);
-	x = fputs(tmp,f);
-	sprintf(tmp,"#include \"%sViews.h\"\n\n",AppName);
-	x = fputs(tmp,f);
-	sprintf(tmp,"class %sView;\n\n",AppName);
-	x = fputs(tmp,f);
-	sprintf(tmp,"class %sWindow : public BWindow\n",AppName);
-	x = fputs(tmp,f);
-	x = fputs("{\n",f);
-	x = fputs("\tpublic:\n",f);
-	sprintf(tmp,"\t\t%sWindow(BRect frame);\n",AppName);
-	x = fputs(tmp,f);
-	sprintf(tmp,"\t\t~%sWindow();\n",AppName);
-	x = fputs(tmp,f);
-	x = fputs("\t\tvirtual bool QuitRequested();\n",f);
-	x = fputs("\t\tvirtual void MessageReceived(BMessage *message);\n",f);
-	x = fputs("\tprivate:\n",f);
-	x = fputs("\t\tvoid InitWindow(void);\n\n",f);
+	sprintf(FileName,"%s/projects/%s/%sWindows.h",apath,ProjectName.String(),ProjectName.String());
+	FileContents.SetTo("#ifndef __");
+	FileContents.Append(UpperProjectName.String());
+	FileContents.Append("WINDOWS_H__\n");
+	FileContents.Append("#define __");
+	FileContents.Append(UpperProjectName.String());
+	FileContents.Append("WINDOWS_H__\n\n");
+	FileContents.Append("#include \"");
+	FileContents.Append(ProjectName.String());
+	FileContents.Append(".h\"\n");
+	FileContents.Append("#include \"");
+	FileContents.Append(ProjectName.String());
+	FileContents.Append("Views.h\"\n\n");
+	FileContents.Append("class ");
+	FileContents.Append(ProjectName.String()); 
+	FileContents.Append("View;\n\n");
+	FileContents.Append("class ");
+	FileContents.Append(ProjectName.String()); 
+	FileContents.Append("Window : public BWindow\n");
+	FileContents.Append("{\n\tpublic:\n\t\t");
+	FileContents.Append(ProjectName.String()); 
+	FileContents.Append("Window(BRect frame);\n");
+	FileContents.Append("\t\t~");
+	FileContents.Append(ProjectName.String()); 
+	FileContents.Append("Window();\n");
+	FileContents.Append("\t\tvirtual bool QuitRequested();\n");
+	FileContents.Append("\t\tvirtual void MessageReceived(BMessage *message);\n");
+	FileContents.Append("\tprivate:\n");
+	FileContents.Append("\t\tvoid InitWindow(void);\n\n");
+	if (chkLoadSavePrefs->Value() == B_CONTROL_ON) {
+		FileContents.Append("\t\tvoid LoadSettings(BMessage *msg);\n");
+		FileContents.Append("\t\tvoid SaveSettings(void);\n");
+	}
+	FileContents.Append("\t\t");
+	FileContents.Append(ProjectName.String());
+	FileContents.Append("View*\t\tptr");
+	FileContents.Append(ProjectName.String());
+	FileContents.Append("View;\n");
+	FileContents.Append("};\n\n");
+	FileContents.Append("#endif\n");
+	CreateFile(FileName,"Windows Header",FileContents);
+
+//	FileContents.Append("");
+	
+//	f = fopen(FileName,"w");
+//	x = fputs("/*\n\n",f);
+//	sprintf(tmp,"%s Windows Header\n\n",ProjectName.String());
+//	x = fputs(tmp,f);
+//	sprintf(tmp,"Author: %s\n\n",txtAuthor->Text());
+//	x = fputs(tmp,f);
+//	x = fputs("(C)2003 Created using BRIE (http://brie.sf.net/)\n\n",f);
+//	x = fputs("*/\n\n",f);
+//	sprintf(tmp,"#ifndef __%sWINDOWS_H__\n",ProjectName.String());
+//	x = fputs(tmp,f);
+//	sprintf(tmp,"#define __%sWINDOWS_H__\n\n",ProjectName.String());
+//	x = fputs(tmp,f);
+//	sprintf(tmp,"#include \"%s.h\"\n",ProjectName.String());
+//	x = fputs(tmp,f);
+//	sprintf(tmp,"#include \"%sViews.h\"\n\n",ProjectName.String());
+//	x = fputs(tmp,f);
+//	sprintf(tmp,"class %sView;\n\n",ProjectName.String());
+//	x = fputs(tmp,f);
+//	sprintf(tmp,"class %sWindow : public BWindow\n",ProjectName.String());
+//	x = fputs(tmp,f);
+//	x = fputs("{\n",f);
+//	x = fputs("\tpublic:\n",f);
+//	sprintf(tmp,"\t\t%sWindow(BRect frame);\n",ProjectName.String());
+//	x = fputs(tmp,f);
+//	sprintf(tmp,"\t\t~%sWindow();\n",ProjectName.String());
+//	x = fputs(tmp,f);
+//	x = fputs("\t\tvirtual bool QuitRequested();\n",f);
+//	x = fputs("\t\tvirtual void MessageReceived(BMessage *message);\n",f);
+//	x = fputs("\tprivate:\n",f);
+//	x = fputs("\t\tvoid InitWindow(void);\n\n",f);
 	
 	// add load/save pref (if checked)
-	if (chkLoadSavePrefs->Value() == B_CONTROL_ON) {
-		x = fputs("\t\tvoid LoadSettings(BMessage *msg);\n",f);
-		x = fputs("\t\tvoid SaveSettings(void); \n",f);
-	}
-	sprintf(tmp,"\t\t%sView*\t\tptr%sView;\n",AppName,AppName);
-	x = fputs(tmp,f);
-	x = fputs("};\n\n",f);
-	x = fputs("#endif\n",f);
-	fclose(f);
+//	if (chkLoadSavePrefs->Value() == B_CONTROL_ON) {
+//		x = fputs("\t\tvoid LoadSettings(BMessage *msg);\n",f);
+//		x = fputs("\t\tvoid SaveSettings(void); \n",f);
+//	}
+//	sprintf(tmp,"\t\t%sView*\t\tptr%sView;\n",ProjectName.String(),ProjectName.String());
+//	x = fputs(tmp,f);
+//	x = fputs("};\n\n",f);
+//	x = fputs("#endif\n",f);
+//	fclose(f);
 	
 	// Views Header
-	sprintf(FileName,"%s/projects/%s/%sViews.h",apath,AppName,AppName);
+	sprintf(FileName,"%s/projects/%s/%sViews.h",apath,ProjectName.String(),ProjectName.String());
 	f = fopen(FileName,"w");
 	x = fputs("/*\n\n",f);
-	sprintf(tmp,"%s Views Header\n\n",AppName);
+	sprintf(tmp,"%s Views Header\n\n",ProjectName.String());
 	x = fputs(tmp,f);
 	sprintf(tmp,"Author: %s\n\n",txtAuthor->Text());
 	x = fputs(tmp,f);
