@@ -102,7 +102,7 @@ static void TopOfScreen(BWindow* w)
 
 
 // FileWindow - Constructor
-FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.36", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
+FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.37", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
 	ptrFileWindow = this;
 	InitWindow();
