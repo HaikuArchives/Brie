@@ -4,7 +4,7 @@ BRIEConstants by Sikosis
 
 Released under the MIT license.
 
-(C) 2002 http://brie.gravity24hr.com/
+(C) 2002-2003 http://brie.gravity24hr.com/
 
 */
 
