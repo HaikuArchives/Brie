@@ -27,6 +27,7 @@ class NewProjectWindowView;
 class AboutWindowView;
 class BRIEIconView;
 class HelpTipView;
+class InputBoxView;
 
 
 class ProjectWindow : public BWindow
@@ -203,6 +204,21 @@ class HelpTipWindow : public BWindow
 	    BStringView     *stvTipText2;
 	    BStringView     *stvTipText3;
 	    BCheckBox		*chkDontShowAgain;
+};
+
+class InputBoxWindow : public BWindow
+{
+	public:
+		InputBoxWindow(BRect frame);
+		~InputBoxWindow();
+		virtual bool QuitRequested();
+		virtual void MessageReceived(BMessage *message);
+	private:
+		void InitWindow(void);
+		InputBoxView*	ptrInputBoxView;
+		
+		BButton			*btnOkay;
+	    BTextControl    *txtQuestion;
 };
 
 #endif

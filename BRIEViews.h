@@ -76,4 +76,10 @@ class HelpTipView : public BView
 		virtual void Draw(BRect updateRect);
 };
 
+class InputBoxView : public BView
+{
+	public:
+		InputBoxView(BRect frame);
+};
+
 #endif
