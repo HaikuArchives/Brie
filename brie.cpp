@@ -38,6 +38,7 @@ int TipNumber = 0;
 int ShowWinProj = 1;
 int ShowWinProp = 1;
 int ShowWinTool = 1;
+int PanelType = 0;
 PropertiesWindow* ptrPropertiesWindow;
 ToolboxWindow*    ptrToolboxWindow;
 ProjectWindow*    ptrProjectWindow;
@@ -100,6 +101,39 @@ void BRIE::MessageReceived (BMessage *message)
     }
 }
 // ---------------------------------------------------------------------------------------------------------- //
+
+
+// BRIE::RefsReceived
+void BRIE::RefsReceived (BMessage *message)
+{
+	uint32 type;
+	int32 count;
+	entry_ref ref;
+	
+	message->GetInfo("refs", &type, &count);
+	if (type != B_REF_TYPE)
+		return;
+	for (long i = --count; i >=0; i--)
+	{
+		if (message->FindRef("refs", i, &ref) == B_OK)
+		{
+			BFile LocationDir;
+			if (LocationDir.SetTo(&ref, B_READ_ONLY) == B_OK)
+			{
+				BPath LocationDir (&ref);
+				
+				// need to lock the app and the windows's looper as well ...
+				be_app->Lock();
+				ptrFileWindow->LockLooper();
+				ptrProjectWindow->stvProjectName->SetText(LocationDir.Path());
+				ptrFileWindow->UnlockLooper();
+				be_app->Unlock();
+				ProjectName.SetTo(LocationDir.Path());
+			}	
+		}	
+	}
+}
+// ------------------------------------------------------------------------------------------------- //
 
 
 // BRIE Main

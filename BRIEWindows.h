@@ -81,14 +81,14 @@ class FileWindow : public BWindow
 	    ~FileWindow();
     	virtual bool QuitRequested();
 	    virtual void MessageReceived(BMessage *message);
-	    
+	    void SaveProject(const char *prjname, const char *prjpath, const char *prjauthor);
+	    void GetCurrentPath(void);
 	private:
 		void InitWindow(void);
 	    void CompileGCC(const char *prjname, const char *prjpath, const char *prjauthor);
 	    void CreateMakeFile(const char *prjname, const char *prjpath, const char *prjauthor);
-	    void SaveProject(const char *prjname, const char *prjpath, const char *prjauthor);
 	    void SetProject(const char *prjname);
-	    void GetCurrentPath(void);
+	    
 	    FileWindowView* 	ptrFileWindowView;
 		
 	    FileWindow*			ptrFileWindow;
@@ -100,6 +100,7 @@ class FileWindow : public BWindow
 	    BPictureButton      *btnSaveProject;
 	    BPictureButton      *btnSaveAsProject;
 	    BPictureButton      *btnPrintProject;
+	    BFilePanel			*BrowsePanel;
 };
 
 
@@ -113,6 +114,7 @@ class NewProjectWindow : public BWindow
 	private:
 		void InitWindow(void);
 		void CreateNewProject(void);
+		void CreateExistingProject(void);
 	    NewProjectWindowView*		ptrNewProjectWindowView;
 	    	    
 	    BButton         		    *btnAdd;  // alias Create

@@ -41,6 +41,7 @@ extern BString ProjectAuthor;
 extern int  ShowWinProj;
 extern int  ShowWinProp;
 extern int  ShowWinTool;
+extern int  PanelType;
 
 // uses with HelpTipWindow
 extern int  TipNumber;

@@ -78,28 +78,47 @@ void NewProjectWindow::InitWindow(void)
 {	
 	BRect r;
 	r = Bounds(); // the whole view
-	
 	int LeftMargin = 14;
 	int AddButtonSize = 75;
 	int CancelButtonSize = 75;
-	
-	//float CancelLeftMargin = (r.right / 2) - ((AddButtonSize + 20 + CancelButtonSize) / 2);
-	//float AddLeftMargin = CancelLeftMargin + CancelButtonSize + 20;;
-	
 	float AddLeftMargin = r.right - (AddButtonSize + 10);
 	float CancelLeftMargin = AddLeftMargin - (CancelButtonSize + 11);
-	
 	int NewProjectTop = 10;
 	
-	txtNewProject = new BTextControl(BRect(LeftMargin,NewProjectTop,r.right-10,NewProjectTop+10), "txtNewProject","Project Name:","Test",new BMessage(TXT_NEW_PROJECT), B_FOLLOW_LEFT | B_FOLLOW_TOP , B_WILL_DRAW | B_NAVIGABLE);
-	//txtNewProject = new BTextControl(BRect(LeftMargin,NewProjectTop,r.right-10,NewProjectTop+10), "txtNewProject","Project Name:","New Project",new BMessage(TXT_NEW_PROJECT), B_FOLLOW_LEFT | B_FOLLOW_TOP , B_WILL_DRAW | B_NAVIGABLE);
+	if (PanelType == 1) {
+		// Existing
+		txtNewProject = new BTextControl(BRect(LeftMargin,NewProjectTop,r.right-10,NewProjectTop+10),
+						"txtNewProject","Project Name:",ptrProjectWindow->stvProjectName->Text(),new BMessage(TXT_NEW_PROJECT),
+						B_FOLLOW_LEFT | B_FOLLOW_TOP , B_WILL_DRAW | B_NAVIGABLE);
+	} else {
+		// New
+		txtNewProject = new BTextControl(BRect(LeftMargin,NewProjectTop,r.right-10,NewProjectTop+10),
+						"txtNewProject","Project Name:","Test",new BMessage(TXT_NEW_PROJECT),
+						B_FOLLOW_LEFT | B_FOLLOW_TOP , B_WILL_DRAW | B_NAVIGABLE);
+	}
 	txtNewProject->SetDivider(88);
-
-	txtAuthor = new BTextControl(BRect(LeftMargin,NewProjectTop+25,r.right-10,NewProjectTop+35), "txtAuthor","Author:","Author",new BMessage(TXT_AUTHOR), B_FOLLOW_LEFT | B_FOLLOW_TOP , B_WILL_DRAW | B_NAVIGABLE);
+	
+	if (PanelType == 1) {
+		txtAuthor = new BTextControl(BRect(LeftMargin,NewProjectTop+25,r.right-10,NewProjectTop+35),
+		            "txtAuthor","Author:",ProjectAuthor.String(),new BMessage(TXT_AUTHOR), B_FOLLOW_LEFT | B_FOLLOW_TOP,
+	    	        B_WILL_DRAW | B_NAVIGABLE);
+	} else {
+		txtAuthor = new BTextControl(BRect(LeftMargin,NewProjectTop+25,r.right-10,NewProjectTop+35),
+		            "txtAuthor","Author:","Author",new BMessage(TXT_AUTHOR), B_FOLLOW_LEFT | B_FOLLOW_TOP,
+	    	        B_WILL_DRAW | B_NAVIGABLE);
+	
+	}    	        
 	txtAuthor->SetDivider(88);
 	   	
 	btnCancel = new BButton(BRect (CancelLeftMargin,r.bottom-34,CancelLeftMargin+CancelButtonSize,r.bottom-14),"Cancel","Cancel", new BMessage(BTN_CANCEL), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);		
-  	btnAdd = new BButton(BRect (AddLeftMargin,r.bottom-34,AddLeftMargin+AddButtonSize,r.bottom-14),"Create","Create", new BMessage(BTN_ADD), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+	if (PanelType == 1) {
+		btnAdd = new BButton(BRect (AddLeftMargin,r.bottom-34,AddLeftMargin+AddButtonSize,r.bottom-14),
+				 "Save","Save", new BMessage(BTN_ADD), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+	} else {
+		btnAdd = new BButton(BRect (AddLeftMargin,r.bottom-34,AddLeftMargin+AddButtonSize,r.bottom-14),
+				 "Create","Create", new BMessage(BTN_ADD), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+	}
+  	
   	btnAdd->MakeDefault(true);
 		
 	AddChild(ptrNewProjectWindowView = new NewProjectWindowView(r));
@@ -592,6 +611,30 @@ void NewProjectWindow::ShowTracker(char apath[256],char AppName[256])
 // ---------------------------------------------------------------------------------------------------------- //
 
 
+// CreateExistingProject -- Saves only the necessary bits - asks if you to recreate
+void NewProjectWindow::CreateExistingProject(void) 
+{
+	char tmp[256];
+	char cmd[256];
+	BAlert *alert;
+    long result;
+    
+	sprintf(tmp,"Would you like to Recreate your Project \"%s\".\n\nPlease note this means all the existing files will be overwritten.\n\nIf you are unsure, click No.",ProjectName.String());
+    alert = new BAlert("", tmp, " Yes ", " No ", NULL, B_WIDTH_FROM_WIDEST, B_WARNING_ALERT);
+	alert->SetShortcut(0, B_ESCAPE);
+	result = alert->Go();
+    if (result == B_OK)
+    {
+    	// right - do the lot
+    	CreateNewProject();	
+	} else {
+		// Only save necessary bits like project
+		ptrFileWindow->SaveProject(ProjectName.String(),ProjectPath.String(),ProjectAuthor.String());
+	}	
+}
+// ---------------------------------------------------------------------------------------------------------- //
+
+
 // NewProjectWindow::MessageReceived -- receives messages
 void NewProjectWindow::MessageReceived (BMessage *message)
 {
@@ -599,7 +642,11 @@ void NewProjectWindow::MessageReceived (BMessage *message)
 	{
 		case BTN_ADD:
 			{
-				CreateNewProject();
+				if (PanelType == 1) {
+					CreateExistingProject();
+				} else {
+					CreateNewProject();
+				}
 				Lock();
 				Quit();
 			}

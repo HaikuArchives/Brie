@@ -311,6 +311,7 @@ void FileWindow::InitWindow(void)
 	AddChild(tmpBPictureView);
 	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
 	
+	//BrowsePanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL,	B_DIRECTORY_NODE, true);
         
     // Add Controls
     AddChild(btnNewProject);
@@ -482,9 +483,15 @@ void FileWindow::SaveProject(const char *prjname, const char *prjpath, const cha
 		x = fputs(tmp,f);
 		sprintf(tmp,"ProjectDir=%s/projects/%s\n",prjpath,prjname);
 		x = fputs(tmp,f);
-		sprintf(tmp,"Author=%s",prjauthor);
+		sprintf(tmp,"Author=%s\n",prjauthor);
+		x = fputs(tmp,f);
+		sprintf(tmp,"Language=%s\n","C/C++");
 		x = fputs(tmp,f);
 		x = fputs("### Files\n",f);
+		
+		// need to loop the array or whatever we store the list
+		// of cpp files in
+		
 		sprintf(tmp,"%s.cpp\n",prjname);
 		x = fputs(tmp,f);
 		sprintf(tmp,"%sWindow.cpp\n",prjname);
@@ -536,7 +543,8 @@ void FileWindow::MessageReceived (BMessage *message)
 				if (strlen(ProjectPath.String()) == 0)
 				{
 					GetCurrentPath();
-				} 	
+				} 
+				//PanelType = 0;	
 				//browsePanel->SetPanelDirectory(ProjectPath.String());
 				//browsePanel->Show();
 			}
@@ -560,12 +568,12 @@ void FileWindow::MessageReceived (BMessage *message)
 				{
 					GetCurrentPath();
 				}
-				//browsePanel->SetPanelDirectory(apath);
+				PanelType = 1;
+				// show the panel to get the new name
+				//browsePanel->SetPanelDirectory(ProjectPath.String());
 				//browsePanel->Show();
-				//load the panel to get the new name
 				//SaveProject(ptrProjectWindow->stvProjectName->Text(),ProjectPath.String(),ProjectAuthor.String());
 				//SetProject(ptrProjectWindow->stvProjectName->Text());
-				(new BAlert("","Coming Soon."," debug "))->Go();
 			}
 			break;
 		case TOOLBAR_BTN_PRINT_PROJECT:	

@@ -4,7 +4,7 @@ BRIE Header by Sikosis
 
 Released under the MIT license.
 
-(C) 2002-2003 http://brie.gravity24hr.com/
+(C) 2002-2003 http://brie.sf.net/
 
 */
 
@@ -21,7 +21,7 @@ class BRIE : public BApplication
     	BRIE();
 	    virtual void MessageReceived(BMessage *message);
 	    //virtual void ReadyToRun (void);
-	    //virtual void RefsReceived (BMessage *message);
+	    virtual void RefsReceived (BMessage *message);
 	private:
 		FileWindow			*fileWindow;
 		ProjectWindow		*projectWindow;
