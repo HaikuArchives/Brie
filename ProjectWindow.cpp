@@ -34,7 +34,7 @@ Released under the MIT license.
 #include <View.h>
 
 //#include "brie.h"
-//#include "brieconstants.h"
+#include "brieconstants.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
 
@@ -86,9 +86,11 @@ void ProjectWindow::InitWindow(void)
     // Add Controls
     stvProjectName = new BStringView(BRect(LeftMargin, TopMargin, RightMargin, TopMargin+10), "Project Name", "Untitled");
     
-	// Add the Drawing View
-	AddChild(ptrProjectWindowView = new ProjectWindowView(r));
-	AddChild(stvProjectName);
+    AddChild(stvProjectName);
+    
+    // Add the Drawing View
+    ptrProjectWindowView = new ProjectWindowView(r);
+    AddChild(ptrProjectWindowView);
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -104,13 +106,13 @@ bool ProjectWindow::QuitRequested()
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-//void ProjectWindow::SetProjectTitle(char title[256])
-void ProjectWindow::SetProjectTitle(const char *title)
-{
-	//(new BAlert("",title,"debug"))->Go(); // debug
-	printf("%p\n", stvProjectName->Text());
+//void ProjectWindow::SetProjectTitle(const char *title)
+//{
+	//(new BAlert("",title,"segment violates just after this with stvProjectName"))->Go(); // debug
+	//printf("%p\n", stvProjectName->Text());
 	//stvProjectName->SetText("test"); // segment violated :(
-}
+	//ptrProjectWindowView->
+//}
 // ---------------------------------------------------------------------------------------------------------- //
 
 
@@ -119,6 +121,9 @@ void ProjectWindow::MessageReceived (BMessage *message)
 {
 	switch(message->what)
 	{
+		case SET_PROJECT_NAME:
+			stvProjectName->SetText("blah");
+			break;
 		default:
 			BWindow::MessageReceived(message);
 			break;

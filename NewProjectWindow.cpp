@@ -27,6 +27,8 @@ Released under the MIT license.
 #include <iostream.h>
 #include <fstream.h>
 
+#include "brieconstants.h"
+#include "brie.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
 
@@ -480,7 +482,8 @@ void NewProjectWindow::CreateNewProject(void)
 	fclose(f);
 	sprintf(tmp,"%s.bprj",AppName);
 	ptrFileWindow->SetProject(FileName,tmp);
-	ptrProjectWindow->SetProjectTitle(AppName);
+	//ptrProjectWindow->SetProjectTitle(AppName);
+	ptrProjectWindow->PostMessage(new BMessage(SET_PROJECT_NAME));
 	
 	// 6) Create makefile for compilation
 	sprintf(FileName,"%s/projects/%s/makefile",apath,AppName);

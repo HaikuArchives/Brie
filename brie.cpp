@@ -70,6 +70,12 @@ BRIE::BRIE() : BApplication (APP_SIGNATURE)
 	projectWindow = new ProjectWindow(projectwindowRect);
 	toolboxWindow = new ToolboxWindow(toolboxwindowRect);
 	fileWindow = new FileWindow(windowRect);
+	newprojectWindow = new NewProjectWindow(BRect(367.0, 268.0, 657.0, 500.0));
+	
+	//fileWindow->ptrNewProjectWindow = newprojectWindow;	
+	newprojectWindow->ptrProjectWindow = projectWindow;
+	newprojectWindow->ptrFileWindow = fileWindow;
+	newprojectWindow->Hide();
 }
 // ---------------------------------------------------------------------------------------------------------- //
 

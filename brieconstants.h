@@ -11,9 +11,8 @@ Released under the MIT license.
 #ifndef __BRIECONSTANTS_H__
 #define __BRIECONSTANTS_H__
 
-//const uint32 PERFORM_PING = 'PPng';
-
 const uint32 TOOLBAR_BTN_NEW_PROJECT = 'Tbnp';
+const uint32 SET_PROJECT_NAME = 'setp';
 
 const char projtitle[]="BeOS Rapid Integrated Environment v";
 const char projversion[]="0.3";

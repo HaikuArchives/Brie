@@ -6,7 +6,7 @@ FileWindow by Sikosis
 
 Released under the MIT license.
 
-(C) 2002 http://brie.sf.net/
+(C) 2002-2003 http://brie.sf.net/
 
 */
 
@@ -241,6 +241,7 @@ bool FileWindow::QuitRequested()
 void FileWindow::MessageReceived (BMessage *message)
 {
 	BRect aboutwindowRect(0,0,370,230);
+	NewProjectWindow* ptrNewProjectWindow;
 	
 	switch(message->what)
 	{
@@ -250,7 +251,8 @@ void FileWindow::MessageReceived (BMessage *message)
 			break;	*/
 		case TOOLBAR_BTN_NEW_PROJECT:	
 		case MENU_FILE_NEW:
-			new NewProjectWindow(BRect(367.0, 268.0, 657.0, 500.0));
+			ptrNewProjectWindow = new NewProjectWindow(BRect(367.0, 268.0, 657.0, 500.0));
+			//ptrNewProjectWindow->Show();
 			break;	
 		case MENU_HELP_ABOUT:
 			aboutWindow = new AboutWindow(aboutwindowRect);

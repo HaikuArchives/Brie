@@ -13,6 +13,7 @@ Released under the MIT license.
 #ifndef __BRIEWINDOWS_H__
 #define __BRIEWINDOWS_H__
 
+//#include "brie.h"
 #include "BRIEViews.h"
 #include "URLView.h"
 
@@ -32,9 +33,9 @@ class ProjectWindow : public BWindow
 	    ~ProjectWindow();
     	virtual bool QuitRequested();
 	    virtual void MessageReceived(BMessage *message);
-	    void SetProjectTitle(const char *title);
+	    //void SetProjectTitle(const char *title);
 	private:
-		BStringView *stvProjectName;
+		BStringView        *stvProjectName;
 		void InitWindow(void);
 	    ProjectWindowView* ptrProjectWindowView;
 };
@@ -76,6 +77,7 @@ class FileWindow : public BWindow
     	virtual bool QuitRequested();
 	    virtual void MessageReceived(BMessage *message);
 	    void SetProject(const char *projectname, const char *shortprojectname);
+	 //   NewProjectWindow*			ptrNewProjectWindow;
 	private:
 		void InitWindow(void);
 	    FileWindowView* 	ptrFileWindowView;
@@ -92,12 +94,13 @@ class NewProjectWindow : public BWindow
     	NewProjectWindow(BRect frame);
 	    ~NewProjectWindow();
 	    virtual void MessageReceived(BMessage *message);
+	    
+	    FileWindow*     ptrFileWindow;
+	    ProjectWindow*  ptrProjectWindow;
 	private:
 		void InitWindow(void);
 		void CreateNewProject(void);
 	    NewProjectWindowView*		ptrNewProjectWindowView;
-	    FileWindow*					ptrFileWindow;
-	    ProjectWindow*				ptrProjectWindow;
 	    	    
 	    BButton         		    *btnAdd;
 	    BButton         		    *btnCancel;
