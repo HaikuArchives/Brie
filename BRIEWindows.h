@@ -16,6 +16,8 @@ Released under the MIT license.
 #include "BRIEViews.h"
 #include "URLView.h"
 
+class BPictureButton;
+
 class FileWindowView; 
 class ProjectWindowView;
 class PropertiesWindowView;
