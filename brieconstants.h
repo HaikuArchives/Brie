@@ -16,14 +16,11 @@ extern char *kProjectName;
 extern char *kAuthor;
 extern bool *kNotSaved;
 
-//extern char *kProjectTitle;
-//extern char *kProjectShortTitle;
-
 extern char *kDontShowAgain;
 
 // bmessages
 const uint32 SET_PROJECT_TITLE = 'spjt';
-const uint32 SET_PROJECT_NAME = 'spjn';
+//const uint32 SET_PROJECT_NAME = 'spjn';
 const uint32 BTN_OKAY = 'BOky';
 const uint32 CHK_DONTSHOWAGAIN = 'chkd';
 
@@ -37,9 +34,10 @@ extern PropertiesWindow* ptrPropertiesWindow;
 const char projtitle[]="BeOS Rapid Integrated Environment";
 const char projversion[]="v0.33";
 
-extern char *ProjectName; // globals ...
-extern char *ProjectPath; // this is the current directory where brie is /projects/
-extern char *ProjectAuthor;
+extern BString ProjectName;
+//extern char *ProjectName; // globals ...
+extern BString ProjectPath; // this is the current directory where brie is /projects/
+extern BString ProjectAuthor;
 extern int  ShowWinProj;
 extern int  ShowWinProp;
 extern int  ShowWinTool;

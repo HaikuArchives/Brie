@@ -562,7 +562,7 @@ void NewProjectWindow::CreateNewProject(void)
 	BMessenger(ptrFileWindow).SendMessage(&msg);
 	BMessenger(ptrProjectWindow).SendMessage(&msg);
 	
-	ProjectName = AppName;
+	ProjectName.SetTo(AppName);
 	ProjectPath = apath;
 		
 	// 8) Show Tracker and/or Continue

@@ -88,6 +88,7 @@ class FileWindow : public BWindow
 	    void CreateMakeFile(const char *prjname, const char *prjpath, const char *prjauthor);
 	    void SaveProject(const char *prjname, const char *prjpath, const char *prjauthor);
 	    void SetProject(const char *prjname);
+	    void GetCurrentPath(void);
 	    FileWindowView* 	ptrFileWindowView;
 		
 	    FileWindow*			ptrFileWindow;

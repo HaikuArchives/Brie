@@ -39,10 +39,6 @@ Released under the MIT license.
 #include <View.h>
 
 // Toolbar
-//#include "brie_tool_new.h"
-//#include "brie_tool_new_inverse.h"
-//#include "brie_tool_load.h"
-//#include "brie_tool_load_inverse.h"
 #include "Bitmaps-Toolbar.h"
 
 #include "brie.h"
@@ -179,7 +175,7 @@ void FileWindow::InitWindow(void)
     // Sikosis's Toolbar ;)
     int ToolbarButtonMargin = 6;
     int ToolbarButtonWidth = 24;
-    int ButtonGap = 2;
+    int ButtonGap = 3;
 	
 	// New Project Button
   	BRect BitmapFrame (BRect(0,0,23,23));
@@ -437,7 +433,7 @@ void FileWindow::CompileGCC(const char *prjname, const char *prjpath, const char
 		FILE *f;	
     	
     	printf("CompileGCC - cmd is %s\n",cmd); //debug
-    	if ((f = fopen(cmd, "r"))) {
+    	if (!(f = fopen(cmd, "r"))) {
 			(new BAlert("","No Makefile Found.\n\nWe MUST create a new one.","Okay"))->Go();
 			CreateMakeFile(prjpath,prjname,prjauthor);
 		}
@@ -459,10 +455,9 @@ void FileWindow::CompileGCC(const char *prjname, const char *prjpath, const char
 		sprintf(tmp,"%s\n",prjpath,prjname);
 		x = fputs(tmp,f);
 		fclose(f);
-		
-		sprintf(cmd,"Terminal -t \"Compiling %s\" %s",FileName);
-		printf("now run make %s\n",cmd); //debug
-		system(cmd);
+		//sprintf(cmd,"Terminal -t \"Compiling %s\" %s",FileName);
+		//printf("now run make %s\n",cmd); //debug
+		system(FileName);
 	} else {
 		(new BAlert("","You have to create a Project first before you can Compile/Run.","Okay"))->Go();	
 	}
@@ -505,6 +500,20 @@ void FileWindow::SaveProject(const char *prjname, const char *prjpath, const cha
 // ---------------------------------------------------------------------------------------------------------- //
 
 
+void FileWindow::GetCurrentPath(void)
+{
+	app_info	daInfo;
+	be_app->GetAppInfo(&daInfo);
+	BEntry	daEntry(&daInfo.ref);
+	daEntry.GetParent(&daEntry);
+	BPath	pPath(&daEntry);
+	char	apath[256];
+	::memcpy(apath, pPath.Path(), 256);
+	ProjectPath.SetTo(apath);
+}
+// ---------------------------------------------------------------------------------------------------------- //
+
+
 // FileWindow::MessageReceived -- receives messages
 void FileWindow::MessageReceived (BMessage *message)
 {
@@ -524,54 +533,37 @@ void FileWindow::MessageReceived (BMessage *message)
 			{
 				TipNumber = 1;
 				new HelpTipWindow(BRect(0.0, 0.0, 350.0, 120.0));
-			
-				app_info	daInfo;
-				be_app->GetAppInfo(&daInfo);
-				BEntry	daEntry(&daInfo.ref);
-				daEntry.GetParent(&daEntry);
-				BPath	pPath(&daEntry);
-				char	apath[256];
-				::memcpy(apath, pPath.Path(), 256);	
-				strcat(apath,"/projects/");
-				//browsePanel->SetPanelDirectory(apath);
+				if (strlen(ProjectPath.String()) == 0)
+				{
+					GetCurrentPath();
+				} 	
+				//browsePanel->SetPanelDirectory(ProjectPath.String());
 				//browsePanel->Show();
 			}
 			break;
 		case TOOLBAR_BTN_SAVE_PROJECT:	
 		case MENU_FILE_SAVE:
 			{
-				if (strlen(ProjectPath) == 0)
+				if (strlen(ProjectPath.String()) == 0)
 				{
-					app_info	daInfo;
-					be_app->GetAppInfo(&daInfo);
-					BEntry	daEntry(&daInfo.ref);
-					daEntry.GetParent(&daEntry);
-					BPath	pPath(&daEntry);
-					char	apath[256];
-					::memcpy(apath, pPath.Path(), 256);	
-					strcat(ProjectPath,apath);
-				}
-				if (ProjectAuthor == "") { ProjectAuthor = "DeveloperName"; }
+					GetCurrentPath();
+				} 	
+				if (ProjectAuthor == "") { ProjectAuthor.SetTo("DeveloperName"); }
 				//printf("Menu Save - %s - %s - %s\n\n",ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
-				SaveProject(ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
+				SaveProject(ptrProjectWindow->stvProjectName->Text(),ProjectPath.String(),ProjectAuthor.String());
 			}
 			break;
 		case TOOLBAR_BTN_SAVEAS_PROJECT:	
 		case MENU_FILE_SAVEAS:
 			{
-				//app_info	daInfo;
-				//be_app->GetAppInfo(&daInfo);
-				//BEntry	daEntry(&daInfo.ref);
-				//daEntry.GetParent(&daEntry);
-				//BPath	pPath(&daEntry);
-				//char	apath[256];
-				//::memcpy(apath, pPath.Path(), 256);	
-				//strcat(apath,"/projects/");
+				if (strlen(ProjectPath.String()) == 0)
+				{
+					GetCurrentPath();
+				}
 				//browsePanel->SetPanelDirectory(apath);
 				//browsePanel->Show();
-
 				//load the panel to get the new name
-				//SaveProject(ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
+				//SaveProject(ptrProjectWindow->stvProjectName->Text(),ProjectPath.String(),ProjectAuthor.String());
 				//SetProject(ptrProjectWindow->stvProjectName->Text());
 				(new BAlert("","Coming Soon."," debug "))->Go();
 			}
@@ -596,33 +588,23 @@ void FileWindow::MessageReceived (BMessage *message)
 			break;	
 		case MENU_TOOLS_CREATEMAKE:
 			{
-				app_info	daInfo;
-				be_app->GetAppInfo(&daInfo);
-				BEntry	daEntry(&daInfo.ref);
-				daEntry.GetParent(&daEntry);
-				BPath	pPath(&daEntry);
-				char	apath[256];
-				::memcpy(apath, pPath.Path(), 256);	
-				ProjectPath = apath;
-				if (ProjectAuthor == "") { ProjectAuthor = "DeveloperName"; }
-				CreateMakeFile(ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
+				if (strlen(ProjectPath.String()) == 0)
+				{
+					GetCurrentPath();
+				}
+				if (strlen(ProjectAuthor.String()) == 0) { ProjectAuthor.SetTo("DeveloperName"); }
+				CreateMakeFile(ptrProjectWindow->stvProjectName->Text(),ProjectPath.String(),ProjectAuthor.String());
 			}
 			break;	
 		case MENU_TOOLS_COMPILE:
 			{
-				app_info	daInfo;
-				be_app->GetAppInfo(&daInfo);
-				BEntry	daEntry(&daInfo.ref);
-				daEntry.GetParent(&daEntry);
-				BPath	pPath(&daEntry);
-				char	apath[256];
-				::memcpy(apath, pPath.Path(), 256);	
-				ProjectPath = apath;
-				if (ProjectAuthor == "") { ProjectAuthor = "DeveloperName"; }
-				//Lock();
-				//SaveProject(ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
-				CompileGCC(ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
-				//UnLock();
+				if (strlen(ProjectPath.String()) == 0)
+				{
+					GetCurrentPath();
+				}
+				if (strlen(ProjectAuthor.String()) == 0) { ProjectAuthor.SetTo("DeveloperName"); }
+				//Save
+				CompileGCC(ptrProjectWindow->stvProjectName->Text(),ProjectPath.String(),ProjectAuthor.String());
 			}	
 			break;	
 		case MENU_WIN_PROJ:
@@ -667,15 +649,13 @@ void FileWindow::MessageReceived (BMessage *message)
 		case MENU_HELP_MANUAL:
 			{
 				// launch browser on local html manual
-				int result;
-				app_info	daInfo;
-				be_app->GetAppInfo(&daInfo);
-				BEntry	daEntry(&daInfo.ref);
-				daEntry.GetParent(&daEntry);
-				BPath	pPath(&daEntry);
-				char	path[256];
-				::memcpy(path, pPath.Path(), 256);
-			
+				if (strlen(ProjectPath.String()) == 0)
+				{
+					GetCurrentPath();
+				}
+				int  result;
+				char path[256];
+				::memcpy(path, ProjectPath.String(), 256);
 				char *the_url = strcat(path,"/docs/index.html");
 				//printf("%s\n",the_url); // debug
 				result = be_roster->Launch(URL_TYPE, 1, &the_url);

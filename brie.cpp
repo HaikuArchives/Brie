@@ -21,7 +21,7 @@ Released under the MIT license.
 #include <Screen.h>
 #include <ScrollView.h>
 #include <stdio.h>
-#include <string.h>
+#include <String.h>
 #include <TextControl.h>
 #include <Window.h>
 #include <View.h>
@@ -42,9 +42,9 @@ PropertiesWindow* ptrPropertiesWindow;
 ToolboxWindow*    ptrToolboxWindow;
 ProjectWindow*    ptrProjectWindow;
 FileWindow*       ptrFileWindow;
-char *ProjectName;
-char *ProjectPath;
-char *ProjectAuthor;
+BString ProjectName;
+BString ProjectPath;
+BString ProjectAuthor;
 
 // Default Window Size - even though we centre the form to the current screen size
 float FormTopDefault = 30;
@@ -55,7 +55,7 @@ float FormHeightDefault = 24;
 float ProjectFormTopDefault = 0;
 float ProjectFormLeftDefault = 0;
 float ProjectFormWidthDefault = 225;
-float ProjectFormHeightDefault = 105;
+float ProjectFormHeightDefault = 155;
 
 float ToolboxFormTopDefault = 0;
 float ToolboxFormLeftDefault = 0;
@@ -65,7 +65,7 @@ float ToolboxFormHeightDefault = 300;
 float PropertiesFormTopDefault = 0;
 float PropertiesFormLeftDefault = 0;
 float PropertiesFormWidthDefault = 225;
-float PropertiesFormHeightDefault = 300;
+float PropertiesFormHeightDefault = 250;
 
 BRect windowRect(FormTopDefault,FormLeftDefault,FormLeftDefault+FormWidthDefault,FormTopDefault+FormHeightDefault);
 BRect projectwindowRect(ProjectFormTopDefault,ProjectFormLeftDefault,ProjectFormLeftDefault+ProjectFormWidthDefault,ProjectFormTopDefault+ProjectFormHeightDefault);
@@ -82,16 +82,9 @@ BRIE::BRIE() : BApplication (APP_SIGNATURE)
 	toolboxWindow = new ToolboxWindow(toolboxwindowRect);
 	fileWindow = new FileWindow(windowRect);
 	
-	//app_info	daInfo;
-	//be_app->GetAppInfo(&daInfo);
-	//BEntry	daEntry(&daInfo.ref);
-	//daEntry.GetParent(&daEntry);
-	//BPath	pPath(&daEntry);
-	//char	apath[256];
-	//::memcpy(apath, pPath.Path(), 256);	
-	
-	ProjectName = "Untitled";
-	//ProjectPath = apath;
+	ProjectName.SetTo("Untitled");
+	ProjectPath.SetTo("");
+	ProjectAuthor.SetTo("");
 }
 // ---------------------------------------------------------------------------------------------------------- //
 

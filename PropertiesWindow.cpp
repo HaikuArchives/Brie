@@ -47,7 +47,7 @@ static void TopOfScreen(BWindow* w)
 	BRect	screenFrame = (BScreen(B_MAIN_SCREEN_ID).Frame());
 	BPoint 	pt;
 	pt.x = screenFrame.Width() - 350;
-	pt.y = 246;
+	pt.y = 296;
 	
 	if (screenFrame.Contains(pt))
 		w->MoveTo(pt);
