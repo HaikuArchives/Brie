@@ -260,7 +260,6 @@ void ProjectWindow::MessageReceived (BMessage *message)
 				BString prjname;
 				message->FindString(kProjectName, &prjname);
 				stvProjectName->SetText(prjname.String());
-				
 				//ShowProjectFiles(&ProjectFiles);
 			}
 			break;
