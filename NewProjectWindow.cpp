@@ -486,7 +486,7 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs(tmp,f);
 	fclose(f);
 	sprintf(tmp,"%s.bprj",AppName);
-	ptrFileWindow->SetProject(FileName,tmp);
+	//ptrFileWindow->SetProject(FileName,tmp);
 	//ptrProjectWindow->SetProjectTitle(AppName);
 	
 	//msg = new BMessage(SET_PROJECT_NAME);
@@ -547,16 +547,29 @@ void NewProjectWindow::CreateNewProject(void)
 	fclose(f);
 	
 	// 7) Send Messages to other Windows to update
-	BMessage msg(SET_PROJECT_NAME);
-	msg.AddString(kProjectName, AppName);
+	//BMessage msg(SET_PROJECT_NAME);
+	//msg.AddString(kProjectName, AppName);
 	//msg.AddBool(kNotSaved, true); // make this false later - true for debug purposes
-	BMessenger(ptrProjectWindow).SendMessage(&msg);
+	//BMessenger(ptrProjectWindow).SendMessage(&msg);
+	//BMessenger(ptrProjectWindow).SendMessage(new BMessage(SET_PROJECT_NAME));
+	
+	ProjectName = AppName;
 		
 	// 8) Show Tracker and/or Continue
-	sprintf(tmp,"Your Project \"%s\" has now been created.\n\nAll your files are located at:-\n\n%s/%s",AppName,apath,AppName);
+	ShowTracker(apath,AppName);
+}
+// ---------------------------------------------------------------------------------------------------------- //
+
+
+// ShowTracker -- Asks if you wish to view your project in the Tracker or not after creation
+void NewProjectWindow::ShowTracker(char apath[256],char AppName[256]) 
+{
+	char tmp[256];
+	char cmd[256];
 	BAlert *alert;
     long result;
-   
+    
+	sprintf(tmp,"Your Project \"%s\" has now been created.\n\nAll your files are located at:-\n\n%s/%s",AppName,apath,AppName);
     alert = new BAlert("", tmp, "   Tracker   ", "   Continue   ", NULL, B_WIDTH_FROM_WIDEST, B_WARNING_ALERT);
 	alert->SetShortcut(0, B_ESCAPE);
 	result = alert->Go();
@@ -564,10 +577,10 @@ void NewProjectWindow::CreateNewProject(void)
    	{
 		sprintf(cmd,"/boot/beos/system/Tracker %s/projects/%s &",apath,AppName);
 		system(cmd);	
-	}
-	//Quit();
-	Hide(); // change later
+	}	
 }
+// ---------------------------------------------------------------------------------------------------------- //
+
 
 // NewProjectWindow::MessageReceived -- receives messages
 void NewProjectWindow::MessageReceived (BMessage *message)
@@ -577,6 +590,7 @@ void NewProjectWindow::MessageReceived (BMessage *message)
 		case BTN_ADD:
 			{
 				CreateNewProject();
+				Hide(); // change later
 			}
 			break;
 		case BTN_CANCEL:

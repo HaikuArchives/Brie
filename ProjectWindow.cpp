@@ -117,7 +117,8 @@ void ProjectWindow::MessageReceived (BMessage *message)
 			const char *prjname;
 			message->FindString(kProjectName, &prjname);
 			(new BAlert("",prjname,"ProjectName"))->Go();
-			stvProjectName->SetText(prjname);	
+			stvProjectName->SetText(prjname);
+			(new BAlert("",ProjectName,"ProjectName"))->Go();	
 			}
 			break;
 		default:

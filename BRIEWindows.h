@@ -81,7 +81,6 @@ class FileWindow : public BWindow
     	virtual bool QuitRequested();
 	    virtual void MessageReceived(BMessage *message);
 	    void SetProject(const char *projectname, const char *shortprojectname);
-	 //   NewProjectWindow*			ptrNewProjectWindow;
 	private:
 		void InitWindow(void);
 	    FileWindowView* 	ptrFileWindowView;
@@ -99,9 +98,7 @@ class NewProjectWindow : public BWindow
     	NewProjectWindow(BRect frame);
 	    ~NewProjectWindow();
 	    virtual void MessageReceived(BMessage *message);
-	    
-	    FileWindow*     ptrFileWindow;
-	    ProjectWindow*  ptrProjectWindow;
+	    void ShowTracker(char apath[256],char AppName[256]);
 	private:
 		void InitWindow(void);
 		void CreateNewProject(void);
@@ -150,9 +147,10 @@ class HelpTipWindow : public BWindow
 		virtual void MessageReceived(BMessage *message);
 	private:
 		void InitWindow(void);
+		HelpTipView*	ptrHelpTipView;
+		
 		BButton			*btnOkay;
 	    BStringView		*stvTipTitle;
-		HelpTipView*	ptrHelpTipView;
 };
 
 #endif
