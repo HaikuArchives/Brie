@@ -15,7 +15,12 @@ Released under the MIT license.
 #include <Application.h>
 #include <Bitmap.h>
 #include <Button.h>
+#include <CheckBox.h>
+#include <Entry.h>
+#include <File.h>
+#include <FindDirectory.h>
 #include <Path.h>
+//#include <Roster.h>
 #include <Screen.h>
 #include <ScrollView.h>
 #include <stdio.h>
@@ -29,7 +34,7 @@ Released under the MIT license.
 #include "BRIEViews.h"
 #include "brieconstants.h"
 // Constants ---------------------------------------------------------------------------------------- //
-
+char *kDontShowAgain;
 // -------------------------------------------------------------------------------------------------- //
 
 
@@ -71,11 +76,13 @@ void HelpTipWindow::InitWindow(void)
 	r = Bounds(); // the whole view
 	
 	char TipTitle[256];
+	char TipDesc[256];
 	
 	switch(TipNumber)
 	{
 		case 1:
 			sprintf(TipTitle,"BRIE Tip #%i - %s",TipNumber,"Loading Projects");
+			sprintf(TipDesc,"%s","Please note we only support the loading of existing BRIE projects.");
 			break;
 		default:
 			strcat(TipTitle,"BRIE Helpful Tips");
@@ -95,10 +102,9 @@ void HelpTipWindow::InitWindow(void)
 		
 	//stvDescription = new BStringView(BRect(LeftMarginDescription, DescriptionTop, RightMargin, DescriptionTop+10), "Description", "BRIE is an IDE for rapid development of native BeOS applications.");
 	//stvDescription2 = new BStringView(BRect(LeftMarginDescription, DescriptionTop+16, RightMargin, DescriptionTop+26), "Description2", "All code is generated in C/C++ using the BeAPI plus a few extras.");
-	//stvDescription3 = new BStringView(BRect(LeftMarginDescription, DescriptionTop+28, RightMargin, DescriptionTop+38), "Description3", "We may look at supporting other languages such as Python/Bethon,");
-	//stvDescription4 = new BStringView(BRect(LeftMarginDescription, DescriptionTop+40, RightMargin, DescriptionTop+50), "Description4", "Pascal, BASIC, etc.");
-	//stvDescription5 = new BStringView(BRect(LeftMarginDescription, DescriptionTop+58, RightMargin, DescriptionTop+68), "Description5", "If you would like to help out with this project or have feedback,");
-	//stvDescription6 = new BStringView(BRect(LeftMarginDescription, DescriptionTop+70, RightMargin, DescriptionTop+80), "Description6", "please visit our web site or email us.");
+
+	//chkDontShowAgain = new BCheckBox(BRect frame, "chkDontShowAgain", "Don't Show Again.", new BMessage(CHK_DONTSHOWAGAIN), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+	chkDontShowAgain = new BCheckBox(BRect(LeftMargin+8,r.bottom - 25,RightMargin,r.bottom - 13),"chkDontShowAgain","Don't Show this Tip Again", new BMessage(CHK_DONTSHOWAGAIN), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
 		
   	btnOkay = new BButton(BRect (OkayLeftMargin,r.bottom-35,OkayLeftMargin+OkayButtonSize,r.bottom-15),"Okay","Okay", new BMessage(BTN_OKAY), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
   	btnOkay->MakeDefault(true);
@@ -114,21 +120,14 @@ void HelpTipWindow::InitWindow(void)
 
     AddChild(btnOkay);
 	AddChild(stvTipTitle);
+	AddChild(chkDontShowAgain);
     //AddChild(stvDescription);
     //AddChild(stvDescription2);
-    //AddChild(stvDescription3);
-    //AddChild(stvDescription4);
-    //AddChild(stvDescription5);
-    //AddChild(stvDescription6);
     
     stvTipTitle->AttachedToWindow();
-    
+    chkDontShowAgain->AttachedToWindow();
     //stvDescription->AttachedToWindow();
     //stvDescription2->AttachedToWindow();
-    //stvDescription3->AttachedToWindow();
-    //stvDescription4->AttachedToWindow();
-    //stvDescription5->AttachedToWindow();
-    //stvDescription6->AttachedToWindow();
     
 	// Create the Views
 	AddChild(ptrHelpTipView = new HelpTipView(r));
@@ -146,12 +145,46 @@ bool HelpTipWindow::QuitRequested()
 // -------------------------------------------------------------------------------------------------- //
 
 
+// HelpTipWindow::SaveTipSettings -- Saves whether you want to see the tip again or not
+void HelpTipWindow::SaveTipSettings(void)
+{
+	BMessage msg;
+		
+	switch (TipNumber) {
+		case 1:
+			kDontShowAgain = "Tip #1";
+			break;
+		case 2:
+			kDontShowAgain = "Tip #2";
+			break;
+	}
+	
+	msg.AddInt32(kDontShowAgain,chkDontShowAgain->Value());
+	
+	// check for existence of tip settings file
+	
+	// if exists search for kDontShowAgain - can we remove it ?
+	
+	// if it doesnt exist or it doesnt exist in our search
+    BPath path;
+    status_t result = find_directory(B_USER_SETTINGS_DIRECTORY,&path);
+    if (result == B_OK)
+    {
+	    path.Append("BRIE_Tip_Settings",true);
+    	BFile file(path.Path(),B_READ_WRITE | B_CREATE_FILE | B_ERASE_FILE);
+	    msg.Flatten(&file);
+	}    
+}
+// -------------------------------------------------------------------------------------------------- //
+
+
 // HelpTipWindow::MessageReceived -- receives messages
 void HelpTipWindow::MessageReceived (BMessage *message)
 {
 	switch(message->what)
 	{
 		case BTN_OKAY:
+			SaveTipSettings();
 			Hide(); // change later if necessary
 			break;
 		default:

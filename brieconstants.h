@@ -19,9 +19,12 @@ extern bool *kNotSaved;
 extern char *kProjectTitle;
 extern char *kProjectShortTitle;
 
+extern char *kDontShowAgain;
+
 // bmessages
 const uint32 SET_PROJECT_NAME = 'setp';
 const uint32 BTN_OKAY = 'BOky';
+const uint32 CHK_DONTSHOWAGAIN = 'chkd';
 
 // pointers to windows
 //extern FileWindow* ptrFileWindow;

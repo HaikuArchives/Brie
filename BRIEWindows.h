@@ -146,11 +146,13 @@ class HelpTipWindow : public BWindow
 		virtual bool QuitRequested();
 		virtual void MessageReceived(BMessage *message);
 	private:
+		void SaveTipSettings(void);
 		void InitWindow(void);
 		HelpTipView*	ptrHelpTipView;
 		
 		BButton			*btnOkay;
 	    BStringView		*stvTipTitle;
+	    BCheckBox		*chkDontShowAgain;
 };
 
 #endif
