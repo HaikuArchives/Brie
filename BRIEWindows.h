@@ -17,7 +17,6 @@ Released under the MIT license.
 #include "URLView.h"
 
 class BPictureButton;
-
 class FileWindowView; 
 class ProjectWindowView;
 class PropertiesWindowView;
@@ -25,7 +24,6 @@ class ToolboxWindowView;
 class NewProjectWindowView;
 class AboutWindowView;
 class BRIEIconView;
-class BPictureButton;
 
 class ProjectWindow : public BWindow
 {
@@ -67,7 +65,6 @@ class AboutWindow : public BWindow
 	    BStringView	       *stvDescription4;	    
 	    BStringView	       *stvDescription5;	
 	    BStringView		   *stvDescription6;
-	    
 };
 
 
@@ -95,7 +92,6 @@ class NewProjectWindow : public BWindow
     	NewProjectWindow(BRect frame);
 	    ~NewProjectWindow();
 	    virtual void MessageReceived(BMessage *message);
-	    
 	private:
 		void InitWindow(void);
 		void CreateNewProject(void);
@@ -117,11 +113,11 @@ class PropertiesWindow : public BWindow
 	    ~PropertiesWindow();
     	virtual bool QuitRequested();
 	    virtual void MessageReceived(BMessage *message);
-	    
 	private:
 		void InitWindow(void);
 	    PropertiesWindowView* ptrPropertiesWindowView;
 };
+
 
 class ToolboxWindow : public BWindow
 {
@@ -130,7 +126,6 @@ class ToolboxWindow : public BWindow
 	    ~ToolboxWindow();
     	virtual bool QuitRequested();
 	    virtual void MessageReceived(BMessage *message);
-	    
 	private:
 		void InitWindow(void);
 	    ToolboxWindowView* ptrToolboxWindowView;
