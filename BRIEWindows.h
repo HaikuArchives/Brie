@@ -66,6 +66,7 @@ class FileWindow : public BWindow
 	    FileWindowView* aFileWindowView;
 	    BMenuBar  *menubar;
 	    AboutWindow         *aboutWindow;
+	    BPictureButton      *btnNewProject;
 };
 
 class ProjectWindow : public BWindow

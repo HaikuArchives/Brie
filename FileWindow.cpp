@@ -14,6 +14,7 @@ Released under the MIT license.
 // Includes -------------------------------------------------------------------------------------------------- //
 #include <Alert.h>
 #include <Application.h>
+#include <Bitmap.h>
 #include <Button.h>
 #include <Entry.h>
 #include <File.h>
@@ -23,6 +24,8 @@ Released under the MIT license.
 #include <Menu.h> 
 #include <MenuItem.h>
 #include <Path.h>
+#include <Picture.h>
+#include <PictureButton.h>
 #include <Screen.h>
 #include <ScrollView.h>
 #include <StatusBar.h>
@@ -32,6 +35,11 @@ Released under the MIT license.
 #include <TextControl.h>
 #include <Window.h>
 #include <View.h>
+
+// Toolbar
+#include "brie_tool_new.h"
+#include "brie_tool_new_inverse.h"
+//#include "brie_tool_open.h"
 
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
@@ -54,26 +62,6 @@ const uint32 MENU_WIN_PROJ = 'Mwpj';
 const uint32 MENU_HELP_MANUAL = 'Mhma';
 const uint32 MENU_HELP_ABOUT = 'Mhab';
 // ---------------------------------------------------------------------------------------------------------- //
-
-/*rgb_color bluebar = {50, 150, 255, 0};
-rgb_color yellowbar = {255, 255, 0, 0};
-rgb_color orangebar = {255, 150, 50, 0};
-rgb_color redbar = {255, 0, 0, 0};
-rgb_color greenbar = {0, 255, 0, 0};*/
-
-// CenterWindowOnScreen -- Centers the BWindow to the Current Screen
-/*static void CenterWindowOnScreen(BWindow* w)
-{
-	BRect	screenFrame = (BScreen(B_MAIN_SCREEN_ID).Frame());
-	BPoint 	pt;
-	pt.x = screenFrame.Width()/2 - w->Bounds().Width()/2;
-	pt.y = screenFrame.Height()/2 - w->Bounds().Height()/2;
-
-	if (screenFrame.Contains(pt))
-		w->MoveTo(pt);
-}*/
-// ---------------------------------------------------------------------------------------------------------- //
-
 
 // TopOfScreen -- Places the BWindow starting from the top of the Current Screen
 static void TopOfScreen(BWindow* w)
@@ -171,7 +159,46 @@ void FileWindow::InitWindow(void)
     menu->AddItem(new BMenuItem("About BRIE ...", new BMessage(MENU_HELP_ABOUT), NULL));
     menubar->AddItem(menu);
     
+    // Sikosis's Toolbar ;)
+    BRect rToolbar;
+    int ToolbarButtonMargin = 4;
+    int ToolbarButtonWidth = 36;
+	
+	// New Email Button
+  	BRect BitmapFrame (BRect(0,0,31,31));
+  	BPicture *tmpBPicture;
+  	BPicture *tmpBPicture2;
+  	BPicture *tmpBPicture3;
+  	BView    *tmpBPictureView = new BView(BitmapFrame, "tmpBPictureView",B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+  	//rgb_color toolbar_button_background = { 255, 255, 255, 0 };
+  	
+  	AddChild(tmpBPictureView);
+  	
+  	BBitmap *newprojectpicture = new BBitmap(BitmapFrame,B_RGB32);
+	newprojectpicture->SetBits(brienew,3072,0,B_RGB32);
+  	
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(newprojectpicture,BPoint(3,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *newprojectpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	newprojectpicture_state2->SetBits(brienewinverse,3072,0,B_RGB32);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(newprojectpicture_state2,BPoint(3,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnNewProject = new BPictureButton(BRect (ToolbarButtonMargin,rMenuBar.bottom+2,ToolbarButtonMargin+ToolbarButtonWidth,rMenuBar.bottom+34),"New Project",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_NEW_PROJECT),B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth;
+    
     // Add Controls
+    AddChild(btnNewProject);
+    
     
 	// Add the Drawing View
 	AddChild(aFileWindowView = new FileWindowView(r));
@@ -191,7 +218,7 @@ bool FileWindow::QuitRequested()
 // FileWindow::MessageReceived -- receives messages
 void FileWindow::MessageReceived (BMessage *message)
 {
-	BRect aboutwindowRect(0,0,340,230);
+	BRect aboutwindowRect(0,0,370,230);
 	
 	switch(message->what)
 	{

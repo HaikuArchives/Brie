@@ -13,4 +13,7 @@ Released under the MIT license.
 
 //const uint32 PERFORM_PING = 'PPng';
 
+const uint32 TOOLBAR_BTN_NEW_PROJECT = 'Tbnp';
+
+
 #endif
