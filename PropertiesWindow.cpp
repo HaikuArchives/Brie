@@ -154,7 +154,7 @@ void PropertiesWindow::AddPropertyItem(BString propname, BString propvalue)
 	tmp.SetTo(propname.String());
 	tmp.Append(": ");
 	tmp.Append(propvalue.String());
-	printf("AddPropertyItem - %s\n",tmp.String()); // debug
+	printf("AddPropertyItem - %s\n\n",tmp.String()); // debug
 	lsvProperties->AddItem(new BStringItem(tmp.String()));
 	newselection = lsvProperties->CountItems() - 1;
 	lsvProperties->Select(newselection,true);

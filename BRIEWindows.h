@@ -185,6 +185,7 @@ class HelpTipWindow : public BWindow
 	    BStringView		*stvTipTitle;
 	    BStringView     *stvTipText;
 	    BStringView     *stvTipText2;
+	    BStringView     *stvTipText3;
 	    BCheckBox		*chkDontShowAgain;
 };
 

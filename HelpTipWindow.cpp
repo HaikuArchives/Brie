@@ -24,7 +24,7 @@ Released under the MIT license.
 #include <Screen.h>
 #include <ScrollView.h>
 #include <stdio.h>
-#include <string.h>
+#include <String.h>
 #include <TextControl.h>
 #include <Window.h>
 #include <View.h>
@@ -79,6 +79,7 @@ void HelpTipWindow::InitWindow(void)
 	char TipTitle[256];
 	char TipText[150];
 	char TipText2[150];
+	BString TipText3;
 	
 	switch(TipNumber)
 	{
@@ -87,6 +88,12 @@ void HelpTipWindow::InitWindow(void)
 			sprintf(TipText,"%s","Please note we only support the loading of existing BRIE");
 			sprintf(TipText2,"%s","BRIE projects.");
 			break;
+		case 2:
+			sprintf(TipTitle,"BRIE Tip #%i - %s",TipNumber,"New Project Name");
+			sprintf(TipText,"%s","Try giving your New Project a name better than Untitled.");
+			sprintf(TipText2,"%s","");
+			TipText3.SetTo("C'mon ... Surely, your life can't be that dull. ;)");
+			break;	
 		default:
 			strcat(TipTitle,"BRIE Helpful Tips");
 			break;	
@@ -107,6 +114,7 @@ void HelpTipWindow::InitWindow(void)
 		
 	stvTipText = new BStringView(BRect(LeftMarginText, TextTop, RightMargin, TextTop+10), "Text", TipText);
 	stvTipText2 = new BStringView(BRect(LeftMarginText, TextTop+13, RightMargin, TextTop+23), "Text2", TipText2);
+	stvTipText3 = new BStringView(BRect(LeftMarginText, TextTop+28, RightMargin, TextTop+38), "Text3", TipText3.String());
 	
 	chkDontShowAgain = new BCheckBox(BRect(LeftMargin+8,r.bottom - 25,RightMargin,r.bottom - 13),"chkDontShowAgain","Don't Show this Tip Again", new BMessage(CHK_DONTSHOWAGAIN), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
 		
@@ -127,11 +135,13 @@ void HelpTipWindow::InitWindow(void)
 	AddChild(stvTipTitle);
 	AddChild(stvTipText);
     AddChild(stvTipText2);
+    AddChild(stvTipText3);
     
     stvTipTitle->AttachedToWindow();
     chkDontShowAgain->AttachedToWindow();
     stvTipText->AttachedToWindow();
     stvTipText2->AttachedToWindow();
+    stvTipText3->AttachedToWindow();
     
 	// Create the Views
 	AddChild(ptrHelpTipView = new HelpTipView(r));

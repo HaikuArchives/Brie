@@ -503,17 +503,28 @@ bool FileWindow::QuitRequested()
 
 void FileWindow::CreateJamFile(void)
 {
-/*	FILE *f;
+	FILE *f;
 	char tmp[256];
 	char FileName[256];
 	int x;
-	printf("Count: %i // Compare: %i\n\n",ProjectName.Length,ProjectName.Compare("Untitled"));
-	if (ProjectName.Length !=0)
+	
+	printf("ProjectName.Compare - %i\n",ProjectName.Compare("Untitled")); // debug
+	
+	if (ProjectName.Length() !=0 && ProjectName.Compare("Untitled") != 0)
 	{
-		if (ProjectName.Compare("Untitled") != 1) {
-			printf("CreateJam - %s\n\n",ProjectName.String());
-		}	
-	}*/
+		printf("CreateJam - %s\n\n",ProjectName.String());
+		sprintf(FileName,"%s/projects/%s/Jamfile",ProjectPath.String(),ProjectName.String());
+		f = fopen(FileName,"w");
+		sprintf(tmp,"## BeOS Jamfile for %s ##\n",ProjectName.String());
+		x = fputs(tmp,f);
+		sprintf(tmp,"## Author: %s\n",ProjectAuthor.String());
+		x = fputs(tmp,f);
+		x = fputs("## Created by BRIE (http://brie.sf.net/)\n\n",f);
+		x = fputs("## Coming Soon - Once I figure jam out ;)\n\n",f);
+		fclose(f);
+	} else {
+		(new BAlert("","You have to create a Project first before you can create a Jamfile.","Okay"))->Go();	
+	}
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -525,7 +536,7 @@ void FileWindow::CreateMakeFile(void)
 	char FileName[256];
 	int x;
 	
-	if (ProjectName.Length() !=0)
+	if (ProjectName.Length() !=0 && ProjectName.Compare("Untitled") != 0)
 	{
 		printf("CreateMake - %s\n\n",ProjectName.String());
 		sprintf(FileName,"%s/projects/%s/makefile",ProjectPath.String(),ProjectName.String());
@@ -587,7 +598,7 @@ void FileWindow::CreateMakeFile(void)
 
 void FileWindow::CompileGCC(void)
 {
-	/*if (ProjectName.Length() !=0)
+	if (ProjectName.Length() !=0 && ProjectName.Compare("Untitled") != 0)
 	{
 		// check to see if the makefile exists
 		char cmd[256];
@@ -614,22 +625,22 @@ void FileWindow::CompileGCC(void)
 		x = fputs("make clean\n",f);
 		x = fputs("make\n",f);
 		x = fputs("cd obj.x86\n",f);
-		sprintf(tmp,"%s\n",ProjectPath.String(),ProjectName.String());
+		sprintf(tmp,"%s\n",ProjectName.String());
 		x = fputs(tmp,f);
 		fclose(f);
-		//sprintf(cmd,"Terminal -t \"Compiling %s\" %s",FileName);
-		//printf("now run make %s\n",cmd); //debug
+		sprintf(cmd,"Terminal -t \"Compiling %s\" %s",FileName,ProjectName.String());
+		printf("now run make %s\n",cmd); //debug
 		system(FileName);
 	} else {
 		(new BAlert("","You have to create a Project first before you can Compile/Run.","Okay"))->Go();	
-	}*/
+	}
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
 
 void FileWindow::SaveProject(void)
 {
-	if (ProjectName.Length() !=0)
+	if (ProjectName.Length() !=0 && ProjectName.Compare("Untitled") != 0)
 	{
 		FILE *f;
 		char tmp[256];
@@ -650,13 +661,7 @@ void FileWindow::SaveProject(void)
 		x = fputs(tmp,f);
 		x = fputs("### Files\n",f);
 		fclose(f);
-	/*	sprintf(tmp,"%s.cpp\n",prjname);
-		x = fputs(tmp,f);
-		sprintf(tmp,"%sWindow.cpp\n",prjname);
-		x = fputs(tmp,f);
-		sprintf(tmp,"%sView.cpp\n",prjname);
-		x = fputs(tmp,f);
-		fclose(f);*/
+
 		/* BListItem *item; 
    int32 selected; 
    while ( (selected = myListView->CurrentSelection(i)) >= 0 ) { 
@@ -673,19 +678,9 @@ void FileWindow::SaveProject(void)
 		//	x = fputs(tmp,f);
 		//}
 		//Unlock();		
-/*		### Properties:TestWindow.cpp
-0
-0
-100
-100
-###*/
-		
 		
 		// need to loop the array or whatever we store the list
 		// of cpp files in
-		
-		
-		
 	} else {
 		(new BAlert("","You have to create a Project first before you can Save.","Okay"))->Go();	
 	}
@@ -806,12 +801,9 @@ void FileWindow::MessageReceived (BMessage *message)
 		case TOOLBAR_BTN_COMPILE:		
 		case MENU_TOOLS_COMPILE:
 			{
-				if (ProjectPath.Length() == 0)
-				{
-					GetCurrentPath();
-				}
+				if (ProjectPath.Length() == 0) { GetCurrentPath(); }
 				if (ProjectAuthor.Length() == 0) { ProjectAuthor.SetTo("DeveloperName"); }
-				//Save
+				//Save Project First
 				ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text());
 				CompileGCC();
 			}	

@@ -95,7 +95,7 @@ void NewProjectWindow::InitWindow(void)
 	} else {
 		// New
 		txtNewProject = new BTextControl(BRect(LeftMargin,NewProjectTop,r.right-10,NewProjectTop+10),
-						"txtNewProject","Project Name:","Test",new BMessage(TXT_NEW_PROJECT),
+						"txtNewProject","Project Name:","Untitled",new BMessage(TXT_NEW_PROJECT),
 						B_FOLLOW_LEFT | B_FOLLOW_TOP , B_WILL_DRAW | B_NAVIGABLE);
 	}
 	txtNewProject->SetDivider(88);
@@ -106,7 +106,7 @@ void NewProjectWindow::InitWindow(void)
 	    	        B_WILL_DRAW | B_NAVIGABLE);
 	} else {
 		txtAuthor = new BTextControl(BRect(LeftMargin,NewProjectTop+25,r.right-10,NewProjectTop+35),
-		            "txtAuthor","Author:","Author",new BMessage(TXT_AUTHOR), B_FOLLOW_LEFT | B_FOLLOW_TOP,
+		            "txtAuthor","Author:","DeveloperName",new BMessage(TXT_AUTHOR), B_FOLLOW_LEFT | B_FOLLOW_TOP,
 	    	        B_WILL_DRAW | B_NAVIGABLE);
 	
 	}    	        
@@ -374,8 +374,8 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs("\tBRect	screenFrame = (BScreen(B_MAIN_SCREEN_ID).Frame());\n\n",f);
 	x = fputs("\tfloat FormTopDefault = 0;\n",f);
 	x = fputs("\tfloat FormLeftDefault = 0;\n",f);
-	x = fputs("\tfloat FormWidthDefault = screenFrame.Width() - 300;\n",f);
-	x = fputs("\tfloat FormHeightDefault = screenFrame.Height() - 300;\n",f);
+	x = fputs("\tfloat FormWidthDefault = screenFrame.Width() - 500;\n",f);
+	x = fputs("\tfloat FormHeightDefault = screenFrame.Height() - 500;\n",f);
 	sprintf(tmp,"\tBRect %sWindowRect(FormTopDefault,FormLeftDefault,FormLeftDefault+FormWidthDefault,FormTopDefault+FormHeightDefault);\n\n",AppName);
 	x = fputs(tmp,f);
 	sprintf(tmp,"\tptr%sWindow = new %sWindow(%sWindowRect);\n",AppName,AppName,AppName);
@@ -581,7 +581,9 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs(tmp,f);
 	sprintf(tmp,"ProjectDir=%s/projects/%s\n",apath,AppName);
 	x = fputs(tmp,f);
-	sprintf(tmp,"Author=%s",txtAuthor->Text());
+	sprintf(tmp,"Author=%s\n",txtAuthor->Text());
+	x = fputs(tmp,f);
+	sprintf(tmp,"Language=%s\n","C/C++"); // might change later ...
 	x = fputs(tmp,f);
 	x = fputs("### Files\n",f);
 	sprintf(tmp,"%s.cpp\n",AppName);
@@ -619,14 +621,6 @@ void NewProjectWindow::CreateNewProject(void)
 	ProgName.Append("View.cpp");
 	pfmsg.AddString(kProjectFile, ProgName.String());
 	BMessenger(ptrProjectWindow).SendMessage(&pfmsg);
-	
-	///sprintf(tmp,"%s.cpp",AppName);
-	//pfmsg.AddString(kProjectFile, tmp);
-	//sprintf(tmp,"%sWindow.cpp",AppName);
-	//pfmsg.AddString(kProjectFile, tmp);
-	//sprintf(tmp,"%sView.cpp",AppName);
-	//pfmsg.AddString(kProjectFile, tmp);
-	//BMessenger(ptrProjectWindow).SendMessage(&pfmsg);
 	
 	// 6) Create makefile for compilation
 	sprintf(FileName,"%s/projects/%s/makefile",apath,AppName);
@@ -748,19 +742,29 @@ void NewProjectWindow::MessageReceived (BMessage *message)
 {
 	switch(message->what)
 	{
-		case BTN_ADD:
+		case BTN_ADD: // aka Create or Save
 			{
-				if (PanelType == 1) {
-					CreateExistingProject();
+				//printf ("txtNewProject->Text() - %s\n\n",txtNewProject->Text());
+				BString tmp = "Untitled";
+				if (tmp.Compare(txtNewProject->Text()) != 0)
+				{
+					if (PanelType == 1) {
+						CreateExistingProject();
+					} else {
+						CreateNewProject();
+					}
+					Lock();
+					Quit();
 				} else {
-					CreateNewProject();
+					// Tip 2 - New Project Name - something other than untitled ;)
+					TipNumber = 2;
+					new HelpTipWindow(BRect(0.0, 0.0, 350.0, 120.0));
 				}
-				Lock();
-				Quit();
 			}
 			break;
 		case BTN_CANCEL:
 			{
+				// This Window is no longer needed.
 				Lock();
 		    	Quit();
 		    }
@@ -771,5 +775,7 @@ void NewProjectWindow::MessageReceived (BMessage *message)
 	}
 }
 // ---------------------------------------------------------------------------------------------------------- //
+
+
 
 
