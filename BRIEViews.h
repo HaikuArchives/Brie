@@ -66,6 +66,7 @@ class NewProjectWindowView : public BView
 {
 	public:
 		NewProjectWindowView(BRect frame);
+		virtual void Draw(BRect drawRect);
 };
 
 class HelpTipView : public BView
