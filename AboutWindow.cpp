@@ -67,28 +67,41 @@ AboutWindow::~AboutWindow()
 // AboutWindow::InitWindow
 void AboutWindow::InitWindow(void)
 {	
+	BRect r;
+	r = Bounds(); // the whole view
+	
 	int LeftMarginTitles = 55;
 	int LeftMargin = 6;
-	int RightMargin = 340;
+	float RightMargin = r.right;
 	int DescriptionTop = 80;
 	int OkayButtonSize = 130;
 	int OkayLeftMargin = (RightMargin / 2) - (OkayButtonSize / 2);
 	int WebSiteSize = 126;
 	int WebSiteMargin = (RightMargin / 2) - (WebSiteSize / 2);
-	BRect r;
-	r = Bounds(); // the whole view
 	
 	
-	stvAppName = new BStringView(BRect(LeftMarginTitles, 16, LeftMarginTitles+260, 40), "AppName", "BeOS Rapid Integrated Environment (BRIE)");
-	stvAppName->SetFontSize(12.0);
+	rgb_color AppNameFontColor = { 0,0,0,0 };	
+	
+	stvAppName = new BStringView(BRect(LeftMarginTitles, 16, LeftMarginTitles+300, 40), "AppName", "BeOS Rapid Integrated Environment (BRIE)");
+	stvAppName->SetFont(be_bold_font);
+	stvAppName->SetFontSize(18.0);
+	stvAppName->SetHighColor(AppNameFontColor);
+	
+	
+	/*
+	SetFontAndColor(int32 start, int32 finish, 
+      const BFont *font, uint32 properties = B_FONT_ALL, rgb_color *color = NULL) 
+
+	SetFontAndColor(const BFont *font, uint32 properties = B_FONT_ALL, rgb_color *color = NULL)
+	*/
 	
 	stvVersion = new BStringView(BRect(LeftMarginTitles+2, r.top+43, 97, r.top+53), "Version:", "Version:");
-	urlVersion = new URLView(BRect(LeftMarginTitles+53, r.top+43, 160, r.top+53), "urlVersion", "0.2", "http://brie.sf.net/");
+	urlVersion = new URLView(BRect(LeftMarginTitles+53, r.top+43, 160, r.top+53), "urlVersion", "0.3", "http://brie.sf.net/");
 	
 	stvEmail = new BStringView(BRect(LeftMarginTitles+2, r.top+57, 103, r.top+67), "Coded by", "Coded by");
 	urlEmail = new URLView(BRect(LeftMarginTitles+53, r.top+57, LeftMarginTitles+85, r.top+67), "urlEmail", "Sikosis", "beos@gravity24hr.com");
 	stvEmail2 = new BStringView(BRect(LeftMarginTitles+85, r.top+57, RightMargin, r.top+67), "emailname", "(Phil Greenway)");
-	//urlEmail->SetHoverEnabled(false);
+
 	urlEmail->AddAttribute("META:name", "Phil Greenway");
 	urlEmail->AddAttribute("META:nickname", "Sikosis");
 	urlEmail->AddAttribute("META:company", "Gravity 24 Hour");
@@ -96,13 +109,12 @@ void AboutWindow::InitWindow(void)
 	urlEmail->AddAttribute("META:state", "QLD");
 	urlEmail->AddAttribute("META:country", "Australia");
   	
-	stvDescription = new BStringView(BRect(LeftMargin, DescriptionTop, RightMargin, DescriptionTop+10), "Description", "BRIE is a native BeOS ...");
+	stvDescription = new BStringView(BRect(LeftMargin, DescriptionTop, RightMargin, DescriptionTop+10), "Description", "BRIE is a IDE environment for rapid development of native BeOS applications.");
 	stvDescription2 = new BStringView(BRect(LeftMargin, DescriptionTop+12, RightMargin, DescriptionTop+22), "Description2", "");
-	stvDescription3 = new BStringView(BRect(LeftMargin, DescriptionTop+26, RightMargin, DescriptionTop+36), "Description3", "");
+	stvDescription3 = new BStringView(BRect(LeftMargin, DescriptionTop+26, RightMargin, DescriptionTop+36), "Description3", "All code is generated in C/C++ using the BeAPI plus a few extras.");
 	stvDescription4 = new BStringView(BRect(LeftMargin, DescriptionTop+38, RightMargin, DescriptionTop+48), "Description4", "");
-	stvDescription5 = new BStringView(BRect(LeftMargin, DescriptionTop+50, RightMargin, DescriptionTop+60), "Description5", "");
-	stvDescription6 = new BStringView(BRect(LeftMargin, DescriptionTop+68, RightMargin, DescriptionTop+78), "Description6", "");
-	//urlMDR = new URLView(BRect(LeftMargin+145, DescriptionTop+68, LeftMargin+164, DescriptionTop+78), "urlMDR", "MDR", "http://bebits.com/app/2289");
+	stvDescription5 = new BStringView(BRect(LeftMargin, DescriptionTop+50, RightMargin, DescriptionTop+60), "Description5", "If you would like to help out with this project or have feedback,");
+	stvDescription6 = new BStringView(BRect(LeftMargin, DescriptionTop+68, RightMargin, DescriptionTop+78), "Description6", "please visit our web site or email us.");
 		
   	btnOkay = new BButton(BRect (OkayLeftMargin,r.bottom-60,OkayLeftMargin+OkayButtonSize,r.bottom-30),"Okay","Okay", new BMessage(BTN_OKAY), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
   	btnOkay->MakeDefault(true);
@@ -110,14 +122,13 @@ void AboutWindow::InitWindow(void)
   	
   	// create icon for About Window
   	BRect IconFrame (BRect(0,0,31,31));
-  	BRect IconViewLocation (BRect(LeftMargin+2,r.top+10,LeftMargin+38,r.top+55));
+  	BRect IconViewLocation (BRect(LeftMargin+2,r.top+10,LeftMargin+48,r.top+55));
   	BBitmap *brieicon = new BBitmap(IconFrame,B_RGB32);
-	brieicon->SetBits(brieicon,3072,0,B_RGB32); 
+	brieicon->SetBits(brieimageicon,3072,0,B_RGB32); 
 	BRIEIconView* IconView = new BRIEIconView(brieicon,IconViewLocation);
 	IconView->SetDrawingMode(B_OP_OVER);
 	AddChild(IconView);
 
-    //AddChild(urlMDR);
 	AddChild(urlWebSite);
     AddChild(btnOkay);
     AddChild(urlEmail);
@@ -131,6 +142,8 @@ void AboutWindow::InitWindow(void)
     AddChild(stvDescription4);
     AddChild(stvDescription5);
     AddChild(stvDescription6);
+    
+    stvAppName->AttachedToWindow();
     
     stvDescription->AttachedToWindow();
     stvDescription2->AttachedToWindow();

@@ -6,7 +6,7 @@ ProjectWindow by Sikosis
 
 Released under the MIT license.
 
-(C) 2002 http://brie.sf.net/
+(C) 2002-2003 http://brie.sf.net/
 
 */
 
@@ -24,7 +24,7 @@ Released under the MIT license.
 #include <MenuItem.h>
 #include <Path.h>
 #include <Screen.h>
-#include <ScrollView.h>
+#include <StringView.h>
 #include <StatusBar.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,9 +33,10 @@ Released under the MIT license.
 #include <Window.h>
 #include <View.h>
 
+//#include "brie.h"
+//#include "brieconstants.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
-#include "brieconstants.h"
 
 // Constants ------------------------------------------------------------------------------------------------- //
 // ---------------------------------------------------------------------------------------------------------- //
@@ -46,12 +47,10 @@ static void TopOfScreen(BWindow* w)
 	BRect	screenFrame = (BScreen(B_MAIN_SCREEN_ID).Frame());
 	BPoint 	pt;
 	pt.x = screenFrame.Width() - 350;
-	//pt.x = 450; //screenFrame.Width()/2 - w->Bounds().Width()/2;
-	pt.y = 110; //screenFrame.Height()/2 - w->Bounds().Height()/2;
+	pt.y = 110;
 
 	if (screenFrame.Contains(pt))
 		w->MoveTo(pt);
-
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -63,14 +62,15 @@ ProjectWindow::ProjectWindow(BRect frame) : BWindow (frame, "Project Window", B_
 	TopOfScreen(this);
 	Show();
 }
+// ---------------------------------------------------------------------------------------------------------- //
 
 
 // ProjectWindow - Destructor
 ProjectWindow::~ProjectWindow()
 {
-	//delete browsePanel;
 	exit(0);
 }
+// ---------------------------------------------------------------------------------------------------------- //
 
 
 // ProjectWindow::InitWindow -- Initialization Commands here
@@ -78,13 +78,17 @@ void ProjectWindow::InitWindow(void)
 {
 	BRect r;
 	r = Bounds();
-	
 	r.top = 20;
+	int LeftMargin = 6;
+	float RightMargin = r.right;
+	int TopMargin = 6;
 	
     // Add Controls
+    stvProjectName = new BStringView(BRect(LeftMargin, TopMargin, RightMargin, TopMargin+10), "Project Name", "Untitled");
     
 	// Add the Drawing View
-	AddChild(aProjectWindowView = new ProjectWindowView(r));
+	AddChild(ptrProjectWindowView = new ProjectWindowView(r));
+	AddChild(stvProjectName);
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -96,6 +100,16 @@ bool ProjectWindow::QuitRequested()
    Minimize(true);
    Hide(); 
    return true;
+}
+// ---------------------------------------------------------------------------------------------------------- //
+
+
+//void ProjectWindow::SetProjectTitle(char title[256])
+void ProjectWindow::SetProjectTitle(const char *title)
+{
+	//(new BAlert("",title,"debug"))->Go(); // debug
+	printf("%p\n", stvProjectName->Text());
+	//stvProjectName->SetText("test"); // segment violated :(
 }
 // ---------------------------------------------------------------------------------------------------------- //
 

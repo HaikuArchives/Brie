@@ -15,5 +15,7 @@ Released under the MIT license.
 
 const uint32 TOOLBAR_BTN_NEW_PROJECT = 'Tbnp';
 
+const char projtitle[]="BeOS Rapid Integrated Environment v";
+const char projversion[]="0.3";
 
 #endif

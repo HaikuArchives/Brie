@@ -4,7 +4,7 @@ BRIE Header by Sikosis
 
 Released under the MIT license.
 
-(C) 2002 http://brie.gravity24hr.com/
+(C) 2002-2003 http://brie.gravity24hr.com/
 
 */
 
@@ -12,9 +12,6 @@ Released under the MIT license.
 #define __BRIE_H__
 
 #include "BRIEWindows.h"
-//#include "ProjectWindow.h"
-//#include "ToolboxWindow.h"
-//#include "PropertiesWindow.h"
 
 extern const char *APP_SIGNATURE;
 
@@ -25,9 +22,8 @@ class BRIE : public BApplication
 	    virtual void MessageReceived(BMessage *message);
 	    virtual void ReadyToRun (void);
 	    virtual void RefsReceived (BMessage *message);
-	    
 	private:
-		FileWindow			*fileWindow;
+	    FileWindow			*fileWindow;
 		ProjectWindow		*projectWindow;
 		ToolboxWindow		*toolboxWindow;
 		PropertiesWindow	*propertiesWindow;

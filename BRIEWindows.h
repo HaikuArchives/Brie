@@ -6,7 +6,7 @@ BRIEWindows Header by Sikosis
 
 Released under the MIT license.
 
-(C) 2002 http://brie.sf.net/
+(C) 2002-2003 http://brie.sf.net/
 
 */
 
@@ -24,13 +24,27 @@ class NewProjectWindowView;
 class AboutWindowView;
 class BRIEIconView;
 
+class ProjectWindow : public BWindow
+{
+	public:
+    	ProjectWindow(BRect frame);
+	    ~ProjectWindow();
+    	virtual bool QuitRequested();
+	    virtual void MessageReceived(BMessage *message);
+	    void SetProjectTitle(const char *title);
+	private:
+		BStringView *stvProjectName;
+		void InitWindow(void);
+	    ProjectWindowView* ptrProjectWindowView;
+};
+
+
 class AboutWindow : public BWindow
 {
 	public:
 		AboutWindow(BRect frame);
 		~AboutWindow();
 		virtual void MessageReceived(BMessage *message);
-		
 	private:
 		void InitWindow(void);
 	    AboutWindowView*   ptrAboutWindowView;
@@ -53,6 +67,7 @@ class AboutWindow : public BWindow
 	    
 };
 
+
 class FileWindow : public BWindow
 {
 	public:
@@ -60,27 +75,37 @@ class FileWindow : public BWindow
 	    ~FileWindow();
     	virtual bool QuitRequested();
 	    virtual void MessageReceived(BMessage *message);
-	    
+	    void SetProject(const char *projectname, const char *shortprojectname);
 	private:
 		void InitWindow(void);
-	    FileWindowView* aFileWindowView;
-	    BMenuBar  *menubar;
+	    FileWindowView* 	ptrFileWindowView;
+	    FileWindow*			ptrFileWindow;
+	    BMenuBar  			*menubar;
 	    AboutWindow         *aboutWindow;
 	    BPictureButton      *btnNewProject;
 };
 
-class ProjectWindow : public BWindow
+
+class NewProjectWindow : public BWindow
 {
 	public:
-    	ProjectWindow(BRect frame);
-	    ~ProjectWindow();
-    	virtual bool QuitRequested();
+    	NewProjectWindow(BRect frame);
+	    ~NewProjectWindow();
 	    virtual void MessageReceived(BMessage *message);
 	    
 	private:
 		void InitWindow(void);
-	    ProjectWindowView* aProjectWindowView;
+		void CreateNewProject(void);
+	    NewProjectWindowView*		ptrNewProjectWindowView;
+	    FileWindow*					ptrFileWindow;
+	    ProjectWindow*				ptrProjectWindow;
+	    	    
+	    BButton         		    *btnAdd;
+	    BButton         		    *btnCancel;
+	    BTextControl                *txtNewProject;
+	    BTextControl                *txtAuthor;
 };
+
 
 class PropertiesWindow : public BWindow
 {
@@ -92,7 +117,7 @@ class PropertiesWindow : public BWindow
 	    
 	private:
 		void InitWindow(void);
-	    PropertiesWindowView* aPropertiesWindowView;
+	    PropertiesWindowView* ptrPropertiesWindowView;
 };
 
 class ToolboxWindow : public BWindow
@@ -105,21 +130,7 @@ class ToolboxWindow : public BWindow
 	    
 	private:
 		void InitWindow(void);
-	    ToolboxWindowView* aToolboxWindowView;
+	    ToolboxWindowView* ptrToolboxWindowView;
 };
-
-class NewProjectWindow : public BWindow
-{
-	public:
-    	NewProjectWindow(BRect frame);
-	    ~NewProjectWindow();
-    	virtual bool QuitRequested();
-	    virtual void MessageReceived(BMessage *message);
-	    
-	private:
-		void InitWindow(void);
-	    NewProjectWindowView* aNewProjectWindowView;
-};
-
 
 #endif

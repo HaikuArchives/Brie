@@ -82,11 +82,10 @@ void PropertiesWindow::InitWindow(void)
 {
 	BRect r;
 	r = Bounds();
-
     // Add Controls
     
 	// Add the Drawing View
-	AddChild(aPropertiesWindowView = new PropertiesWindowView(r));
+	AddChild(ptrPropertiesWindowView = new PropertiesWindowView(r));
 }
 // ---------------------------------------------------------------------------------------------------------- //
 

@@ -26,6 +26,7 @@ Released under the MIT license.
 #include <Path.h>
 #include <Picture.h>
 #include <PictureButton.h>
+#include <Roster.h>
 #include <Screen.h>
 #include <ScrollView.h>
 #include <StatusBar.h>
@@ -41,6 +42,7 @@ Released under the MIT license.
 #include "brie_tool_new_inverse.h"
 //#include "brie_tool_open.h"
 
+#include "brie.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
 #include "brieconstants.h"
@@ -63,44 +65,41 @@ const uint32 MENU_HELP_MANUAL = 'Mhma';
 const uint32 MENU_HELP_ABOUT = 'Mhab';
 // ---------------------------------------------------------------------------------------------------------- //
 
+// Globals
+char CurrentProjectName[256];
+
 // TopOfScreen -- Places the BWindow starting from the top of the Current Screen
 static void TopOfScreen(BWindow* w)
 {
 	BRect	screenFrame = (BScreen(B_MAIN_SCREEN_ID).Frame());
 	BPoint 	pt;
-	pt.x = 5; //screenFrame.Width()/2 - w->Bounds().Width()/2;
-	pt.y = 30; //screenFrame.Height()/2 - w->Bounds().Height()/2;
-	//w->Bounds().Width()
-
+	pt.x = 5;
+	pt.y = 30;
 	if (screenFrame.Contains(pt))
 		w->MoveTo(pt);
 	
 	int NewWidth = (int) screenFrame.Width() - 130;
-	//char tmp[250];
-	//sprintf(tmp,"NewWidth is %i",NewWidth);
-	//(new BAlert("",tmp,"debug"))->Go();
 	w->ResizeTo(NewWidth,50); // resize to the current screen size
-		
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
 
 // FileWindow - Constructor
-FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.2", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
+FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.3", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
 	InitWindow();
-	//CenterWindowOnScreen(this);
 	TopOfScreen(this);
 	Show();
 }
+// ---------------------------------------------------------------------------------------------------------- //
 
 
 // BRIEWindow - Destructor
 FileWindow::~FileWindow()
 {
-	//delete browsePanel;
 	exit(0);
 }
+// ---------------------------------------------------------------------------------------------------------- //
 
 
 // FileWindow::InitWindow -- Initialization Commands here
@@ -160,7 +159,7 @@ void FileWindow::InitWindow(void)
     menubar->AddItem(menu);
     
     // Sikosis's Toolbar ;)
-    BRect rToolbar;
+    //BRect rToolbar;
     int ToolbarButtonMargin = 4;
     int ToolbarButtonWidth = 36;
 	
@@ -168,7 +167,7 @@ void FileWindow::InitWindow(void)
   	BRect BitmapFrame (BRect(0,0,31,31));
   	BPicture *tmpBPicture;
   	BPicture *tmpBPicture2;
-  	BPicture *tmpBPicture3;
+  	//BPicture *tmpBPicture3;
   	BView    *tmpBPictureView = new BView(BitmapFrame, "tmpBPictureView",B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
   	//rgb_color toolbar_button_background = { 255, 255, 255, 0 };
   	
@@ -199,9 +198,32 @@ void FileWindow::InitWindow(void)
     // Add Controls
     AddChild(btnNewProject);
     
-    
 	// Add the Drawing View
-	AddChild(aFileWindowView = new FileWindowView(r));
+	AddChild(ptrFileWindowView = new FileWindowView(r));
+	
+	// Check for Existence of Project directory and create it if necessary
+	app_info	daInfo;
+	be_app->GetAppInfo(&daInfo);
+	BEntry	daEntry(&daInfo.ref);
+	daEntry.GetParent(&daEntry);
+	BPath	pPath(&daEntry);
+	char	apath[256];
+	::memcpy(apath, pPath.Path(), 256);	
+	
+	char cmd[256];
+	sprintf(cmd,"mkdir %s/projects",apath);
+	system(cmd);
+}
+// ---------------------------------------------------------------------------------------------------------- //
+
+void FileWindow::SetProject(const char *projectname, const char *shortprojectname)
+{
+	char newtitle[256];
+	sprintf(CurrentProjectName,"%s",projectname);
+	sprintf(newtitle,"%s%s - [ %s ]",projtitle,projversion,shortprojectname);
+	//(new BAlert("",newtitle,"debug"))->Go();
+	//fileWindow->SetTitle(newtitle);
+	SetTitle(newtitle);
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -226,8 +248,11 @@ void FileWindow::MessageReceived (BMessage *message)
 			//browsePanel->SetPanelDirectory(txtCVSRoot->Text());
 			//browsePanel->Show();
 			break;	*/
+		case TOOLBAR_BTN_NEW_PROJECT:	
+		case MENU_FILE_NEW:
+			new NewProjectWindow(BRect(367.0, 268.0, 657.0, 500.0));
+			break;	
 		case MENU_HELP_ABOUT:
-			//(new BAlert("","BeOS Rapid Integrated Environment (BRIE) v0.2\n\nCoded by Sikosis\n\nhttp://brie.sf.net/\n\nReleased under the MIT License.","Okay"))->Go();
 			aboutWindow = new AboutWindow(aboutwindowRect);
 			break;	
 		case MENU_FILE_PRINT:

@@ -1,12 +1,12 @@
 /*
 
-BRIEView Header
+BRIEViews Header
 
 Coded by Sikosis
 
 Released under the MIT license.
 
-(C) 2002 http://brie.sf.net/
+(C) 2002-2003 http://brie.sf.net/
 
 */
 
@@ -52,5 +52,10 @@ class AboutWindowView : public BView
     	AboutWindowView(BRect frame);
 };
 
+class NewProjectWindowView : public BView
+{
+	public:
+		NewProjectWindowView(BRect frame);
+};
 
 #endif

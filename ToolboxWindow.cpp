@@ -6,7 +6,7 @@ ToolboxWindow by Sikosis
 
 Released under the MIT license.
 
-(C) 2002 http://brie.sf.net/
+(C) 2002-2003 http://brie.sf.net/
 
 */
 
@@ -45,18 +45,14 @@ static void TopOfScreen(BWindow* w)
 {
 	BRect	screenFrame = (BScreen(B_MAIN_SCREEN_ID).Frame());
 	BPoint 	pt;
-	pt.x = 5; //screenFrame.Width()/2 - w->Bounds().Width()/2;
-	pt.y = 110; //screenFrame.Height()/2 - w->Bounds().Height()/2;
+	pt.x = 5;
+	pt.y = 110;
 
 	if (screenFrame.Contains(pt))
 		w->MoveTo(pt);
 	
 	int BottomToolbox = (int) screenFrame.Height() - 314;
-	/*char tmp[250];
-	sprintf(tmp,"BottomToolbox is %i",BottomToolbox);
-	(new BAlert("",tmp,"debug"))->Go();*/
 	w->ResizeTo(w->Bounds().Width(),BottomToolbox);
-	
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -82,11 +78,10 @@ void ToolboxWindow::InitWindow(void)
 {
 	BRect r;
 	r = Bounds();
-
     // Add Controls
     
 	// Add the Drawing View
-	AddChild(aToolboxWindowView = new ToolboxWindowView(r));
+	AddChild(ptrToolboxWindowView = new ToolboxWindowView(r));
 }
 // ---------------------------------------------------------------------------------------------------------- //
 

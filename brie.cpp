@@ -4,7 +4,7 @@ BRIE by the Sikosis
 
 Released under the MIT license.
 
-(C) 2002 http://brie.gravity24hr.com/
+(C) 2002-2003 http://brie.gravity24hr.com/
 */
 
 // Includes -------------------------------------------------------------------------------------------------- //
@@ -62,6 +62,7 @@ BRect toolboxwindowRect(ToolboxFormTopDefault,ToolboxFormLeftDefault,ToolboxForm
 BRect propertieswindowRect(PropertiesFormTopDefault,PropertiesFormLeftDefault,PropertiesFormLeftDefault+PropertiesFormWidthDefault,PropertiesFormTopDefault+PropertiesFormHeightDefault);
 // ---------------------------------------------------------------------------------------------------------- //
 
+
 // BRIE -- constructor for BRIE Class
 BRIE::BRIE() : BApplication (APP_SIGNATURE)
 {
@@ -106,6 +107,7 @@ void BRIE::RefsReceived (BMessage *message)
 
 }
 // ---------------------------------------------------------------------------------------------------------- //
+
 
 // BRIE Main
 int main(void)
