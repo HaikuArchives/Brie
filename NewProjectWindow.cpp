@@ -554,6 +554,7 @@ void NewProjectWindow::CreateNewProject(void)
 	//BMessenger(ptrProjectWindow).SendMessage(new BMessage(SET_PROJECT_NAME));
 	
 	ProjectName = AppName;
+	ProjectPath = apath;
 		
 	// 8) Show Tracker and/or Continue
 	ShowTracker(apath,AppName);
@@ -590,11 +591,15 @@ void NewProjectWindow::MessageReceived (BMessage *message)
 		case BTN_ADD:
 			{
 				CreateNewProject();
-				Hide(); // change later
+				Lock();
+				Quit();
 			}
 			break;
 		case BTN_CANCEL:
-		    Quit();
+			{
+				Lock();
+		    	Quit();
+		    }
 			break;
 		default:
 			BWindow::MessageReceived(message);

@@ -83,8 +83,12 @@ class FileWindow : public BWindow
 	    void SetProject(const char *projectname, const char *shortprojectname);
 	private:
 		void InitWindow(void);
+	    void CompileGCC(void);
+	    void CreateMakeFile(void);
 	    FileWindowView* 	ptrFileWindowView;
+		
 	    FileWindow*			ptrFileWindow;
+	    
 	    BMenuBar  			*menubar;
 	    AboutWindow         *aboutWindow;
 	    BPictureButton      *btnNewProject;
@@ -152,6 +156,8 @@ class HelpTipWindow : public BWindow
 		
 		BButton			*btnOkay;
 	    BStringView		*stvTipTitle;
+	    BStringView     *stvTipText;
+	    BStringView     *stvTipText2;
 	    BCheckBox		*chkDontShowAgain;
 };
 

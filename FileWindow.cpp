@@ -62,6 +62,8 @@ const uint32 MENU_TOOLS_OPTIONS = 'Mtop';
 const uint32 MENU_TOOLS_COMPILE = 'Mtgc';
 const uint32 MENU_TOOLS_CREATEJAM = 'Mtja';
 const uint32 MENU_WIN_PROJ = 'Mwpj';
+const uint32 MENU_WIN_PROP = 'Mprp';
+const uint32 MENU_WIN_TOOL = 'Mwtl';
 const uint32 MENU_HELP_MANUAL = 'Mhma';
 const uint32 MENU_HELP_ABOUT = 'Mhab';
 
@@ -156,6 +158,8 @@ void FileWindow::InitWindow(void)
     
     menu = new BMenu("Window");
 	menu->AddItem(new BMenuItem("Show/Hide Project", new BMessage(MENU_WIN_PROJ), '0'));
+	menu->AddItem(new BMenuItem("Show/Hide Properties", new BMessage(MENU_WIN_PROP), '1'));
+	menu->AddItem(new BMenuItem("Show/Hide Toolbox", new BMessage(MENU_WIN_TOOL), '2'));
     menubar->AddItem(menu);
     		    
     menu = new BMenu("Help");
@@ -262,8 +266,40 @@ void FileWindow::SetProject(const char *projectname, const char *shortprojectnam
 // FileWindow::QuitRequested -- Post a message to the app to quit
 bool FileWindow::QuitRequested()
 {
-   be_app->PostMessage(B_QUIT_REQUESTED); // change to sendmessage
+   be_app->PostMessage(B_QUIT_REQUESTED);
    return true;
+}
+// ---------------------------------------------------------------------------------------------------------- //
+
+
+void FileWindow::CreateMakeFile(void)
+{
+	(new BAlert("","Coming Soon","debug"))->Go();
+}
+// ---------------------------------------------------------------------------------------------------------- //
+
+
+void FileWindow::CompileGCC(void)
+{
+	if (ProjectName != "Untitled")
+	{
+		// check to see if the makefile exists
+		char cmd[256];
+		sprintf(cmd,"%s/projects/%s/makefile",ProjectPath,ProjectName);
+		FILE *f;	
+    	if (!(f = fopen(cmd, "r"))) {
+			//(new BAlert("","Found","debug"))->Go();
+		} else {
+			(new BAlert("","No Makefile Found.\n\nWe MUST create a new one.","Okay"))->Go();
+			CreateMakeFile();
+		}
+		fclose(f);
+		
+		// now run make
+		sprintf(cmd,"Terminal %s/projects/%s/make",ProjectPath,ProjectName);
+		(new BAlert("",cmd,"cmd"))->Go();
+		system(cmd);
+	}
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -306,9 +342,56 @@ void FileWindow::MessageReceived (BMessage *message)
 			(new BAlert("","Printing is a low priority feature.\n\nComing Soon to a Printer near you ..."," Soonish "))->Go();
 			break;	
 		case MENU_FILE_QUIT:
-			//SaveConfig();
-			QuitRequested();
+			{
+				//SaveConfig();
+				Lock();
+				QuitRequested();
+			}	
+			break;
+		case MENU_TOOLS_COMPILE:
+			{
+				//SaveProject();
+				//Lock();
+				CompileGCC();
+				//UnLock();
+			}	
 			break;	
+		case MENU_WIN_PROJ:
+			{
+				if (ShowWinProj == 1)
+				{
+					ptrProjectWindow->Hide();
+					ShowWinProj = 0;
+				} else {
+					ptrProjectWindow->Show();
+					ShowWinProj = 1;
+				}	
+			}
+			break;
+		case MENU_WIN_PROP:
+			{
+				if (ShowWinProp == 1)
+				{
+					ptrPropertiesWindow->Hide();
+					ShowWinProp = 0;
+				} else {
+					ptrPropertiesWindow->Show();
+					ShowWinProp = 1;
+				}	
+			}
+			break;
+		case MENU_WIN_TOOL:
+			{
+				if (ShowWinTool == 1)
+				{
+					ptrToolboxWindow->Hide();
+					ShowWinTool = 0;
+				} else {
+					ptrToolboxWindow->Show();
+					ShowWinTool = 1;
+				}	
+			}
+			break;						
 		default:
 			BWindow::MessageReceived(message);
 			break;

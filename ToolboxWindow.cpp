@@ -28,10 +28,10 @@ Released under the MIT license.
 #include <Window.h>
 #include <View.h>
 
-//#include "brie.h"
+#include "brie.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
-//#include "brieconstants.h"
+#include "brieconstants.h"
 // ---------------------------------------------------------------------------------------------------------- //
 
 
@@ -55,6 +55,7 @@ static void TopOfScreen(BWindow* w)
 // ToolboxWindow - Constructor
 ToolboxWindow::ToolboxWindow(BRect frame) : BWindow (frame, "Toolbox", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
+	ptrToolboxWindow = this;
 	InitWindow();
 	TopOfScreen(this);
 	Show();
@@ -65,7 +66,7 @@ ToolboxWindow::ToolboxWindow(BRect frame) : BWindow (frame, "Toolbox", B_TITLED_
 // ToolboxWindow - Destructor
 ToolboxWindow::~ToolboxWindow()
 {
-	//exit(0);
+	exit(0);
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -86,10 +87,7 @@ void ToolboxWindow::InitWindow(void)
 // ToolboxWindow::QuitRequested -- Post a message to the app to quit
 bool ToolboxWindow::QuitRequested()
 {
-   //be_app->PostMessage(B_QUIT_REQUESTED);
-   return true;
-   //Minimize(true);
-   //Hide();
+	return true;
 }
 // ---------------------------------------------------------------------------------------------------------- //
 

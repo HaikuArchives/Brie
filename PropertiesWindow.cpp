@@ -33,6 +33,7 @@ Released under the MIT license.
 #include <Window.h>
 #include <View.h>
 
+#include "brie.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
 #include "brieconstants.h"
@@ -64,6 +65,7 @@ static void TopOfScreen(BWindow* w)
 // PropertiesWindow - Constructor
 PropertiesWindow::PropertiesWindow(BRect frame) : BWindow (frame, "Properties", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
+	ptrPropertiesWindow = this;
 	InitWindow();
 	TopOfScreen(this);
 	Show();

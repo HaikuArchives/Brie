@@ -30,6 +30,7 @@ Released under the MIT license.
 #include <View.h>
 
 #include "drbe.h"
+#include "brie.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
 #include "brieconstants.h"
@@ -52,7 +53,7 @@ static void CenterWindowOnScreen(BWindow* w)
 
 
 // HelpTipWindow - Constructor
-HelpTipWindow::HelpTipWindow(BRect frame) : BWindow (frame, "BRIE Help Tips", B_TITLED_WINDOW, B_NORMAL_WINDOW_FEEL , 0)
+HelpTipWindow::HelpTipWindow(BRect frame) : BWindow (frame, "BRIE Help Tips", B_MODAL_WINDOW, B_NORMAL_WINDOW_FEEL , 0)
 {
 	InitWindow();
 	CenterWindowOnScreen(this);
@@ -76,13 +77,15 @@ void HelpTipWindow::InitWindow(void)
 	r = Bounds(); // the whole view
 	
 	char TipTitle[256];
-	char TipDesc[256];
+	char TipText[150];
+	char TipText2[150];
 	
 	switch(TipNumber)
 	{
 		case 1:
 			sprintf(TipTitle,"BRIE Tip #%i - %s",TipNumber,"Loading Projects");
-			sprintf(TipDesc,"%s","Please note we only support the loading of existing BRIE projects.");
+			sprintf(TipText,"%s","Please note we only support the loading of existing BRIE");
+			sprintf(TipText2,"%s","BRIE projects.");
 			break;
 		default:
 			strcat(TipTitle,"BRIE Helpful Tips");
@@ -91,6 +94,8 @@ void HelpTipWindow::InitWindow(void)
 		
 	float LeftMarginTitles = 55;
 	float LeftMargin = 6;
+	float LeftMarginText = LeftMarginTitles;
+	float TextTop = 40;
 	float RightMargin = r.right;
 	float OkayButtonSize = 70;
 	float OkayLeftMargin = RightMargin - OkayButtonSize - 10;
@@ -100,10 +105,9 @@ void HelpTipWindow::InitWindow(void)
 	stvTipTitle->SetFont(be_bold_font);
 	stvTipTitle->SetHighColor(TipTitleFontColor);
 		
-	//stvDescription = new BStringView(BRect(LeftMarginDescription, DescriptionTop, RightMargin, DescriptionTop+10), "Description", "BRIE is an IDE for rapid development of native BeOS applications.");
-	//stvDescription2 = new BStringView(BRect(LeftMarginDescription, DescriptionTop+16, RightMargin, DescriptionTop+26), "Description2", "All code is generated in C/C++ using the BeAPI plus a few extras.");
-
-	//chkDontShowAgain = new BCheckBox(BRect frame, "chkDontShowAgain", "Don't Show Again.", new BMessage(CHK_DONTSHOWAGAIN), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+	stvTipText = new BStringView(BRect(LeftMarginText, TextTop, RightMargin, TextTop+10), "Text", TipText);
+	stvTipText2 = new BStringView(BRect(LeftMarginText, TextTop+13, RightMargin, TextTop+23), "Text2", TipText2);
+	
 	chkDontShowAgain = new BCheckBox(BRect(LeftMargin+8,r.bottom - 25,RightMargin,r.bottom - 13),"chkDontShowAgain","Don't Show this Tip Again", new BMessage(CHK_DONTSHOWAGAIN), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
 		
   	btnOkay = new BButton(BRect (OkayLeftMargin,r.bottom-35,OkayLeftMargin+OkayButtonSize,r.bottom-15),"Okay","Okay", new BMessage(BTN_OKAY), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
@@ -119,15 +123,15 @@ void HelpTipWindow::InitWindow(void)
 	AddChild(IconView);
 
     AddChild(btnOkay);
-	AddChild(stvTipTitle);
 	AddChild(chkDontShowAgain);
-    //AddChild(stvDescription);
-    //AddChild(stvDescription2);
+	AddChild(stvTipTitle);
+	AddChild(stvTipText);
+    AddChild(stvTipText2);
     
     stvTipTitle->AttachedToWindow();
     chkDontShowAgain->AttachedToWindow();
-    //stvDescription->AttachedToWindow();
-    //stvDescription2->AttachedToWindow();
+    stvTipText->AttachedToWindow();
+    stvTipText2->AttachedToWindow();
     
 	// Create the Views
 	AddChild(ptrHelpTipView = new HelpTipView(r));
@@ -139,7 +143,7 @@ void HelpTipWindow::InitWindow(void)
 bool HelpTipWindow::QuitRequested()
 {
 	//be_app->PostMessage(B_QUIT_REQUESTED);
-	Hide();
+	//Hide();
 	return true;
 }
 // -------------------------------------------------------------------------------------------------- //
@@ -185,7 +189,8 @@ void HelpTipWindow::MessageReceived (BMessage *message)
 	{
 		case BTN_OKAY:
 			SaveTipSettings();
-			Hide(); // change later if necessary
+			Lock();
+			Quit();
 			break;
 		default:
 			BWindow::MessageReceived(message);
