@@ -1,10 +1,12 @@
 /*
 
-BRIE - AboutWindow by Sikosis
+AboutWindow
+
+Coded by Sikosis
 
 Released under the MIT license.
 
-(C)2002-2004
+(C)2004 http://sikosis.com/
 
 */
 
@@ -13,7 +15,6 @@ Released under the MIT license.
 #include <Application.h>
 #include <Bitmap.h>
 #include <Button.h>
-#include <Font.h>
 #include <Roster.h>
 #include <Screen.h>
 #include <stdio.h>
@@ -25,9 +26,12 @@ Released under the MIT license.
 #include <View.h>
 
 #include "AboutConstants.h"
-#include "BRIEWindows.h"
-#include "BRIEViews.h"
+//#include "BRIEWindows.h"
+//#include "BRIEViews.h"
+#include "AboutWindow.h"
+#include "AboutWindowView.h"
 // ---------------------------------------------------------------------------------------------------------- //
+
 
 // CenterWindowOnScreen -- Centers the BWindow to the Current Screen
 static void CenterWindowOnScreen(BWindow* w)

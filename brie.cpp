@@ -71,7 +71,7 @@ float ToolboxFormHeightDefault = 300;
 float PropertiesFormTopDefault = 0;
 float PropertiesFormLeftDefault = 0;
 float PropertiesFormWidthDefault = 225;
-float PropertiesFormHeightDefault = 200; // was 250
+float PropertiesFormHeightDefault = 150; // 200 // was 250
 
 BRect windowRect(FormTopDefault,FormLeftDefault,FormLeftDefault+FormWidthDefault,FormTopDefault+FormHeightDefault);
 BRect projectwindowRect(ProjectFormTopDefault,ProjectFormLeftDefault,ProjectFormLeftDefault+ProjectFormWidthDefault,ProjectFormTopDefault+ProjectFormHeightDefault);

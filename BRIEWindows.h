@@ -24,8 +24,6 @@ class ProjectWindowView;
 class PropertiesWindowView;
 class ToolboxWindowView;
 class NewProjectWindowView;
-class AboutWindowView;
-class BRIEIconView;
 class HelpTipView;
 class InputBoxView;
 class MenuCreatorView;
@@ -50,19 +48,6 @@ class ProjectWindow : public BWindow
 	    //BListView       	*lsvProjectFiles;
 	    BPictureButton      *btnAddFileToProjectList;
 	    BPictureButton      *btnRemoveFileFromProjectList;
-};
-
-
-class AboutWindow : public BWindow
-{
-	public:
-		AboutWindow(BRect frame);
-		virtual void MessageReceived(BMessage *message);
-	private:
-		void InitWindow(void);
-	    AboutWindowView*   ptrAboutWindowView;
-	    BRIEIconView*      ptrBRIEIconView;
-
 };
 
 
@@ -93,7 +78,7 @@ class FileWindow : public BWindow
 	    BMenuItem			*menucreatejamfile;
 	    BMenuItem			*menucompilegcc;
 	    BMenuItem			*menucreatedox;
-	    AboutWindow         *aboutWindow;
+	   // AboutWindow         *aboutWindow;
 	    BPictureButton      *btnNewProject;
 	    BPictureButton      *btnLoadProject;
 	    BPictureButton      *btnSaveProject;

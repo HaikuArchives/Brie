@@ -6,7 +6,7 @@ Author: Sikosis
 
 Released under the MIT license.
 
-(C)2003 BRIE (http://brie.sf.net/)
+(C)2003-2004 BRIE (http://brie.sf.net/)
 
 */
 
@@ -83,19 +83,33 @@ void HelpTipWindow::InitWindow(void)
 	
 	switch(TipNumber)
 	{
-		case 1:
-			sprintf(TipTitle,"BRIE Tip #%i - %s",TipNumber,"Loading Projects");
-			sprintf(TipText,"%s","Please note we only support the loading of existing BRIE");
-			sprintf(TipText2,"%s","BRIE projects.");
+		case 1: 
+			{
+				sprintf(TipTitle,"BRIE Tip #%i - %s",TipNumber,"Loading Projects");
+				sprintf(TipText,"%s","Please note we only support the loading of existing BRIE");
+				sprintf(TipText2,"%s","BRIE projects.");
+			}
 			break;
 		case 2:
-			sprintf(TipTitle,"BRIE Tip #%i - %s",TipNumber,"New Project Name");
-			sprintf(TipText,"%s","Try giving your New Project a name better than Untitled.");
-			sprintf(TipText2,"%s","");
-			TipText3.SetTo("C'mon ... Surely, your life can't be that dull. ;)");
-			break;	
+			{
+				sprintf(TipTitle,"BRIE Tip #%i - %s",TipNumber,"New Project Name");
+				sprintf(TipText,"%s","Try giving your New Project a name better than Untitled.");
+				sprintf(TipText2,"%s","");
+				TipText3.SetTo("C'mon ... Surely, your life can't be that dull. ;)");
+			}
+			break;
+		case 3:
+			{
+				sprintf(TipTitle,"BRIE Tip #%i - %s",TipNumber,"No Project Name");
+				sprintf(TipText,"%s","You must create a New Project first.");
+				sprintf(TipText2,"%s","");
+				TipText3.SetTo("NB: Click on File, then New Project or use the first icon on the Toolbar.");
+			}
+			break;			
 		default:
-			strcat(TipTitle,"BRIE Helpful Tips");
+			{
+				strcat(TipTitle,"BRIE Helpful Tips");
+			}
 			break;	
 	}
 		

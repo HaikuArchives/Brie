@@ -6,7 +6,7 @@ FileWindow by Sikosis
 
 Released under the MIT license.
 
-(C) 2002-2003 http://brie.sf.net/
+(C) 2002-2004 http://brie.sf.net/
 
 */
 
@@ -41,6 +41,9 @@ Released under the MIT license.
 
 // Toolbar
 #include "Bitmaps-Toolbar.h"
+
+// About Window
+#include "AboutWindow.h"
 
 #include "brie.h"
 #include "BRIEWindows.h"
@@ -101,11 +104,19 @@ static void TopOfScreen(BWindow* w)
 
 
 // FileWindow - Constructor
-FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.38", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
+FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment vX.XX", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
 	ptrFileWindow = this;
 	InitWindow();
 	TopOfScreen(this);
+	
+	// new title
+	BString WindowCaption;
+	WindowCaption.SetTo(projtitle);
+	WindowCaption.Append(" ");
+	WindowCaption.Append(projversion);
+	printf ("WindowCaption is %s\n\n",WindowCaption.String()); // debug
+	SetTitle(WindowCaption.String());
 	
 	// add load settings here
 	Show();
@@ -726,7 +737,7 @@ void FileWindow::GetCurrentPath(void)
 // FileWindow::MessageReceived -- receives messages
 void FileWindow::MessageReceived (BMessage *message)
 {
-	BRect aboutwindowRect(0,0,370,230);
+	
 	NewProjectWindow* ptrNewProjectWindow;
 	
 	switch(message->what)
@@ -807,10 +818,7 @@ void FileWindow::MessageReceived (BMessage *message)
 		case TOOLBAR_BTN_CREATEJAM:		
 		case MENU_TOOLS_CREATEJAM:
 			{
-				if (ProjectPath.Length() == 0)
-				{
-					GetCurrentPath();
-				}
+				if (ProjectPath.Length() == 0) { GetCurrentPath(); }
 				if (ProjectAuthor.Length() == 0) { ProjectAuthor.SetTo("DeveloperName"); }
 				ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text());
 				CreateJamFile();
@@ -822,8 +830,13 @@ void FileWindow::MessageReceived (BMessage *message)
 				if (ProjectPath.Length() == 0) { GetCurrentPath(); }
 				if (ProjectAuthor.Length() == 0) { ProjectAuthor.SetTo("DeveloperName"); }
 				//Save Project First
-				ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text());
-				CompileGCC();
+				//if (ptrProjectWindow == NULL) {
+				//	(new BAlert("","Can not Compile.\n\nYou must create a New Project first."," OK "))->Go();
+				//} else {
+				//	printf ("MENU_TOOLS_COMPILE: %s\n",ptrProjectWindow->stvProjectName->Text()); // debug
+				//	ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text()); // crashing - seg violation
+					CompileGCC();
+				//}
 			}	
 			break;	
 		case MENU_WIN_PROJ:
@@ -882,7 +895,9 @@ void FileWindow::MessageReceived (BMessage *message)
 			break;			
 		case MENU_HELP_ABOUT:
 			{
-				aboutWindow = new AboutWindow(aboutwindowRect);
+				AboutWindow* ptrAboutWindow;
+				BRect aboutwindowRect(0,0,370,230); 
+				ptrAboutWindow = new AboutWindow(aboutwindowRect);
 			}	
 			break;	
 		case SET_PROJECT_TITLE:

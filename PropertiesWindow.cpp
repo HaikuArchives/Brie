@@ -6,7 +6,7 @@ PropertiesWindowWindow by Sikosis
 
 Released under the MIT license.
 
-(C) 2002-2003 http://brie.sf.net/
+(C) 2002-2004 http://brie.sf.net/
 
 */
 
@@ -48,16 +48,17 @@ static void TopOfScreen(BWindow* w)
 	BPoint 	pt;
 	pt.x = screenFrame.Width() - 350;
 	pt.y = 296;
-	
+
 	if (screenFrame.Contains(pt))
 		w->MoveTo(pt);
 	
-	int BottomProp = (int) screenFrame.Height() - 400; // 450
+	int BottomProp = 269;
+	//int BottomProp = (int) screenFrame.Height() - 450; // 450
 	/*char tmp[250];
 	sprintf(tmp,"BottomProp is %i",BottomProp);
 	(new BAlert("",tmp,"debug"))->Go();*/
-	w->ResizeTo(225,BottomProp);
-	
+	//w->ResizeTo(225,BottomProp);
+	w->ResizeTo(w->Bounds().Width(),BottomProp);
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
