@@ -57,33 +57,12 @@ class AboutWindow : public BWindow
 {
 	public:
 		AboutWindow(BRect frame);
-		~AboutWindow();
 		virtual void MessageReceived(BMessage *message);
 	private:
 		void InitWindow(void);
 	    AboutWindowView*   ptrAboutWindowView;
 	    BRIEIconView*      ptrBRIEIconView;
-	    
-	    BButton            *btnOkay;
-	    //URLView			   *urlWebSite;
-	    //URLView			   *urlEmail;
-	    //URLView			   *urlVersion;
-	    //URLView            *urlMDR;
-	    
-	    BStringView        *stvMDR;
-	    BStringView        *stvWebSiteAddress;
-	    BStringView        *stvEmailAddress;
-	    BStringView        *stvVersionNumber;
-	    BStringView        *stvVersion;
-	    BStringView        *stvEmail;
-	    BStringView        *stvEmail2;
-	    BStringView        *stvAppName;
-	    BStringView	       *stvDescription;
-	    BStringView	       *stvDescription2;
-	    BStringView	       *stvDescription3;
-	    BStringView	       *stvDescription4;	    
-	    BStringView	       *stvDescription5;	
-	    BStringView		   *stvDescription6;
+
 };
 
 

@@ -86,9 +86,9 @@ void MenuCreator::InitWindow(void)
 {
 	BRect r;
 	r = Bounds();
-	int LeftMargin = 6;
-	float RightMargin = r.right;
-	int TopMargin = 11;
+	//int LeftMargin = 6;
+	//float RightMargin = r.right;
+	//int TopMargin = 11;
 	
     // Add Controls
     //stvProjectName = new BStringView(BRect(LeftMargin+1, TopMargin, RightMargin, TopMargin+10), "Project Name", "Untitled");
@@ -266,18 +266,32 @@ void MenuCreator::InitWindow(void)
     // end toolbar
 
     
-	lsvMenuItems = new BListView(BRect(6,29,r.right-6,r.bottom-6), "lsvMenuItems",
+	lsvMenuItems = new BListView(BRect(6,29,r.right-22,r.bottom-6), "lsvMenuItems",
 					  B_SINGLE_SELECTION_LIST, B_FOLLOW_LEFT | B_FOLLOW_TOP,
 					  B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS);
 	
 	lsvMenuItems->SetFont(be_bold_font);
 	lsvMenuItems->SetFontSize(14.0);
+	rgb_color white = { 0,0,0,0 };
+	lsvMenuItems->SetHighColor(white);
 	
-	//ptrMenuCreatorView->AddChild(new BScrollView("ScrollViewMenuItems",lsvMenuItems, B_FOLLOW_LEFT | B_FOLLOW_TOP, 0, true, false)); */
+	
+	
+/*	AddChild(lsvMenuItems);
+	
+	//
+    
+    AddChild(btnMenuRemove);
+	AddChild(btnMenuAdd);
+	AddChild(btnMenuUp);
+	AddChild(btnMenuDown);
+	AddChild(btnMenuLeft);
+	AddChild(btnMenuRight);*/
 		
 	// Add the Drawing View
     ptrMenuCreatorView = new MenuCreatorView(r);
-    ptrMenuCreatorView->AddChild(lsvMenuItems);
+    //ptrMenuCreatorView->AddChild(lsvMenuItems);
+    ptrMenuCreatorView->AddChild(new BScrollView("ScrollViewMenuItems",lsvMenuItems, B_FOLLOW_LEFT | B_FOLLOW_TOP, 0, false, true));
     ptrMenuCreatorView->AddChild(btnMenuAdd);
     ptrMenuCreatorView->AddChild(btnMenuRemove);
     ptrMenuCreatorView->AddChild(btnMenuUp);
@@ -350,7 +364,7 @@ void MenuCreator::MessageReceived (BMessage *message)
 			int32 selected;
 			int32 preselected;
 			selected = lsvMenuItems->CurrentSelection(0);
-			//printf("removing %i\n",selected);
+			printf("removing %i\n",selected);
 			lsvMenuItems->RemoveItem(selected);
 			preselected = selected - 1;
 			if (preselected < 0) {
@@ -362,13 +376,50 @@ void MenuCreator::MessageReceived (BMessage *message)
 		
 		case TOOLBAR_BTN_RIGHT_MENU_ITEM:
 		{
-			//int32 selected;
-			//BListItem *item;
-			//selected = lsvMenuItems->CurrentSelection(0);
+			int32 		selected;
+			selected = lsvMenuItems->CurrentSelection(0);
 			//item = ItemAt(selected);
-			// hrmm not sure how to get the current item as a BString
+			//BListItem* item = static_cast<BListItem *>(lsvMenuItems->ItemAt(lsvMenuItems->CurrentSelection()));
+			//((BStringItem *)lsvMenuItems->ItemAt(lsvMenuItems->CurrentSelection(0)))->Text()
 			
-			
+			if (selected >= 0) {
+				BString tmp, tmp2, firstchar;
+				tmp.SetTo(((BStringItem *)lsvMenuItems->ItemAt(selected))->Text());
+				//tmp.SetTo(((BStringItem *)lsvMenuItems->ItemAt(lsvMenuItems->CurrentSelection(0)))->Text());
+				long wordlength = tmp.Length() - 1;
+				tmp.CopyInto(tmp2, 1, wordlength);
+				//printf ("selected: %s and tmp2 is %s (%i)\n",tmp.String(), tmp2.String(), wordlength);
+				printf ("tmp2 is %s (%i)\n",tmp2.String(), wordlength);
+				tmp.CopyInto(firstchar,0,1);
+				if (firstchar == " ") {
+					// top level item - this is simple add ... to the front of tmp2 and replace item
+					tmp2.Prepend(" ...");
+					printf ("%s\n",tmp2.String());
+					
+					//BStringItem *newitem = new BStringItem(tmp2.String());
+					//newitem->SetText(tmp2.String());
+					lsvMenuItems->ReplaceItem(selected, new BStringItem(tmp2.String()));
+					
+					Lock();   //   this code causes the BListView to do 
+					lsvMenuItems->Invalidate();   //   completed stupid things. oh how i hate thee
+					Unlock();     
+					
+					lsvMenuItems->ScrollToSelection();
+					
+				} else {
+					if (firstchar == ".") {
+						// sub menu already
+					}
+				} 
+				
+				
+			} else {
+				// no item selected so let the user know
+				BAlert *alert;
+				alert = new BAlert("", "You have not selected a Menu Item.\n\nPlease select one from the list first.", " Okay ", NULL , NULL, B_WIDTH_FROM_WIDEST, B_WARNING_ALERT);
+				alert->Go();
+				lsvMenuItems->MakeFocus(true);
+			}
 		}
 			break;
 			

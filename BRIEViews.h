@@ -60,6 +60,30 @@ class AboutWindowView : public BView
 {
 	public:
     	AboutWindowView(BRect frame);
+    	virtual void MessageReceived(BMessage *message);
+    private:
+    		    
+	    BButton            *btnOkay;
+	    //URLView			   *urlWebSite;
+	    //URLView			   *urlEmail;
+	    //URLView			   *urlVersion;
+	    //URLView            *urlMDR;
+	    
+	    BStringView        *stvMDR;
+	    BStringView        *stvWebSiteAddress;
+	    BStringView        *stvEmailAddress;
+	    BStringView        *stvVersionNumber;
+	    BStringView        *stvVersion;
+	    BStringView        *stvEmail;
+	    BStringView        *stvEmail2;
+	    BStringView        *stvAppName;
+	    BTextView		   *txvDescription;
+	    BStringView	       *stvDescription;
+	    BStringView	       *stvDescription2;
+	    BStringView	       *stvDescription3;
+	    BStringView	       *stvDescription4;	    
+	    BStringView	       *stvDescription5;	
+	    BStringView		   *stvDescription6;
 };
 
 class MenuCreatorView : public BView

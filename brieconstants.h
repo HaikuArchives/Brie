@@ -40,7 +40,7 @@ extern InputBoxWindow*   ptrInputBoxWindow;
 
 // product name
 const char projtitle[]="BeOS Rapid Integrated Environment";
-const char projversion[]="v0.38";
+const char projversion[]="v0.4";
 
 extern BString  ProjectName;
 extern BString  ProjectPath; // this is the current directory where brie is minus the /projects/
