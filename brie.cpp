@@ -10,6 +10,7 @@ Released under the MIT license.
 // Includes -------------------------------------------------------------------------------------------------- //
 #include <Alert.h>
 #include <Application.h>
+#include <Bitmap.h>
 #include <Button.h>
 #include <Deskbar.h>
 #include <Entry.h>

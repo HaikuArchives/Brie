@@ -37,4 +37,20 @@ class ToolboxWindowView : public BView
     	ToolboxWindowView(BRect frame);
 };
 
+class BRIEIconView : public BView
+{
+	public:
+		BRIEIconView(BBitmap* bitmap, BRect r);
+		virtual void Draw(BRect drawRect);
+	private:
+		BBitmap* icon;
+};
+
+class AboutWindowView : public BView
+{
+	public:
+    	AboutWindowView(BRect frame);
+};
+
+
 #endif

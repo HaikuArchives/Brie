@@ -191,6 +191,8 @@ bool FileWindow::QuitRequested()
 // FileWindow::MessageReceived -- receives messages
 void FileWindow::MessageReceived (BMessage *message)
 {
+	BRect aboutwindowRect(0,0,340,230);
+	
 	switch(message->what)
 	{
 		/*case BTN_FILE_BROWSE:
@@ -198,7 +200,8 @@ void FileWindow::MessageReceived (BMessage *message)
 			//browsePanel->Show();
 			break;	*/
 		case MENU_HELP_ABOUT:
-			(new BAlert("","BeOS Rapid Integrated Environment (BRIE) v0.2\n\nCoded by Sikosis\n\nhttp://brie.sf.net/\n\nReleased under the MIT License.","Okay"))->Go();
+			//(new BAlert("","BeOS Rapid Integrated Environment (BRIE) v0.2\n\nCoded by Sikosis\n\nhttp://brie.sf.net/\n\nReleased under the MIT License.","Okay"))->Go();
+			aboutWindow = new AboutWindow(aboutwindowRect);
 			break;	
 		case MENU_FILE_PRINT:
 			(new BAlert("","Printing is a low priority feature.\n\nComing Soon to a Printer near you ..."," Soonish "))->Go();
