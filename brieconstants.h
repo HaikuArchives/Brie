@@ -35,10 +35,11 @@ extern PropertiesWindow* ptrPropertiesWindow;
 
 // product name
 const char projtitle[]="BeOS Rapid Integrated Environment";
-const char projversion[]="v0.32";
+const char projversion[]="v0.33";
 
 extern char *ProjectName; // globals ...
 extern char *ProjectPath; // this is the current directory where brie is /projects/
+extern char *ProjectAuthor;
 extern int  ShowWinProj;
 extern int  ShowWinProp;
 extern int  ShowWinTool;

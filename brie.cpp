@@ -44,6 +44,7 @@ ProjectWindow*    ptrProjectWindow;
 FileWindow*       ptrFileWindow;
 char *ProjectName;
 char *ProjectPath;
+char *ProjectAuthor;
 
 // Default Window Size - even though we centre the form to the current screen size
 float FormTopDefault = 30;

@@ -484,6 +484,15 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs(tmp,f);
 	sprintf(tmp,"ProjectDir=%s/projects/%s\n",apath,AppName);
 	x = fputs(tmp,f);
+	sprintf(tmp,"Author=%s",txtAuthor->Text());
+	x = fputs(tmp,f);
+	x = fputs("### Files\n",f);
+	sprintf(tmp,"%s.cpp\n",AppName);
+	x = fputs(tmp,f);
+	sprintf(tmp,"%sWindow.cpp\n",AppName);
+	x = fputs(tmp,f);
+	sprintf(tmp,"%sView.cpp\n",AppName);
+	x = fputs(tmp,f);
 	fclose(f);
 	sprintf(tmp,"%s.bprj",AppName);
 	//ptrFileWindow->SetProject(FileName,tmp);
@@ -551,7 +560,7 @@ void NewProjectWindow::CreateNewProject(void)
 	msg.AddString(kProjectName, AppName);
 	//msg.AddBool(kNotSaved, true); // make this false later - true for debug purposes
 	BMessenger(ptrFileWindow).SendMessage(&msg);
-	//BMessenger(ptrFileWindow).SendMessage(new BMessage(SET_PROJECT_TITLE));
+	BMessenger(ptrProjectWindow).SendMessage(&msg);
 	
 	ProjectName = AppName;
 	ProjectPath = apath;

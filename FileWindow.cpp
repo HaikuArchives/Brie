@@ -10,6 +10,7 @@ Released under the MIT license.
 
 */
 
+#define URL_TYPE "application/x-vnd.Be.URL.http"
 
 // Includes -------------------------------------------------------------------------------------------------- //
 #include <Alert.h>
@@ -38,10 +39,11 @@ Released under the MIT license.
 #include <View.h>
 
 // Toolbar
-#include "brie_tool_new.h"
-#include "brie_tool_new_inverse.h"
-#include "brie_tool_load.h"
-#include "brie_tool_load_inverse.h"
+//#include "brie_tool_new.h"
+//#include "brie_tool_new_inverse.h"
+//#include "brie_tool_load.h"
+//#include "brie_tool_load_inverse.h"
+#include "Bitmaps-Toolbar.h"
 
 #include "brie.h"
 #include "BRIEWindows.h"
@@ -61,6 +63,7 @@ const uint32 MENU_EDIT_PASTE = 'Mepa';
 const uint32 MENU_TOOLS_OPTIONS = 'Mtop';
 const uint32 MENU_TOOLS_COMPILE = 'Mtgc';
 const uint32 MENU_TOOLS_CREATEJAM = 'Mtja';
+const uint32 MENU_TOOLS_CREATEMAKE = 'Mtmk';
 const uint32 MENU_WIN_PROJ = 'Mwpj';
 const uint32 MENU_WIN_PROP = 'Mprp';
 const uint32 MENU_WIN_TOOL = 'Mwtl';
@@ -69,6 +72,9 @@ const uint32 MENU_HELP_ABOUT = 'Mhab';
 
 const uint32 TOOLBAR_BTN_NEW_PROJECT = 'Tbnp';
 const uint32 TOOLBAR_BTN_LOAD_PROJECT = 'Tblp';
+const uint32 TOOLBAR_BTN_SAVE_PROJECT = 'Tbsp';
+const uint32 TOOLBAR_BTN_SAVEAS_PROJECT = 'Tbsa';
+const uint32 TOOLBAR_BTN_PRINT_PROJECT = 'Tbpt';
 // ---------------------------------------------------------------------------------------------------------- //
 
 char *kProjectName = "ProjectName";
@@ -93,7 +99,7 @@ static void TopOfScreen(BWindow* w)
 
 
 // FileWindow - Constructor
-FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.32", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
+FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.33", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
 	ptrFileWindow = this;
 	InitWindow();
@@ -153,6 +159,7 @@ void FileWindow::InitWindow(void)
 	menu = new BMenu("Tools");
 	menu->AddItem(new BMenuItem("Options", new BMessage(MENU_TOOLS_OPTIONS), 'O'));
 	menu->AddSeparatorItem();
+	menu->AddItem(new BMenuItem("Create MAKE file", new BMessage(MENU_TOOLS_CREATEMAKE), 'M'));
 	menu->AddItem(new BMenuItem("Create JAM file", new BMessage(MENU_TOOLS_CREATEJAM), 'J'));
     menu->AddItem(new BMenuItem("Compile with GCC", new BMessage(MENU_TOOLS_COMPILE), 'R'));
     menubar->AddItem(menu);
@@ -172,6 +179,7 @@ void FileWindow::InitWindow(void)
     // Sikosis's Toolbar ;)
     int ToolbarButtonMargin = 6;
     int ToolbarButtonWidth = 24;
+    int ButtonGap = 2;
 	
 	// New Project Button
   	BRect BitmapFrame (BRect(0,0,23,23));
@@ -203,7 +211,7 @@ void FileWindow::InitWindow(void)
  	
 	tmpBPictureView->RemoveSelf();
 	AddChild(tmpBPictureView);
-	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + 4;
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
     
     // Load Project Button
     BBitmap *loadprojectpicture = new BBitmap(BitmapFrame,B_RGB32);
@@ -227,11 +235,93 @@ void FileWindow::InitWindow(void)
  	
 	tmpBPictureView->RemoveSelf();
 	AddChild(tmpBPictureView);
-	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth;
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
+	
+	// Save Project Button
+    BBitmap *saveprojectpicture = new BBitmap(BitmapFrame,B_RGB32);
+	saveprojectpicture->SetBits(briesave,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(saveprojectpicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *saveprojectpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	saveprojectpicture_state2->SetBits(briesaveinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(saveprojectpicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnSaveProject = new BPictureButton(BRect (ToolbarButtonMargin,rMenuBar.bottom+4,ToolbarButtonMargin+ToolbarButtonWidth,rMenuBar.bottom+28),
+ 					 "Save Project",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_SAVE_PROJECT),B_ONE_STATE_BUTTON,
+ 					 B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
+    
+    // SaveAs Project Button
+    BBitmap *saveasprojectpicture = new BBitmap(BitmapFrame,B_RGB32);
+	saveasprojectpicture->SetBits(briesaveas,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(saveasprojectpicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *saveasprojectpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	saveasprojectpicture_state2->SetBits(briesaveasinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(saveasprojectpicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnSaveAsProject = new BPictureButton(BRect (ToolbarButtonMargin,rMenuBar.bottom+4,ToolbarButtonMargin+ToolbarButtonWidth,rMenuBar.bottom+28),
+ 					 "Save As Project",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_SAVEAS_PROJECT),B_ONE_STATE_BUTTON,
+ 					 B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
+	
+    // Print Project Button
+    BBitmap *printprojectpicture = new BBitmap(BitmapFrame,B_RGB32);
+	printprojectpicture->SetBits(brieprint,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(printprojectpicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *printprojectpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	printprojectpicture_state2->SetBits(brieprintinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(printprojectpicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnPrintProject = new BPictureButton(BRect (ToolbarButtonMargin,rMenuBar.bottom+4,ToolbarButtonMargin+ToolbarButtonWidth,rMenuBar.bottom+28),
+ 					 "Print Project",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_PRINT_PROJECT),B_ONE_STATE_BUTTON,
+ 					 B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
+	
         
     // Add Controls
     AddChild(btnNewProject);
     AddChild(btnLoadProject);
+    AddChild(btnSaveProject);
+    AddChild(btnSaveAsProject);
+    AddChild(btnPrintProject);
     
 	// Add the Drawing View
 	AddChild(ptrFileWindowView = new FileWindowView(r));
@@ -256,7 +346,7 @@ void FileWindow::SetProject(const char *prjname)
 {
 	char newtitle[256];
 	sprintf(newtitle,"%s%s - [ %s ]",projtitle,projversion,prjname);
-	//(new BAlert("",newtitle,"debug"))->Go();
+	printf("newtitle - %s\n",newtitle);
 	ptrFileWindow->SetTitle(newtitle);
 }
 // ---------------------------------------------------------------------------------------------------------- //
@@ -271,31 +361,145 @@ bool FileWindow::QuitRequested()
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-void FileWindow::CreateMakeFile(void)
+void FileWindow::CreateMakeFile(const char *prjname, const char *prjpath, const char *prjauthor)
 {
-	(new BAlert("","Coming Soon","debug"))->Go();
+	FILE *f;
+	char tmp[256];
+	char FileName[256];
+	int x;
+	
+	if (strcmp(prjname,"Untitled") !=0) {
+		printf("CreateMake - %s\n\n",prjname);
+		sprintf(FileName,"%s/projects/%s/makefile",prjpath,prjname);
+		f = fopen(FileName,"w");
+		sprintf(tmp,"## BeOS Makefile for %s ##\n",prjname);
+		x = fputs(tmp,f);
+		sprintf(tmp,"## Author: %s\n",prjauthor);
+		x = fputs(tmp,f);
+		x = fputs("## Created by BRIE (http://brie.sf.net/)\n\n",f);
+		x = fputs("## Application Specific Settings ---------------------------------------------\n\n",f);
+		x = fputs("# specify the name of the binary\n",f);
+		sprintf(tmp,"NAME= %s\n",prjname);
+		x = fputs(tmp,f);
+		x = fputs("# specify the type of binary\n",f);
+		x = fputs("#	APP:	Application\n",f);
+		x = fputs("#	SHARED:	Shared library or add-on\n",f);
+		x = fputs("#	STATIC:	Static library archive\n",f);
+		x = fputs("#	DRIVER: Kernel Driver\n",f);
+		x = fputs("TYPE= APP\n\n",f);
+		x = fputs("#	specify the source files to use\n",f);
+		x = fputs("#	Note that spaces in folder names do not work well with this makefile.\n",f);
+		sprintf(tmp,"SRCS= %s.cpp %sWindow.cpp %sView.cpp\n",prjname,prjname,prjname);
+		x = fputs(tmp,f);
+		x = fputs("# end of srcs\n\n",f);
+		x = fputs("#	specify the resource files to use\n",f);
+		//x = fputs("RSRCS= ../../newproject.rsrc\n\n",f);
+		x = fputs("RSRCS= \n\n",f);
+		x = fputs("#	specify additional libraries to link against\n",f);
+		x = fputs("LIBS= be root\n\n",f);
+		x = fputs("#	specify additional paths to directories \n",f);
+		x = fputs("LIBPATHS=\n\n",f);
+		x = fputs("#	additional paths to look for system headers\n",f);
+		x = fputs("SYSTEM_INCLUDE_PATHS =\n\n",f);
+		x = fputs("#	additional paths to look for local headers\n",f);
+		x = fputs("LOCAL_INCLUDE_PATHS =\n\n",f);
+		x = fputs("#	specify the level of optimization that you desire - NONE, SOME, FULL\n",f);
+		x = fputs("OPTIMIZE=\n\n",f);
+		x = fputs("#	specify any preprocessor symbols to be defined.  \n",f);
+		x = fputs("DEFINES=\n\n",f);
+		x = fputs("#	specify special warning levels - NONE, ALL\n",f);
+		x = fputs("WARNINGS = ALL\n\n",f);
+		x = fputs("#	specify whether image symbols will be created\n",f);
+		x = fputs("SYMBOLS = TRUE\n\n",f);
+		x = fputs("#	specify debug settings\n",f);
+		x = fputs("DEBUGGER =\n\n",f);
+		x = fputs("#	specify additional compiler flags for all files\n",f);	
+		x = fputs("COMPILER_FLAGS =\n\n",f);
+		x = fputs("#	specify additional linker flags\n",f);
+		x = fputs("LINKER_FLAGS =\n\n",f);
+		x = fputs("## include the makefile-engine\n",f);
+		x = fputs("include /boot/develop/etc/makefile-engine\n",f);
+		fclose(f);
+	} else {
+		(new BAlert("","You have to create a Project first before you can create a Makefile.","Okay"))->Go();	
+	}
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-void FileWindow::CompileGCC(const char *prjname, const char *prjpath)
+void FileWindow::CompileGCC(const char *prjname, const char *prjpath, const char *prjauthor)
 {
-	if (prjname != "Untitled")
+	if (strcmp(prjname,"Untitled") !=0)
 	{
 		// check to see if the makefile exists
 		char cmd[256];
 		sprintf(cmd,"%s/projects/%s/makefile",prjpath,prjname);
 		FILE *f;	
+    	
+    	printf("CompileGCC - cmd is %s\n",cmd); //debug
     	if ((f = fopen(cmd, "r"))) {
 			(new BAlert("","No Makefile Found.\n\nWe MUST create a new one.","Okay"))->Go();
-			CreateMakeFile();
+			CreateMakeFile(prjpath,prjname,prjauthor);
 		}
 		fclose(f);
 		
-		// now run make
-		sprintf(cmd,"Terminal %s/projects/%s/make",prjpath,prjname);
-		(new BAlert("",cmd,"cmd"))->Go();
-		//system(cmd);
+		// now run make via our compile.sh
+		int x;
+		char tmp[256];
+		char FileName[256];
+		sprintf(FileName,"%s/projects/%s/compile.sh",prjpath,prjname);
+		f = fopen(FileName,"w");
+		x = fputs("#!/bin/sh\n",f);
+		x = fputs("# Compile and Run\n",f);
+		sprintf(tmp,"cd %s/projects/%s \n",prjpath,prjname);
+		x = fputs(tmp,f);
+		x = fputs("make clean\n",f);
+		x = fputs("make\n",f);
+		x = fputs("cd obj.x86\n",f);
+		sprintf(tmp,"%s\n",prjpath,prjname);
+		x = fputs(tmp,f);
+		fclose(f);
+		
+		sprintf(cmd,"Terminal -t \"Compiling %s\" %s",FileName);
+		printf("now run make %s\n",cmd); //debug
+		system(cmd);
+	} else {
+		(new BAlert("","You have to create a Project first before you can Compile/Run.","Okay"))->Go();	
+	}
+}
+// ---------------------------------------------------------------------------------------------------------- //
+
+
+void FileWindow::SaveProject(const char *prjname, const char *prjpath, const char *prjauthor)
+{
+	if (strcmp(prjname,"Untitled") !=0)
+	{
+		FILE *f;
+		char tmp[256];
+		char FileName[256];
+		int x;
+		
+		sprintf(FileName,"%s/projects/%s.bprj",prjpath,prjname);
+		f = fopen(FileName,"w");
+		sprintf(tmp,"## BRIE Project File for %s ##\n",prjname);
+		x = fputs(tmp,f);
+		sprintf(tmp,"ProjectName=%s\n",prjname);
+		x = fputs(tmp,f);
+		sprintf(tmp,"ProjectDir=%s/projects/%s\n",prjpath,prjname);
+		x = fputs(tmp,f);
+		sprintf(tmp,"Author=%s",prjauthor);
+		x = fputs(tmp,f);
+		x = fputs("### Files\n",f);
+		sprintf(tmp,"%s.cpp\n",prjname);
+		x = fputs(tmp,f);
+		sprintf(tmp,"%sWindow.cpp\n",prjname);
+		x = fputs(tmp,f);
+		sprintf(tmp,"%sView.cpp\n",prjname);
+		x = fputs(tmp,f);
+		fclose(f);
+		sprintf(tmp,"%s.bprj",prjname);
+	} else {
+		(new BAlert("","You have to create a Project first before you can Save.","Okay"))->Go();	
 	}
 }
 // ---------------------------------------------------------------------------------------------------------- //
@@ -311,32 +515,72 @@ void FileWindow::MessageReceived (BMessage *message)
 	{
 		case TOOLBAR_BTN_NEW_PROJECT:	
 		case MENU_FILE_NEW:
-			ptrNewProjectWindow = new NewProjectWindow(BRect(367.0, 268.0, 657.0, 500.0));
+			{
+				ptrNewProjectWindow = new NewProjectWindow(BRect(367.0, 268.0, 657.0, 500.0));
+			}	
 			break;
 		case TOOLBAR_BTN_LOAD_PROJECT:	
 		case MENU_FILE_LOAD:
 			{
-			TipNumber = 1;
-			new HelpTipWindow(BRect(0.0, 0.0, 350.0, 120.0));
+				TipNumber = 1;
+				new HelpTipWindow(BRect(0.0, 0.0, 350.0, 120.0));
 			
-			app_info	daInfo;
-			be_app->GetAppInfo(&daInfo);
-			BEntry	daEntry(&daInfo.ref);
-			daEntry.GetParent(&daEntry);
-			BPath	pPath(&daEntry);
-			char	apath[256];
-			::memcpy(apath, pPath.Path(), 256);	
-			strcat(apath,"/projects/");
-			//(new BAlert("",apath," debug "))->Go(); // debug
-			//browsePanel->SetPanelDirectory(apath);
-			//browsePanel->Show();
+				app_info	daInfo;
+				be_app->GetAppInfo(&daInfo);
+				BEntry	daEntry(&daInfo.ref);
+				daEntry.GetParent(&daEntry);
+				BPath	pPath(&daEntry);
+				char	apath[256];
+				::memcpy(apath, pPath.Path(), 256);	
+				strcat(apath,"/projects/");
+				//browsePanel->SetPanelDirectory(apath);
+				//browsePanel->Show();
 			}
-			break;			
-		case MENU_HELP_ABOUT:
-			aboutWindow = new AboutWindow(aboutwindowRect);
-			break;	
+			break;
+		case TOOLBAR_BTN_SAVE_PROJECT:	
+		case MENU_FILE_SAVE:
+			{
+				if (strlen(ProjectPath) == 0)
+				{
+					app_info	daInfo;
+					be_app->GetAppInfo(&daInfo);
+					BEntry	daEntry(&daInfo.ref);
+					daEntry.GetParent(&daEntry);
+					BPath	pPath(&daEntry);
+					char	apath[256];
+					::memcpy(apath, pPath.Path(), 256);	
+					strcat(ProjectPath,apath);
+				}
+				if (ProjectAuthor == "") { ProjectAuthor = "DeveloperName"; }
+				//printf("Menu Save - %s - %s - %s\n\n",ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
+				SaveProject(ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
+			}
+			break;
+		case TOOLBAR_BTN_SAVEAS_PROJECT:	
+		case MENU_FILE_SAVEAS:
+			{
+				//app_info	daInfo;
+				//be_app->GetAppInfo(&daInfo);
+				//BEntry	daEntry(&daInfo.ref);
+				//daEntry.GetParent(&daEntry);
+				//BPath	pPath(&daEntry);
+				//char	apath[256];
+				//::memcpy(apath, pPath.Path(), 256);	
+				//strcat(apath,"/projects/");
+				//browsePanel->SetPanelDirectory(apath);
+				//browsePanel->Show();
+
+				//load the panel to get the new name
+				//SaveProject(ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
+				//SetProject(ptrProjectWindow->stvProjectName->Text());
+				(new BAlert("","Coming Soon."," debug "))->Go();
+			}
+			break;
+		case TOOLBAR_BTN_PRINT_PROJECT:	
 		case MENU_FILE_PRINT:
-			(new BAlert("","Printing is a low priority feature.\n\nComing Soon to a Printer near you ..."," Soonish "))->Go();
+			{
+				(new BAlert("","Printing is a low priority feature.\n\nComing Soon to a Printer near you ..."," Soonish "))->Go();
+			}	
 			break;	
 		case MENU_FILE_QUIT:
 			{
@@ -345,10 +589,13 @@ void FileWindow::MessageReceived (BMessage *message)
 				QuitRequested();
 			}	
 			break;
-		case MENU_TOOLS_COMPILE:
+		case MENU_TOOLS_OPTIONS:
 			{
-				//SaveProject();
-				//Lock();
+				(new BAlert("","Coming Soon."," debug "))->Go();
+			}
+			break;	
+		case MENU_TOOLS_CREATEMAKE:
+			{
 				app_info	daInfo;
 				be_app->GetAppInfo(&daInfo);
 				BEntry	daEntry(&daInfo.ref);
@@ -357,8 +604,24 @@ void FileWindow::MessageReceived (BMessage *message)
 				char	apath[256];
 				::memcpy(apath, pPath.Path(), 256);	
 				ProjectPath = apath;
-				
-				CompileGCC(ProjectName,ProjectPath);
+				if (ProjectAuthor == "") { ProjectAuthor = "DeveloperName"; }
+				CreateMakeFile(ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
+			}
+			break;	
+		case MENU_TOOLS_COMPILE:
+			{
+				app_info	daInfo;
+				be_app->GetAppInfo(&daInfo);
+				BEntry	daEntry(&daInfo.ref);
+				daEntry.GetParent(&daEntry);
+				BPath	pPath(&daEntry);
+				char	apath[256];
+				::memcpy(apath, pPath.Path(), 256);	
+				ProjectPath = apath;
+				if (ProjectAuthor == "") { ProjectAuthor = "DeveloperName"; }
+				//Lock();
+				//SaveProject(ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
+				CompileGCC(ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
 				//UnLock();
 			}	
 			break;	
@@ -401,15 +664,39 @@ void FileWindow::MessageReceived (BMessage *message)
 				}	
 			}
 			break;
+		case MENU_HELP_MANUAL:
+			{
+				// launch browser on local html manual
+				int result;
+				app_info	daInfo;
+				be_app->GetAppInfo(&daInfo);
+				BEntry	daEntry(&daInfo.ref);
+				daEntry.GetParent(&daEntry);
+				BPath	pPath(&daEntry);
+				char	path[256];
+				::memcpy(path, pPath.Path(), 256);
+			
+				char *the_url = strcat(path,"/docs/index.html");
+				//printf("%s\n",the_url); // debug
+				result = be_roster->Launch(URL_TYPE, 1, &the_url);
+			}
+			break;				
+		case MENU_HELP_ABOUT:
+			{
+				aboutWindow = new AboutWindow(aboutwindowRect);
+			}	
+			break;	
 		case SET_PROJECT_TITLE:
 			{
-				const char *tmp;
+				BString tmp;
 				message->FindString(kProjectName, &tmp);
-				SetProject(tmp);
+				SetProject(tmp.String());
 			}
 			break;							
 		default:
-			BWindow::MessageReceived(message);
+			{
+				BWindow::MessageReceived(message);
+			}	
 			break;
 	}
 }

@@ -12,7 +12,7 @@ Released under the MIT license.
 
 
 // Includes -------------------------------------------------------------------------------------------------- //
-#include <Alert.h>
+//#include <Alert.h>
 #include <Application.h>
 //#include <Button.h>
 //#include <Entry.h>
@@ -28,7 +28,7 @@ Released under the MIT license.
 //#include <StatusBar.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <String.h>
 //#include <TextControl.h>
 #include <Window.h>
 #include <View.h>
@@ -98,9 +98,6 @@ void ProjectWindow::InitWindow(void)
 // ProjectWindow::QuitRequested -- Post a message to the app to quit
 bool ProjectWindow::QuitRequested()
 {
-   //be_app->PostMessage(B_QUIT_REQUESTED);
-   Minimize(true);
-   Hide(); 
    return true;
 }
 // ---------------------------------------------------------------------------------------------------------- //
@@ -111,13 +108,12 @@ void ProjectWindow::MessageReceived (BMessage *message)
 {
 	switch(message->what)
 	{
-		case SET_PROJECT_NAME:
+		case SET_PROJECT_TITLE:
 			{
-			const char *prjname;
+			//const char *prjname;
+			BString prjname;
 			message->FindString(kProjectName, &prjname);
-			(new BAlert("",prjname,"ProjectName"))->Go();
-			stvProjectName->SetText(prjname);
-			(new BAlert("",ProjectName,"ProjectName"))->Go();	
+			stvProjectName->SetText(prjname.String());
 			}
 			break;
 		default:

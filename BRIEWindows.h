@@ -38,8 +38,9 @@ class ProjectWindow : public BWindow
 	    virtual void MessageReceived(BMessage *message);
 	    
 	    //void SetProjectTitle(const char *title);
+	    BStringView        *stvProjectName;
 	private:
-		BStringView        *stvProjectName;
+		
 		void InitWindow(void);
 	    ProjectWindowView* ptrProjectWindowView;
 };
@@ -83,8 +84,9 @@ class FileWindow : public BWindow
 	    
 	private:
 		void InitWindow(void);
-	    void CompileGCC(const char *prjname, const char *prjpath);
-	    void CreateMakeFile(void);
+	    void CompileGCC(const char *prjname, const char *prjpath, const char *prjauthor);
+	    void CreateMakeFile(const char *prjname, const char *prjpath, const char *prjauthor);
+	    void SaveProject(const char *prjname, const char *prjpath, const char *prjauthor);
 	    void SetProject(const char *prjname);
 	    FileWindowView* 	ptrFileWindowView;
 		
@@ -94,6 +96,9 @@ class FileWindow : public BWindow
 	    AboutWindow         *aboutWindow;
 	    BPictureButton      *btnNewProject;
 	    BPictureButton      *btnLoadProject;
+	    BPictureButton      *btnSaveProject;
+	    BPictureButton      *btnSaveAsProject;
+	    BPictureButton      *btnPrintProject;
 };
 
 
