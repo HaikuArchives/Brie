@@ -4,7 +4,7 @@ BRIE - AboutWindow by Sikosis
 
 Released under the MIT license.
 
-(C)2002-2003
+(C)2002-2004
 
 */
 
@@ -104,6 +104,8 @@ void AboutWindow::InitWindow(void)
 	//urlEmail->AddAttribute("META:url", "http://www.gravity24hr.com/");
 	//urlEmail->AddAttribute("META:state", "QLD");
 	//urlEmail->AddAttribute("META:country", "Australia");
+  	
+  	// need to change all these stringviews to one textview - sorry didnt know how else to do it at the time
   	
 	stvDescription = new BStringView(BRect(LeftMarginDescription, DescriptionTop, RightMargin, DescriptionTop+10), "Description", "BRIE is an IDE for rapid development of native BeOS applications.");
 	stvDescription2 = new BStringView(BRect(LeftMarginDescription, DescriptionTop+16, RightMargin, DescriptionTop+26), "Description2", "All code is generated in C/C++ using the BeAPI plus a few extras.");

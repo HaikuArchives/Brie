@@ -6,7 +6,7 @@ MenuCreator by Sikosis
 
 Released under the MIT license.
 
-(C) 2003 http://brie.sf.net/
+(C) 2003-2004 http://brie.sf.net/
 
 */
 
@@ -15,6 +15,7 @@ Released under the MIT license.
 #include <Application.h>
 #include <Alert.h>
 #include <Bitmap.h>
+#include <ListItem.h>
 #include <ListView.h>
 #include <MenuBar.h>
 #include <Menu.h> 
@@ -42,6 +43,10 @@ Released under the MIT license.
 // ---------------------------------------------------------------------------------------------------------- //
 const uint32 TOOLBAR_BTN_ADD_MENU_ITEM = 'tbam';
 const uint32 TOOLBAR_BTN_REMOVE_MENU_ITEM = 'tbrm';
+const uint32 TOOLBAR_BTN_UP_MENU_ITEM = 'tbup';
+const uint32 TOOLBAR_BTN_DOWN_MENU_ITEM = 'tbdn';
+const uint32 TOOLBAR_BTN_LEFT_MENU_ITEM = 'tblt';
+const uint32 TOOLBAR_BTN_RIGHT_MENU_ITEM = 'tbrt';
 
 // CenterWindowOnScreen -- Centers the BWindow to the Current Screen
 static void CenterWindowOnScreen(BWindow* w)
@@ -89,7 +94,7 @@ void MenuCreator::InitWindow(void)
     //stvProjectName = new BStringView(BRect(LeftMargin+1, TopMargin, RightMargin, TopMargin+10), "Project Name", "Untitled");
     
     // Toolbar to Add / Remove Project Files
-    int ToolbarButtonMargin = 167;
+    int ToolbarButtonMargin = 120;
     int ToolbarButtonWidth = 24;
     int ButtonGap = 4;
 	
@@ -124,52 +129,161 @@ void MenuCreator::InitWindow(void)
  							  B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
  	
 	tmpBPictureView->RemoveSelf();
-	/*AddChild(tmpBPictureView);
+	AddChild(tmpBPictureView);
 	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
     
-    // Remove File from Project
-    BBitmap *removefilesfromprojectpicture = new BBitmap(BitmapFrame,B_RGB32);
-	removefilesfromprojectpicture->SetBits(projectremoveicon,1728,0,B_RGB32);
+    // Remove Menu Item
+    BBitmap *menuremovepicture = new BBitmap(BitmapFrame,B_RGB32);
+	menuremovepicture->SetBits(menuremoveicon,1728,0,B_RGB32);
   	tmpBPictureView->SetLowColor(toolbar_button_background);
   	tmpBPictureView->BeginPicture(new BPicture);
-  	tmpBPictureView->DrawBitmap(removefilesfromprojectpicture,BPoint(0,0));
+  	tmpBPictureView->DrawBitmap(menuremovepicture,BPoint(0,0));
   	tmpBPicture = tmpBPictureView->EndPicture();
   	
   	tmpBPictureView->RemoveSelf();
     AddChild(tmpBPictureView);
   	
-  	BBitmap *removefilesfromprojectpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
-	removefilesfromprojectpicture_state2->SetBits(projectremoveiconinverse,1728,0,B_RGB32);
+  	BBitmap *menuremovepicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	menuremovepicture_state2->SetBits(menuremoveiconinverse,1728,0,B_RGB32);
 	tmpBPictureView->SetLowColor(toolbar_button_background);
   	tmpBPictureView->BeginPicture(new BPicture);
-  	tmpBPictureView->DrawBitmap(removefilesfromprojectpicture_state2,BPoint(0,0));
+  	tmpBPictureView->DrawBitmap(menuremovepicture_state2,BPoint(0,0));
   	tmpBPicture2 = tmpBPictureView->EndPicture();
   		
- 	btnRemoveFileFromProjectList = new BPictureButton(BRect (ToolbarButtonMargin,3,ToolbarButtonMargin+ToolbarButtonWidth,26),
- 							  "Remove Files",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_REMOVE_FILE_FROM_PROJECT),B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	btnMenuRemove = new BPictureButton(BRect (ToolbarButtonMargin,3,ToolbarButtonMargin+ToolbarButtonWidth,26),
+ 							  "Remove Menu Item",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_REMOVE_MENU_ITEM),
+ 							  B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
  	
 	tmpBPictureView->RemoveSelf();
 	AddChild(tmpBPictureView);
 	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
     
-       
+    // Move Up
+    BBitmap *menuuppicture = new BBitmap(BitmapFrame,B_RGB32);
+	menuuppicture->SetBits(menuremoveicon,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(menuuppicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *menuuppicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	menuuppicture_state2->SetBits(menuremoveiconinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(menuuppicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnMenuUp = new BPictureButton(BRect (ToolbarButtonMargin,3,ToolbarButtonMargin+ToolbarButtonWidth,26),
+ 							  "Up Menu Item",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_UP_MENU_ITEM),
+ 							  B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
     
-
-    AddChild(btnRemoveFileFromProjectList);
-    AddChild(btnAddFileToProjectList);
-    AddChild(stvProjectName);
+    // Move Down
+    BBitmap *menudownpicture = new BBitmap(BitmapFrame,B_RGB32);
+	menudownpicture->SetBits(menuremoveicon,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(menudownpicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *menudownpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	menudownpicture_state2->SetBits(menuremoveiconinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(menudownpicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnMenuDown = new BPictureButton(BRect (ToolbarButtonMargin,3,ToolbarButtonMargin+ToolbarButtonWidth,26),
+ 							  "Down Menu Item",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_DOWN_MENU_ITEM),
+ 							  B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
     
-    
-    //ptrProjectWindowView->AddChild(new BScrollView("ScrollViewProjectFiles",lsvProjectFiles, B_FOLLOW_LEFT | B_FOLLOW_TOP, 0, true, false)); */
+    // Move Left
+    BBitmap *menuleftpicture = new BBitmap(BitmapFrame,B_RGB32);
+	menuleftpicture->SetBits(menuremoveicon,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(menuleftpicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *menuleftpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	menuleftpicture_state2->SetBits(menuremoveiconinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(menuleftpicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnMenuLeft = new BPictureButton(BRect (ToolbarButtonMargin,3,ToolbarButtonMargin+ToolbarButtonWidth,26),
+ 							  "Left Menu Item",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_LEFT_MENU_ITEM),
+ 							  B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
 	
+	// Move Right
+    BBitmap *menurightpicture = new BBitmap(BitmapFrame,B_RGB32);
+	menurightpicture->SetBits(menuremoveicon,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(menurightpicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *menurightpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	menurightpicture_state2->SetBits(menuremoveiconinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(menurightpicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnMenuRight = new BPictureButton(BRect (ToolbarButtonMargin,3,ToolbarButtonMargin+ToolbarButtonWidth,26),
+ 							  "Right Menu Item",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_RIGHT_MENU_ITEM),
+ 							  B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
+    
+    
+    // end toolbar
+
+    
 	lsvMenuItems = new BListView(BRect(6,29,r.right-6,r.bottom-6), "lsvMenuItems",
 					  B_SINGLE_SELECTION_LIST, B_FOLLOW_LEFT | B_FOLLOW_TOP,
 					  B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS);
+	
+	lsvMenuItems->SetFont(be_bold_font);
+	lsvMenuItems->SetFontSize(14.0);
+	
+	//ptrMenuCreatorView->AddChild(new BScrollView("ScrollViewMenuItems",lsvMenuItems, B_FOLLOW_LEFT | B_FOLLOW_TOP, 0, true, false)); */
 		
 	// Add the Drawing View
     ptrMenuCreatorView = new MenuCreatorView(r);
     ptrMenuCreatorView->AddChild(lsvMenuItems);
     ptrMenuCreatorView->AddChild(btnMenuAdd);
+    ptrMenuCreatorView->AddChild(btnMenuRemove);
+    ptrMenuCreatorView->AddChild(btnMenuUp);
+    ptrMenuCreatorView->AddChild(btnMenuDown);
+    ptrMenuCreatorView->AddChild(btnMenuLeft);
+    ptrMenuCreatorView->AddChild(btnMenuRight);
     
 	AddChild(ptrMenuCreatorView);
 }
@@ -213,21 +327,60 @@ void MenuCreator::MessageReceived (BMessage *message)
 		
 		case TOOLBAR_BTN_ADD_MENU_ITEM:
 		{
-			BString IBTitle;
+			BString IBTitle("Add Menu Item");
 			BString IBQuestion;
 			BString IBDefault;
 			BString IBAnswer;
-			IBTitle.SetTo("Add Menu Item");
+			//IBTitle.SetTo("Add Menu Item");
 			IBQuestion.SetTo("Enter the Menu Item Name:");
-			IBDefault.SetTo("Value"); // debug
+			IBDefault.SetTo("File"); // debug
 			
 			printf("About to Create InputBoxWindow\n"); // debug
-			ptrInputBoxWindow = new InputBoxWindow(BRect(0,0,350,120));
+			ptrInputBoxWindow = new InputBoxWindow(BRect(0,0,300,70));
 			printf("Now about to SetTo the InputBoxWindow\n"); // debug
 			ptrInputBoxWindow->SetTo(IBTitle, IBQuestion, IBDefault, IBAnswer);
 			printf("After InputBoxWindow\n"); // debug
 			printf("IBAnswer = %s\n\n",IBAnswer.String()); // debug
 			//AddMenuItem(&IBAnswer);
+		}
+			break;
+		
+		case TOOLBAR_BTN_REMOVE_MENU_ITEM:
+		{
+			int32 selected;
+			int32 preselected;
+			selected = lsvMenuItems->CurrentSelection(0);
+			//printf("removing %i\n",selected);
+			lsvMenuItems->RemoveItem(selected);
+			preselected = selected - 1;
+			if (preselected < 0) {
+				preselected = 0;
+			}
+			lsvMenuItems->Select(preselected,true);
+		}
+			break;
+		
+		case TOOLBAR_BTN_RIGHT_MENU_ITEM:
+		{
+			//int32 selected;
+			//BListItem *item;
+			//selected = lsvMenuItems->CurrentSelection(0);
+			//item = ItemAt(selected);
+			// hrmm not sure how to get the current item as a BString
+			
+			
+		}
+			break;
+			
+		case IB_ANSWER:
+		{
+			BString tmp;
+			message->FindString("IB_ANSWER", &tmp);
+			printf("IBAnswer = %s\n\n",tmp.String()); // debug
+			
+			if (tmp.Length() != 0) {  // this line crashes it -- invalid reference to a member function name, did you forget the ()?                                                               
+				AddMenuItem(tmp.String());
+			}	
 		}
 			break;
 			

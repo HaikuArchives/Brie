@@ -6,7 +6,7 @@ BRIEWindows Header by Sikosis
 
 Released under the MIT license.
 
-(C) 2002-2003 http://brie.sf.net/
+(C) 2002-2004 http://brie.sf.net/
 
 */
 
@@ -142,6 +142,12 @@ class MenuCreator : public BWindow
 		MenuCreatorView*	ptrMenuCreatorView;
 		
 		BPictureButton		*btnMenuAdd;
+		BPictureButton		*btnMenuRemove;
+		BPictureButton		*btnMenuUp;
+		BPictureButton		*btnMenuDown;
+		BPictureButton		*btnMenuLeft;
+		BPictureButton		*btnMenuRight;
+		
 		BButton				*btnCreateMenu;
 		BButton				*btnClose;
 	    BListView			*lsvMenuItems;
@@ -171,6 +177,7 @@ class NewProjectWindow : public BWindow
 	    BMessage					*msg;
 	    BCheckBox					*chkLoadSavePrefs;
 	    BCheckBox					*chkMenuBar;
+	    BCheckBox					*chkCustomAboutBox;
 };
 
 
@@ -245,6 +252,7 @@ class InputBoxWindow : public BWindow
 		
 		BButton				*btnOkay;
 	    BTextControl    	*txtQuestion;
+	    BStringView			*stvQuestion;
 };
 
 

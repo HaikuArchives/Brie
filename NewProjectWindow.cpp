@@ -41,6 +41,7 @@ const uint32 TXT_NEW_PROJECT = 'nPrj';
 const uint32 TXT_AUTHOR = 'auth';
 const uint32 CHK_ADDLOADSAVEPREF = 'cals';
 const uint32 CHK_ADDMENUBAR = 'camb';
+const uint32 CHK_CUSTOMABOUTBOX = 'cabx';
 // ---------------------------------------------------------------------------------------------------------- //
 
 
@@ -121,6 +122,10 @@ void NewProjectWindow::InitWindow(void)
 	chkMenuBar = new BCheckBox(BRect(LeftMargin,NewProjectTop+85,r.right-10,NewProjectTop+85+12),
 						"chkMenuBar","Add MenuBar and MenuItems", new BMessage(CHK_ADDMENUBAR), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
 	
+	chkCustomAboutBox = new BCheckBox(BRect(LeftMargin,NewProjectTop+105,r.right-10,NewProjectTop+105+12),
+						"chkCustomAboutBox","Add a Custom About Box", new BMessage(CHK_CUSTOMABOUTBOX), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+	
+	chkCustomAboutBox->SetEnabled(false); // debug - cos I havent finished the code for it ;)
 	   	
 	btnCancel = new BButton(BRect (CancelLeftMargin,r.bottom-34,CancelLeftMargin+CancelButtonSize,r.bottom-14),"Cancel","Cancel", new BMessage(BTN_CANCEL), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);		
 	if (PanelType == 1) {
@@ -136,10 +141,11 @@ void NewProjectWindow::InitWindow(void)
 	AddChild(ptrNewProjectWindowView = new NewProjectWindowView(r));
 	ptrNewProjectWindowView->AddChild(txtNewProject);
 	ptrNewProjectWindowView->AddChild(txtAuthor);
+	ptrNewProjectWindowView->AddChild(chkLoadSavePrefs);
+    ptrNewProjectWindowView->AddChild(chkMenuBar);
+    ptrNewProjectWindowView->AddChild(chkCustomAboutBox);
 	ptrNewProjectWindowView->AddChild(btnCancel);
     ptrNewProjectWindowView->AddChild(btnAdd);
-    ptrNewProjectWindowView->AddChild(chkLoadSavePrefs);
-    ptrNewProjectWindowView->AddChild(chkMenuBar);
     txtNewProject->MakeFocus(true);
 }
 // ---------------------------------------------------------------------------------------------------------- //

@@ -26,6 +26,9 @@ const uint32 ADD_PROJECT_FILE = 'adpf';
 const uint32 BTN_OKAY = 'BOky';
 const uint32 CHK_DONTSHOWAGAIN = 'chkd';
 
+// for inputbox class
+const uint32 IB_ANSWER = 'IBAN';
+
 // pointers to windows
 extern FileWindow*       ptrFileWindow;
 extern ToolboxWindow*    ptrToolboxWindow;
