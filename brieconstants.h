@@ -11,9 +11,20 @@ Released under the MIT license.
 #ifndef __BRIECONSTANTS_H__
 #define __BRIECONSTANTS_H__
 
+// used for our messaging between windows
+extern char *kProjectName;
+extern char *kAuthor;
+extern bool *kNotSaved;
+
+// bmessages
 const uint32 TOOLBAR_BTN_NEW_PROJECT = 'Tbnp';
 const uint32 SET_PROJECT_NAME = 'setp';
 
+// pointers to windows
+//extern FileWindow* ptrFileWindow;
+extern ProjectWindow* ptrProjectWindow;
+
+// product name
 const char projtitle[]="BeOS Rapid Integrated Environment v";
 const char projversion[]="0.3";
 

@@ -9,24 +9,26 @@ Released under the MIT license.
 */
 
 // Includes -------------------------------------------------------------------------------------------------- //
-#include <Alert.h>
+//#include <Alert.h>
 #include <Application.h>
-#include <Button.h>
-#include <Entry.h>
-#include <File.h>
-#include <FilePanel.h>
-#include <ListView.h>
-#include <Path.h>
-#include <Screen.h>
-#include <ScrollView.h>
-#include <stdio.h>
-#include <string.h>
-#include <TextControl.h>
+//#include <Button.h>
+//#include <Entry.h>
+//#include <File.h>
+//#include <FilePanel.h>
+//#include <ListView.h>
+//#include <Path.h>
+//#include <Screen.h>
+//#include <ScrollView.h>
+//#include <stdio.h>
+//#include <string.h>
+//#include <TextControl.h>
 #include <Window.h>
 #include <View.h>
 
+#include "brie.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
+#include "brieconstants.h"
 // ------------------------------------------------------------------------------------------------------------- //
 
 // NewProjectWindowView - Constructor

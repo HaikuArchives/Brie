@@ -26,10 +26,10 @@ Released under the MIT license.
 #include <Window.h>
 #include <View.h>
 
-#include "brieconstants.h"
 #include "brie.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
+#include "brieconstants.h"
 // ---------------------------------------------------------------------------------------------------------- //
 
 // Constants ------------------------------------------------------------------------------------------------ //
@@ -70,12 +70,6 @@ BRIE::BRIE() : BApplication (APP_SIGNATURE)
 	projectWindow = new ProjectWindow(projectwindowRect);
 	toolboxWindow = new ToolboxWindow(toolboxwindowRect);
 	fileWindow = new FileWindow(windowRect);
-	newprojectWindow = new NewProjectWindow(BRect(367.0, 268.0, 657.0, 500.0));
-	
-	//fileWindow->ptrNewProjectWindow = newprojectWindow;	
-	newprojectWindow->ptrProjectWindow = projectWindow;
-	newprojectWindow->ptrFileWindow = fileWindow;
-	newprojectWindow->Hide();
 }
 // ---------------------------------------------------------------------------------------------------------- //
 

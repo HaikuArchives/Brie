@@ -22,13 +22,12 @@ class BRIE : public BApplication
 	    virtual void MessageReceived(BMessage *message);
 	    //virtual void ReadyToRun (void);
 	    //virtual void RefsReceived (BMessage *message);
-	    FileWindow			*fileWindow;
+	private:
+		FileWindow			*fileWindow;
 		ProjectWindow		*projectWindow;
 		ToolboxWindow		*toolboxWindow;
 		PropertiesWindow	*propertiesWindow;
 		NewProjectWindow    *newprojectWindow;
-	private:
-
 };
 
 #endif

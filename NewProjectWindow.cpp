@@ -15,6 +15,7 @@ Released under the MIT license.
 #include <Application.h>
 #include <Button.h>
 #include <Directory.h>
+#include <Message.h>
 #include <Path.h>
 #include <Roster.h>
 #include <Screen.h>
@@ -27,10 +28,10 @@ Released under the MIT license.
 #include <iostream.h>
 #include <fstream.h>
 
-#include "brieconstants.h"
 #include "brie.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
+#include "brieconstants.h"
 
 // Constants ------------------------------------------------------------------------------------------------- //
 const uint32 BTN_ADD = 'BAdd';
@@ -178,8 +179,8 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs(tmp,f);
 	sprintf(tmp,"#define __%sCONSTANTS_H__\n\n",AppName);
 	x = fputs(tmp,f);
-	x = fputs("// Constants -------------------------------------------------------------------------------------------- //\n\n",f);
-	sprintf(tmp,"const char *APP_SIGNATURE = \"application/x-vnd.%s.%s\";  // Application Signature and Title\n\n",txtAuthor->Text(),AppName);
+	x = fputs("// Pointers to BWindows\n",f);
+	sprintf(tmp,"extern %sWindow* ptr%sWindow;\n\n",AppName,AppName);
 	x = fputs(tmp,f);
 	x = fputs("#endif\n",f);
 	fclose(f);
@@ -251,11 +252,11 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs("#endif\n",f);
 	fclose(f);
 
-	// Views CPP
-	sprintf(FileName,"%s/projects/%s/%sViews.cpp",apath,AppName,AppName);
+	// View CPP
+	sprintf(FileName,"%s/projects/%s/%sView.cpp",apath,AppName,AppName);
 	f = fopen(FileName,"w");
 	x = fputs("/*\n\n",f);
-	sprintf(tmp,"%s Views\n\n",AppName);
+	sprintf(tmp,"%s View\n\n",AppName);
 	x = fputs(tmp,f);
 	sprintf(tmp,"Author: %s\n\n",txtAuthor->Text());
 	x = fputs(tmp,f);
@@ -281,7 +282,7 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs("\tSetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));\n",f);
 	x = fputs("}\n",f);
 	x = fputs("// ------------------------------------------------------------------------------------------------- //\n\n",f);
-	sprintf(tmp,"void %sView::Draw(BRect updateRect)\n",AppName);
+	sprintf(tmp,"void %sView::Draw(BRect /*updateRect*/)\n",AppName);
 	x = fputs(tmp,f);
 	x = fputs("{\n",f);
 	x = fputs("\tBRect r;\n",f);
@@ -324,7 +325,11 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs(tmp,f);
 	sprintf(tmp,"#include \"%sConstants.h\"\n",AppName);
 	x = fputs(tmp,f);
-	x = fputs("// -------------------------------------------------------------------------------------------------- //\n",f);
+	//x = fputs("// -------------------------------------------------------------------------------------------------- //\n\n",f);
+	x = fputs("// Constants ---------------------------------------------------------------------------------------- //\n\n",f);
+	sprintf(tmp,"const char *APP_SIGNATURE = \"application/x-vnd.%s.%s\";  // Application Signature and Title\n\n",txtAuthor->Text(),AppName);
+	x = fputs(tmp,f);
+	x = fputs("// -------------------------------------------------------------------------------------------------- //\n\n",f);
 	sprintf(tmp,"%sWindow\t\t*ptr%sWindow;\n\n",AppName,AppName);
 	x = fputs(tmp,f);
 	sprintf(tmp,"// %s - Constructor\n",AppName);
@@ -369,11 +374,11 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs("// end --------------------------------------------------------------------------------------------- //\n\n",f);
 	fclose(f);
 	
-	// Windows CPP
-	sprintf(FileName,"%s/projects/%s/%sWindows.cpp",apath,AppName,AppName);
+	// Window CPP
+	sprintf(FileName,"%s/projects/%s/%sWindow.cpp",apath,AppName,AppName);
 	f = fopen(FileName,"w");
 	x = fputs("/*\n\n",f);
-	sprintf(tmp,"%sWindows\n\n",AppName);
+	sprintf(tmp,"%sWindow\n\n",AppName);
 	x = fputs(tmp,f);
 	sprintf(tmp,"Author: %s\n\n",txtAuthor->Text());
 	x = fputs(tmp,f);
@@ -483,7 +488,11 @@ void NewProjectWindow::CreateNewProject(void)
 	sprintf(tmp,"%s.bprj",AppName);
 	ptrFileWindow->SetProject(FileName,tmp);
 	//ptrProjectWindow->SetProjectTitle(AppName);
-	ptrProjectWindow->PostMessage(new BMessage(SET_PROJECT_NAME));
+	
+	//msg = new BMessage(SET_PROJECT_NAME);
+	//msg.AddString("ProjectName",AppName);
+	//msg.AddBool("NotSaved",true);
+	//ptrProjectWindow->PostMessage(&msg);
 	
 	// 6) Create makefile for compilation
 	sprintf(FileName,"%s/projects/%s/makefile",apath,AppName);
@@ -505,7 +514,7 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs("TYPE= APP\n\n",f);
 	x = fputs("#	specify the source files to use\n",f);
 	x = fputs("#	Note that spaces in folder names do not work well with this makefile.\n",f);
-	sprintf(tmp,"SRCS= %s.cpp %sWindows.cpp %sViews.cpp\n",AppName,AppName,AppName);
+	sprintf(tmp,"SRCS= %s.cpp %sWindow.cpp %sView.cpp\n",AppName,AppName,AppName);
 	x = fputs(tmp,f);
 	x = fputs("# end of srcs\n\n",f);
 	x = fputs("#	specify the resource files to use\n",f);
@@ -536,7 +545,12 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs("include /boot/develop/etc/makefile-engine\n",f);
 	fclose(f);
 	
-	// 7) Show Tracker and/or Continue
+	// 7) Send Messages to other Windows to update
+	BMessage msg(SET_PROJECT_NAME);
+	msg.AddString(kProjectName, AppName);
+	BMessenger(ptrProjectWindow).SendMessage(&msg);
+		
+	// 8) Show Tracker and/or Continue
 	sprintf(tmp,"Your Project \"%s\" has now been created.\n\nAll your files are located at:-\n\n%s/%s",AppName,apath,AppName);
 	BAlert *alert;
     long result;

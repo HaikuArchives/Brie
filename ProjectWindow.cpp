@@ -14,31 +14,32 @@ Released under the MIT license.
 // Includes -------------------------------------------------------------------------------------------------- //
 #include <Alert.h>
 #include <Application.h>
-#include <Button.h>
-#include <Entry.h>
-#include <File.h>
-#include <FilePanel.h>
-#include <ListView.h>
-#include <MenuBar.h>
-#include <Menu.h> 
-#include <MenuItem.h>
-#include <Path.h>
+//#include <Button.h>
+//#include <Entry.h>
+//#include <File.h>
+//#include <FilePanel.h>
+//#include <ListView.h>
+//#include <MenuBar.h>
+//#include <Menu.h> 
+//#include <MenuItem.h>
+//#include <Path.h>
 #include <Screen.h>
 #include <StringView.h>
-#include <StatusBar.h>
+//#include <StatusBar.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <TextControl.h>
+//#include <TextControl.h>
 #include <Window.h>
 #include <View.h>
 
-//#include "brie.h"
-#include "brieconstants.h"
+#include "brie.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
+#include "brieconstants.h"
 
 // Constants ------------------------------------------------------------------------------------------------- //
+//extern ProjectWindow* ptrProjectWindow;
 // ---------------------------------------------------------------------------------------------------------- //
 
 // TopOfScreen -- Places the BWindow starting from the top of the Current Screen
@@ -58,6 +59,7 @@ static void TopOfScreen(BWindow* w)
 // ProjectWindow - Constructor
 ProjectWindow::ProjectWindow(BRect frame) : BWindow (frame, "Project Window", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
+	ptrProjectWindow = this;
 	InitWindow();
 	TopOfScreen(this);
 	Show();
@@ -78,7 +80,7 @@ void ProjectWindow::InitWindow(void)
 {
 	BRect r;
 	r = Bounds();
-	r.top = 20;
+	//r.top = 20;
 	int LeftMargin = 6;
 	float RightMargin = r.right;
 	int TopMargin = 6;
@@ -106,23 +108,18 @@ bool ProjectWindow::QuitRequested()
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-//void ProjectWindow::SetProjectTitle(const char *title)
-//{
-	//(new BAlert("",title,"segment violates just after this with stvProjectName"))->Go(); // debug
-	//printf("%p\n", stvProjectName->Text());
-	//stvProjectName->SetText("test"); // segment violated :(
-	//ptrProjectWindowView->
-//}
-// ---------------------------------------------------------------------------------------------------------- //
-
-
 // ProjectWindow::MessageReceived -- receives messages
 void ProjectWindow::MessageReceived (BMessage *message)
 {
 	switch(message->what)
 	{
 		case SET_PROJECT_NAME:
-			stvProjectName->SetText("blah");
+			{
+			const char *prjname;
+			message->FindString(kProjectName, &prjname);
+			//(new BAlert("",prjname,"ProjectName"))->Go();
+			stvProjectName->SetText(prjname);	
+			}
 			break;
 		default:
 			BWindow::MessageReceived(message);

@@ -9,17 +9,17 @@ Released under the MIT license.
 */
 
 // Includes -------------------------------------------------------------------------------------------------- //
-#include <Alert.h>
+//#include <Alert.h>
 #include <Application.h>
 #include <Bitmap.h>
-#include <Button.h>
-#include <Font.h>
-#include <Screen.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <StringView.h>
-#include <TextControl.h>
+//#include <Button.h>
+//#include <Font.h>
+//#include <Screen.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <string.h>
+//#include <StringView.h>
+//#include <TextControl.h>
 #include <Window.h>
 #include <View.h>
 

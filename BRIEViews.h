@@ -23,6 +23,7 @@ class ProjectWindowView : public BView
 {
 	public:
     	ProjectWindowView(BRect frame);
+    	virtual void Draw(BRect drawRect);
 };
 
 class PropertiesWindowView : public BView

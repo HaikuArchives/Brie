@@ -64,9 +64,7 @@ const uint32 MENU_WIN_PROJ = 'Mwpj';
 const uint32 MENU_HELP_MANUAL = 'Mhma';
 const uint32 MENU_HELP_ABOUT = 'Mhab';
 // ---------------------------------------------------------------------------------------------------------- //
-
-// Globals
-char CurrentProjectName[256];
+char *kProjectName = "ProjectName";
 
 // TopOfScreen -- Places the BWindow starting from the top of the Current Screen
 static void TopOfScreen(BWindow* w)
@@ -87,6 +85,7 @@ static void TopOfScreen(BWindow* w)
 // FileWindow - Constructor
 FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.3", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
+	//ptrFileWindow = this;
 	InitWindow();
 	TopOfScreen(this);
 	Show();
@@ -219,10 +218,11 @@ void FileWindow::InitWindow(void)
 void FileWindow::SetProject(const char *projectname, const char *shortprojectname)
 {
 	char newtitle[256];
-	sprintf(CurrentProjectName,"%s",projectname);
+	//sprintf(CurrentProjectName,"%s",projectname);
 	sprintf(newtitle,"%s%s - [ %s ]",projtitle,projversion,shortprojectname);
 	//(new BAlert("",newtitle,"debug"))->Go();
 	//fileWindow->SetTitle(newtitle);
+	//ptrFileWindow->
 	SetTitle(newtitle);
 }
 // ---------------------------------------------------------------------------------------------------------- //

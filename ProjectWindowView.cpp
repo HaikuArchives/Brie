@@ -25,13 +25,24 @@ Released under the MIT license.
 #include <Window.h>
 #include <View.h>
 
+#include "brie.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
+#include "brieconstants.h"
 // ------------------------------------------------------------------------------------------------------------- //
+
 
 // ProjectWindowView - Constructor
 ProjectWindowView::ProjectWindowView (BRect frame) : BView (frame, "ProjectWindowView", B_FOLLOW_ALL_SIDES, B_WILL_DRAW )
 {
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR)); // Set the Background Color
+}
+// ---------------------------------------------------------------------------------------------------------- //
+
+
+void ProjectWindowView::Draw(BRect drawRect)
+{
+	//MovePenTo(BPoint(8,15));
+	//DrawString("Untitled");
 }
 // ---------------------------------------------------------------------------------------------------------- //

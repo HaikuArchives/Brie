@@ -16,6 +16,7 @@ Released under the MIT license.
 //#include "brie.h"
 #include "BRIEViews.h"
 #include "URLView.h"
+//#include "brieconstants.h"
 
 class BPictureButton;
 class FileWindowView; 
@@ -33,6 +34,7 @@ class ProjectWindow : public BWindow
 	    ~ProjectWindow();
     	virtual bool QuitRequested();
 	    virtual void MessageReceived(BMessage *message);
+	    
 	    //void SetProjectTitle(const char *title);
 	private:
 		BStringView        *stvProjectName;
@@ -102,10 +104,11 @@ class NewProjectWindow : public BWindow
 		void CreateNewProject(void);
 	    NewProjectWindowView*		ptrNewProjectWindowView;
 	    	    
-	    BButton         		    *btnAdd;
+	    BButton         		    *btnAdd;  // alias Create
 	    BButton         		    *btnCancel;
 	    BTextControl                *txtNewProject;
 	    BTextControl                *txtAuthor;
+	    BMessage					*msg;
 };
 
 
