@@ -63,10 +63,15 @@ class AboutWindow : public BWindow
 	    BRIEIconView*      ptrBRIEIconView;
 	    
 	    BButton            *btnOkay;
-	    URLView			   *urlWebSite;
-	    URLView			   *urlEmail;
-	    URLView			   *urlVersion;
-	    URLView            *urlMDR;
+	    //URLView			   *urlWebSite;
+	    //URLView			   *urlEmail;
+	    //URLView			   *urlVersion;
+	    //URLView            *urlMDR;
+	    
+	    BStringView        *stvMDR;
+	    BStringView        *stvWebSiteAddress;
+	    BStringView        *stvEmailAddress;
+	    BStringView        *stvVersionNumber;
 	    BStringView        *stvVersion;
 	    BStringView        *stvEmail;
 	    BStringView        *stvEmail2;
@@ -100,6 +105,13 @@ class FileWindow : public BWindow
 	    ProjectWindow*		ptrProjectWindow;
 	    
 	    BMenuBar  			*menubar;
+	    BMenuItem			*menusaveproject;
+	    BMenuItem			*menusaveasproject;
+	    BMenuItem           *menuwinproj;
+	    BMenuItem			*menucreatemakefile;
+	    BMenuItem			*menucreatejamfile;
+	    BMenuItem			*menucompilegcc;
+	    BMenuItem			*menucreatedox;
 	    AboutWindow         *aboutWindow;
 	    BPictureButton      *btnNewProject;
 	    BPictureButton      *btnLoadProject;
@@ -134,6 +146,7 @@ class NewProjectWindow : public BWindow
 	    BTextControl                *txtAuthor;
 	    BMessage					*msg;
 	    BCheckBox					*chkLoadSavePrefs;
+	    BCheckBox					*chkMenuBar;
 };
 
 

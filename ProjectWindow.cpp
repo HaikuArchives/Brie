@@ -13,6 +13,7 @@ Released under the MIT license.
 
 // Includes -------------------------------------------------------------------------------------------------- //
 #include <Application.h>
+#include <Alert.h>
 #include <Bitmap.h>
 #include <ListView.h>
 #include <MenuBar.h>
@@ -218,13 +219,20 @@ void ProjectWindow::MessageReceived (BMessage *message)
 	{
 		case TOOLBAR_BTN_ADD_FILE_TO_PROJECT:
 			{
-				AddProjectFile("Test.cpp"); // debug
-				// popup a modal window asking for type of file to add
-				// ie. cpp  - add to list open as new file 
-				//     h    - not added to list, just created
-				//     templates check the /templates/ directory for cpp templates
-				//     to add to your project ... ie. AboutWindow, SimpleDialog
-			}
+				// first check that a project exists ...
+				if (ProjectName.Length() !=0 && ProjectName.Compare("Untitled") != 0) {
+					AddProjectFile("Test.cpp"); // debug
+					// popup a modal window asking for type of file to add
+					// ie. cpp  - add to list open as new file 
+					//     h    - not added to list, just created
+					//     templates check the /templates/ directory for cpp templates
+					//     to add to your project ... ie. AboutWindow, SimpleDialog
+				} else {
+					(new BAlert("","You have to create a Project first before you can Add Files.\n\nHint: Select New Project from the Menu or Click on the New Project Icon (first)","Okay"))->Go();
+					// open a new project ... maybe later for the time being ppl 
+					// can just open it manually.
+				}
+			}	
 			break;
 		case TOOLBAR_BTN_REMOVE_FILE_FROM_PROJECT:
 			{

@@ -40,6 +40,7 @@ const uint32 BTN_CANCEL = 'BCnl';
 const uint32 TXT_NEW_PROJECT = 'nPrj';
 const uint32 TXT_AUTHOR = 'auth';
 const uint32 CHK_ADDLOADSAVEPREF = 'cals';
+const uint32 CHK_ADDMENUBAR = 'camb';
 // ---------------------------------------------------------------------------------------------------------- //
 
 
@@ -116,6 +117,10 @@ void NewProjectWindow::InitWindow(void)
 	
 	chkLoadSavePrefs = new BCheckBox(BRect(LeftMargin,NewProjectTop+65,r.right-10,NewProjectTop+65+12),
 						"chkLoadSavePrefs","Add Load/Save Preferences Functions", new BMessage(CHK_ADDLOADSAVEPREF), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+	
+	chkMenuBar = new BCheckBox(BRect(LeftMargin,NewProjectTop+85,r.right-10,NewProjectTop+85+12),
+						"chkMenuBar","Add MenuBar and MenuItems", new BMessage(CHK_ADDMENUBAR), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+	
 	   	
 	btnCancel = new BButton(BRect (CancelLeftMargin,r.bottom-34,CancelLeftMargin+CancelButtonSize,r.bottom-14),"Cancel","Cancel", new BMessage(BTN_CANCEL), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);		
 	if (PanelType == 1) {
@@ -134,6 +139,7 @@ void NewProjectWindow::InitWindow(void)
 	ptrNewProjectWindowView->AddChild(btnCancel);
     ptrNewProjectWindowView->AddChild(btnAdd);
     ptrNewProjectWindowView->AddChild(chkLoadSavePrefs);
+    ptrNewProjectWindowView->AddChild(chkMenuBar);
     txtNewProject->MakeFocus(true);
 }
 // ---------------------------------------------------------------------------------------------------------- //

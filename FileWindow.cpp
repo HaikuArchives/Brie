@@ -58,6 +58,7 @@ const uint32 MENU_EDIT_CUT = 'Mect';
 const uint32 MENU_EDIT_COPY = 'Mecp';
 const uint32 MENU_EDIT_PASTE = 'Mepa';
 const uint32 MENU_TOOLS_OPTIONS = 'Mtop';
+const uint32 MENU_TOOLS_CREATEDOX = 'Mtcd';
 const uint32 MENU_TOOLS_COMPILE = 'Mtgc';
 const uint32 MENU_TOOLS_CREATEJAM = 'Mtja';
 const uint32 MENU_TOOLS_CREATEMAKE = 'Mtmk';
@@ -100,7 +101,7 @@ static void TopOfScreen(BWindow* w)
 
 
 // FileWindow - Constructor
-FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.37", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
+FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.38", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
 	ptrFileWindow = this;
 	InitWindow();
@@ -144,8 +145,13 @@ void FileWindow::InitWindow(void)
     menu->AddItem(new BMenuItem("New Project", new BMessage(MENU_FILE_NEW), 'N'));
     menu->AddSeparatorItem();
     menu->AddItem(new BMenuItem("Load Project...", new BMessage(MENU_FILE_LOAD), 'L'));
-    menu->AddItem(new BMenuItem("Save Project", new BMessage(MENU_FILE_SAVE), 'S'));
-    menu->AddItem(new BMenuItem("Save Project As...", new BMessage(MENU_FILE_SAVEAS), 'A'));
+    
+    menusaveproject = new BMenuItem("Save Project", new BMessage(MENU_FILE_SAVE), 'S');
+    menu->AddItem(menusaveproject);
+    menusaveproject->SetEnabled(false);
+    menusaveasproject = new BMenuItem("Save Project As...", new BMessage(MENU_FILE_SAVEAS), 'A');
+    menusaveasproject->SetEnabled(false);
+    menu->AddItem(menusaveasproject);
     menu->AddSeparatorItem();
     menu->AddItem(new BMenuItem("Print", new BMessage(MENU_FILE_PRINT), 'P'));
     menu->AddSeparatorItem();
@@ -162,13 +168,25 @@ void FileWindow::InitWindow(void)
 	menu = new BMenu("Tools");
 	menu->AddItem(new BMenuItem("Options", new BMessage(MENU_TOOLS_OPTIONS), 'O'));
 	menu->AddSeparatorItem();
-	menu->AddItem(new BMenuItem("Create MAKE file", new BMessage(MENU_TOOLS_CREATEMAKE), 'M'));
-	menu->AddItem(new BMenuItem("Create JAM file", new BMessage(MENU_TOOLS_CREATEJAM), 'J'));
-    menu->AddItem(new BMenuItem("Compile with GCC", new BMessage(MENU_TOOLS_COMPILE), 'R'));
+	menucreatedox = new BMenuItem("Create Doxygen Files", new BMessage(MENU_TOOLS_CREATEDOX), 'D');
+	menucreatedox->SetEnabled(false);
+    menu->AddItem(menucreatedox);
+	menucreatemakefile = new BMenuItem("Create MAKE file", new BMessage(MENU_TOOLS_CREATEMAKE), 'M');
+	menu->AddItem(menucreatemakefile);
+	menucreatemakefile->SetEnabled(false);
+	menucreatejamfile = new BMenuItem("Create JAM file", new BMessage(MENU_TOOLS_CREATEJAM), 'J');
+	menu->AddItem(menucreatejamfile);
+	menucreatejamfile->SetEnabled(false);
+	menucompilegcc = new BMenuItem("Compile with GCC", new BMessage(MENU_TOOLS_COMPILE), 'R');
+	menucompilegcc->SetEnabled(false);
+    menu->AddItem(menucompilegcc);
     menubar->AddItem(menu);
     
     menu = new BMenu("Window");
-	menu->AddItem(new BMenuItem("Show/Hide Project", new BMessage(MENU_WIN_PROJ), '0'));
+    menuwinproj = new BMenuItem("Show/Hide Project", new BMessage(MENU_WIN_PROJ), '0');
+	menu->AddItem(menuwinproj);  // debug -- disabled due to when used it crashes
+	menuwinproj->SetEnabled(false);
+	
 	menu->AddItem(new BMenuItem("Show/Hide Properties", new BMessage(MENU_WIN_PROP), '1'));
 	menu->AddItem(new BMenuItem("Show/Hide Toolbox", new BMessage(MENU_WIN_TOOL), '2'));
     menubar->AddItem(menu);
@@ -736,10 +754,7 @@ void FileWindow::MessageReceived (BMessage *message)
 		case TOOLBAR_BTN_SAVE_PROJECT:	
 		case MENU_FILE_SAVE:
 			{
-				//if (ProjectPath.Length() > 0 ) { GetCurrentPath(); } 	
-				//if (ProjectAuthor.Length > 0) { ProjectAuthor.SetTo("DeveloperName"); }
-				//printf("Menu Save - %s - %s - %s\n\n",ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
-				ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text());
+				//ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text()); -- another thing that causes crashes
 				SaveProject();
 			}
 			break;
@@ -767,7 +782,7 @@ void FileWindow::MessageReceived (BMessage *message)
 		case MENU_FILE_QUIT:
 			{
 				//SaveConfig();
-				Lock();
+				//Lock();
 				QuitRequested();
 			}	
 			break;
@@ -813,15 +828,14 @@ void FileWindow::MessageReceived (BMessage *message)
 			break;	
 		case MENU_WIN_PROJ:
 			{
-				if (ShowWinProj == 1)
-				{
-					ptrProjectWindow->Hide();
+				if (ShowWinProj == 1) {
 					ShowWinProj = 0;
+					ptrProjectWindow->Hide();  // why does this code crash it ?
 				} else {
-					ptrProjectWindow->Show();
+					ptrProjectWindow->Show();  // why does this code crash it ?
 					ShowWinProj = 1;
 					Activate();
-				}	
+				}
 			}
 			break;
 		case MENU_WIN_PROP:
