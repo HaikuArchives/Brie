@@ -88,8 +88,8 @@ void ToolboxWindow::InitWindow(void)
     
     // Toolbar
     //int ToolbarButtonMargin = 2;
-    int ToolbarButtonWidth = 22;
-    int ButtonGap = 1;
+    //int ToolbarButtonWidth = 22;
+    //int ButtonGap = 1;
 	
 	// StringView Button
   	BRect BitmapFrame (BRect(0,0,23,23));
@@ -121,7 +121,7 @@ void ToolboxWindow::InitWindow(void)
  	 	
 	tmpBPictureView->RemoveSelf();
 	AddChild(tmpBPictureView);
-    //--------------------------------------------------------------------\\
+    //--------------------------------------------------------------------//
         
     // TextView Button
     BBitmap *textviewpicture = new BBitmap(BitmapFrame,B_RGB32);
@@ -145,7 +145,7 @@ void ToolboxWindow::InitWindow(void)
  	
 	tmpBPictureView->RemoveSelf();
 	AddChild(tmpBPictureView);
-	//--------------------------------------------------------------------\\
+	//--------------------------------------------------------------------//
 	
 	// Button Button
 	BBitmap *buttonpicture = new BBitmap(BitmapFrame,B_RGB32);
@@ -170,7 +170,7 @@ void ToolboxWindow::InitWindow(void)
  	
 	tmpBPictureView->RemoveSelf();
 	AddChild(tmpBPictureView);
-    //--------------------------------------------------------------------\\
+    //--------------------------------------------------------------------//
     
     // Picture Button
     BBitmap *picturepicture = new BBitmap(BitmapFrame,B_RGB32);
@@ -195,7 +195,7 @@ void ToolboxWindow::InitWindow(void)
  	
 	tmpBPictureView->RemoveSelf();
 	AddChild(tmpBPictureView);
-	//--------------------------------------------------------------------\\
+	//--------------------------------------------------------------------//
 	
 	
     AddChild(btnBriePictureControl);

@@ -37,13 +37,15 @@ class ProjectWindow : public BWindow
     	virtual bool QuitRequested();
 	    virtual void MessageReceived(BMessage *message);
 	    void AddProjectFile(BString tmp);
-	    BStringView        *stvProjectName;
+	    
+	    BStringView         *stvProjectName;
+	    BListView       	*lsvProjectFiles;
 	private:
 		void InitWindow(void);
 		void ShowProjectFiles(BMessage *msg);
-	    ProjectWindowView* ptrProjectWindowView;
+	    ProjectWindowView*  ptrProjectWindowView;
 	    
-	    BListView       	*lsvProjectFiles;
+	    //BListView       	*lsvProjectFiles;
 	    BPictureButton      *btnAddFileToProjectList;
 	    BPictureButton      *btnRemoveFileFromProjectList;
 };
@@ -95,6 +97,7 @@ class FileWindow : public BWindow
 	    void SetProject(const char *prjname);
 	    FileWindowView* 	ptrFileWindowView;
 	    FileWindow*			ptrFileWindow;
+	    ProjectWindow*		ptrProjectWindow;
 	    
 	    BMenuBar  			*menubar;
 	    AboutWindow         *aboutWindow;

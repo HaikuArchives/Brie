@@ -81,8 +81,6 @@ const uint32 TOOLBAR_BTN_HELP = 'Tbhp';
 
 char *kProjectName = "ProjectName";
 char *kProjectFile = "ProjectFile";
-//char *kProjectTitle = "ProjectTitle";
-//char *kProjectShortTitle = "ProjectShortTitle";
 
 
 // TopOfScreen -- Places the BWindow starting from the top of the Current Screen
@@ -109,7 +107,6 @@ FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Env
 	TopOfScreen(this);
 	
 	// add load settings here
-	
 	Show();
 }
 // ---------------------------------------------------------------------------------------------------------- //
@@ -508,7 +505,7 @@ void FileWindow::CreateJamFile(void)
 	char FileName[256];
 	int x;
 	
-	printf("ProjectName.Compare - %i\n",ProjectName.Compare("Untitled")); // debug
+	//printf("ProjectName.Compare - %i\n",ProjectName.Compare("Untitled")); // debug
 	
 	if (ProjectName.Length() !=0 && ProjectName.Compare("Untitled") != 0)
 	{
@@ -661,8 +658,14 @@ void FileWindow::SaveProject(void)
 		x = fputs(tmp,f);
 		x = fputs("### Files\n",f);
 		fclose(f);
-
-		/* BListItem *item; 
+		
+		/*printf("CountItems - %d\n\n",ptrProjectWindow->lsvProjectFiles->CountItems()); // debug
+		int z;
+		for(z=0;z<ptrProjectWindow->lsvProjectFiles->CountItems();z++) {
+			printf("%i\n",z); // debug
+		}
+		
+		 BListItem *item; 
    int32 selected; 
    while ( (selected = myListView->CurrentSelection(i)) >= 0 ) { 
        item = ItemAt(selected); */
