@@ -518,7 +518,8 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs(tmp,f);
 	x = fputs("# end of srcs\n\n",f);
 	x = fputs("#	specify the resource files to use\n",f);
-	x = fputs("RSRCS= ../../newproject.rsrc\n\n",f);
+	//x = fputs("RSRCS= ../../newproject.rsrc\n\n",f);
+	x = fputs("RSRCS= \n\n",f);
 	x = fputs("#	specify additional libraries to link against\n",f);
 	x = fputs("LIBS= be root\n\n",f);
 	x = fputs("#	specify additional paths to directories \n",f);

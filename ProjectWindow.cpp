@@ -37,9 +37,6 @@ Released under the MIT license.
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
 #include "brieconstants.h"
-
-// Constants ------------------------------------------------------------------------------------------------- //
-//extern ProjectWindow* ptrProjectWindow;
 // ---------------------------------------------------------------------------------------------------------- //
 
 // TopOfScreen -- Places the BWindow starting from the top of the Current Screen
@@ -59,7 +56,9 @@ static void TopOfScreen(BWindow* w)
 // ProjectWindow - Constructor
 ProjectWindow::ProjectWindow(BRect frame) : BWindow (frame, "Project Window", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
+	// Set ProjectWindow Pointer
 	ptrProjectWindow = this;
+
 	InitWindow();
 	TopOfScreen(this);
 	Show();
@@ -70,7 +69,7 @@ ProjectWindow::ProjectWindow(BRect frame) : BWindow (frame, "Project Window", B_
 // ProjectWindow - Destructor
 ProjectWindow::~ProjectWindow()
 {
-	exit(0);
+	//exit(0);
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -117,7 +116,7 @@ void ProjectWindow::MessageReceived (BMessage *message)
 			{
 			const char *prjname;
 			message->FindString(kProjectName, &prjname);
-			//(new BAlert("",prjname,"ProjectName"))->Go();
+			(new BAlert("",prjname,"ProjectName"))->Go();
 			stvProjectName->SetText(prjname);	
 			}
 			break;
