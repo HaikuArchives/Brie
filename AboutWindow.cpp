@@ -79,7 +79,7 @@ void AboutWindow::InitWindow(void)
 	r = Bounds(); // the whole view
 	
 	
-	stvAppName = new BStringView(BRect(LeftMarginTitles, 16, 150, 40), "AppName", "BeOS Rapid Integrated Environment (BRIE)");
+	stvAppName = new BStringView(BRect(LeftMarginTitles, 16, LeftMarginTitles+260, 40), "AppName", "BeOS Rapid Integrated Environment (BRIE)");
 	stvAppName->SetFontSize(12.0);
 	
 	stvVersion = new BStringView(BRect(LeftMarginTitles+2, r.top+43, 97, r.top+53), "Version:", "Version:");
