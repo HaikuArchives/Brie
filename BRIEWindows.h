@@ -85,13 +85,13 @@ class FileWindow : public BWindow
 	    ~FileWindow();
     	virtual bool QuitRequested();
 	    virtual void MessageReceived(BMessage *message);
-	    void SaveProject(const char *prjname, const char *prjpath, const char *prjauthor);
+	    void SaveProject(void);
 	    void GetCurrentPath(void);
 	private:
 		void InitWindow(void);
-	    void CompileGCC(const char *prjname, const char *prjpath, const char *prjauthor);
-	    void CreateMakeFile(const char *prjname, const char *prjpath, const char *prjauthor);
-	    void CreateJamFile(const char *prjname, const char *prjpath, const char *prjauthor);
+	    void CompileGCC(void);
+	    void CreateMakeFile(void);
+	    void CreateJamFile(void);
 	    void SetProject(const char *prjname);
 	    FileWindowView* 	ptrFileWindowView;
 	    FileWindow*			ptrFileWindow;
@@ -130,6 +130,7 @@ class NewProjectWindow : public BWindow
 	    BTextControl                *txtNewProject;
 	    BTextControl                *txtAuthor;
 	    BMessage					*msg;
+	    BCheckBox					*chkLoadSavePrefs;
 };
 
 
@@ -140,9 +141,13 @@ class PropertiesWindow : public BWindow
 	    ~PropertiesWindow();
     	virtual bool QuitRequested();
 	    virtual void MessageReceived(BMessage *message);
+	    void ShowProperties(BString currentobject, BString objectname);
 	private:
 		void InitWindow(void);
+		void AddPropertyItem(BString propname, BString propvalue);
 	    PropertiesWindowView* ptrPropertiesWindowView;
+	    
+	    BListView	*lsvProperties;
 };
 
 

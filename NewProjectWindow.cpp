@@ -14,6 +14,7 @@ Released under the MIT license.
 #include <Alert.h>
 #include <Application.h>
 #include <Button.h>
+#include <CheckBox.h>
 #include <Directory.h>
 #include <Message.h>
 #include <Path.h>
@@ -38,6 +39,7 @@ const uint32 BTN_ADD = 'BAdd';
 const uint32 BTN_CANCEL = 'BCnl';
 const uint32 TXT_NEW_PROJECT = 'nPrj';
 const uint32 TXT_AUTHOR = 'auth';
+const uint32 CHK_ADDLOADSAVEPREF = 'cals';
 // ---------------------------------------------------------------------------------------------------------- //
 
 
@@ -109,6 +111,11 @@ void NewProjectWindow::InitWindow(void)
 	
 	}    	        
 	txtAuthor->SetDivider(88);
+	
+	// add special project stuff
+	
+	chkLoadSavePrefs = new BCheckBox(BRect(LeftMargin,NewProjectTop+65,r.right-10,NewProjectTop+65+12),
+						"chkLoadSavePrefs","Add Load/Save Preferences Functions", new BMessage(CHK_ADDLOADSAVEPREF), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
 	   	
 	btnCancel = new BButton(BRect (CancelLeftMargin,r.bottom-34,CancelLeftMargin+CancelButtonSize,r.bottom-14),"Cancel","Cancel", new BMessage(BTN_CANCEL), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);		
 	if (PanelType == 1) {
@@ -126,6 +133,7 @@ void NewProjectWindow::InitWindow(void)
 	ptrNewProjectWindowView->AddChild(txtAuthor);
 	ptrNewProjectWindowView->AddChild(btnCancel);
     ptrNewProjectWindowView->AddChild(btnAdd);
+    ptrNewProjectWindowView->AddChild(chkLoadSavePrefs);
     txtNewProject->MakeFocus(true);
 }
 // ---------------------------------------------------------------------------------------------------------- //
@@ -236,6 +244,12 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs("\t\tvirtual void MessageReceived(BMessage *message);\n",f);
 	x = fputs("\tprivate:\n",f);
 	x = fputs("\t\tvoid InitWindow(void);\n\n",f);
+	
+	// add load/save pref (if checked)
+	if (chkLoadSavePrefs->Value() == B_CONTROL_ON) {
+		x = fputs("\t\tvoid LoadSettings(BMessage *msg);\n",f);
+		x = fputs("\t\tvoid SaveSettings(void); \n",f);
+	}
 	sprintf(tmp,"\t\t%sView*\t\tptr%sView;\n",AppName,AppName);
 	x = fputs(tmp,f);
 	x = fputs("};\n\n",f);
@@ -407,6 +421,13 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs("#include <Alert.h>\n",f);
 	x = fputs("#include <Application.h>\n",f);
 	x = fputs("#include <Button.h>\n",f);
+	
+	// add load/save pref (if checked)
+	if (chkLoadSavePrefs->Value() == B_CONTROL_ON) {
+		x = fputs("#include <File.h>\n",f);
+		x = fputs("#include <FindDirectory.h>\n",f);
+	}	
+	
 	x = fputs("#include <Path.h>\n",f);
 	x = fputs("#include <Screen.h>\n",f);
 	x = fputs("#include <ScrollView.h>\n",f);
@@ -440,6 +461,22 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs("{\n",f);
 	x = fputs("\tInitWindow();\n",f);
 	x = fputs("\tCenterWindowOnScreen(this);\n",f);
+	
+	// add load/save pref (if checked)
+	if (chkLoadSavePrefs->Value() == B_CONTROL_ON) {
+		x = fputs("\n",f);
+		x = fputs("\t// Load User Settings \n",f);
+		x = fputs("\tBPath path;\n",f);
+		x = fputs("\tfind_directory(B_USER_SETTINGS_DIRECTORY,&path);\n",f);
+		sprintf(tmp,"\tpath.Append(\"%s_Settings\",true);\n",AppName);
+		x = fputs(tmp,f);
+		x = fputs("\tBFile file(path.Path(),B_READ_ONLY);\n",f);
+		x = fputs("\tBMessage msg;\n",f);
+		x = fputs("\tmsg.Unflatten(&file);\n",f);
+		x = fputs("\tLoadSettings (&msg);\n",f);
+		x = fputs("\n",f);
+    }
+	
 	x = fputs("\tShow();\n",f);
 	x = fputs("}\n",f);
 	x = fputs("// -------------------------------------------------------------------------------------------------- //\n\n",f);
@@ -468,10 +505,51 @@ void NewProjectWindow::CreateNewProject(void)
 	sprintf(tmp,"bool %sWindow::QuitRequested()\n",AppName);
 	x = fputs(tmp,f);
 	x = fputs("{\n",f);
+	
+	if (chkLoadSavePrefs->Value() == B_CONTROL_ON) {
+		x = fputs("\tSaveSettings();\n",f);
+	}
+	
 	x = fputs("\tbe_app->PostMessage(B_QUIT_REQUESTED);\n",f);
 	x = fputs("\treturn true;\n",f);
 	x = fputs("}\n",f);
 	x = fputs("// -------------------------------------------------------------------------------------------------- //\n\n",f);	
+	
+	// add load/save pref (if checked)
+	if (chkLoadSavePrefs->Value() == B_CONTROL_ON) {
+		sprintf(tmp,"// %sWindow::LoadSettings -- Loads your current settings\n",AppName);
+		x = fputs(tmp,f);
+		sprintf(tmp,"void %sWindow::LoadSettings(BMessage *msg)\n",AppName);
+		x = fputs(tmp,f);
+		x = fputs("{\n",f);
+		x = fputs("\tBRect frame;\n\n",f);
+		x = fputs("\tif (B_OK == msg->FindRect(\"windowframe\",&frame)) {\n",f);
+		x = fputs("\t\tMoveTo(frame.left,frame.top);\n",f);
+		x = fputs("\t\tResizeTo(frame.right-frame.left,frame.bottom-frame.top);\n",f);
+		x = fputs("\t}\n",f);
+		x = fputs("}\n",f);
+		x = fputs("// -------------------------------------------------------------------------------------------------- //\n\n",f);		
+
+		sprintf(tmp,"// %sWindow::SaveSettings -- Saves the Users settings\n",AppName);
+		x = fputs(tmp,f);
+		sprintf(tmp,"void %sWindow::SaveSettings(void)\n",AppName);
+		x = fputs(tmp,f);
+		x = fputs("{\n",f);
+		x = fputs("\tBMessage msg;\n",f);
+		x = fputs("\tmsg.AddRect(\"windowframe\",Frame());\n\n",f);
+		x = fputs("\tBPath path;\n",f);
+		x = fputs("\tstatus_t result = find_directory(B_USER_SETTINGS_DIRECTORY,&path);\n",f);
+		x = fputs("\tif (result == B_OK) {\n",f);
+		sprintf(tmp,"\t\tpath.Append(\"%s_Settings\",true);\n",AppName);
+		x = fputs(tmp,f);
+		x = fputs("\t\tBFile file(path.Path(),B_READ_WRITE | B_CREATE_FILE | B_ERASE_FILE);\n",f);
+		x = fputs("\t\tmsg.Flatten(&file);\n",f);
+		
+		x = fputs("\t}\n",f);
+		x = fputs("}\n",f);
+		x = fputs("// -------------------------------------------------------------------------------------------------- //\n\n",f);
+	}
+		
 	sprintf(tmp,"// %sWindow::MessageReceived -- receives messages\n",AppName);
 	x = fputs(tmp,f);
 	sprintf(tmp,"void %sWindow::MessageReceived (BMessage *message)\n",AppName);
@@ -608,9 +686,11 @@ void NewProjectWindow::CreateNewProject(void)
 	//msg.AddBool(kNotSaved, true); // make this false later - true for debug purposes
 	BMessenger(ptrFileWindow).SendMessage(&msg);
 	BMessenger(ptrProjectWindow).SendMessage(&msg);
-	
 	ProjectName.SetTo(AppName);
 	ProjectPath = apath;
+	
+	// set properties window to show current Window from New Project
+	ptrPropertiesWindow->ShowProperties("Window",ProjectName.String());
 		
 	// 8) Show Tracker and/or Continue
 	ShowTracker(apath,AppName);
@@ -657,7 +737,7 @@ void NewProjectWindow::CreateExistingProject(void)
     	CreateNewProject();	
 	} else {
 		// Only save necessary bits like project
-		ptrFileWindow->SaveProject(ProjectName.String(),ProjectPath.String(),ProjectAuthor.String());
+		ptrFileWindow->SaveProject();
 	}	
 }
 // ---------------------------------------------------------------------------------------------------------- //

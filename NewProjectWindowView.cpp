@@ -37,3 +37,25 @@ NewProjectWindowView::NewProjectWindowView (BRect frame) : BView (frame, "NewPro
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR)); // Set the Background Color
 }
 // ---------------------------------------------------------------------------------------------------------- //
+
+
+void NewProjectWindowView::Draw(BRect drawRect)
+{
+	BRect r;
+	r = Bounds();
+	
+	float LineTop = 66.0;
+	float LineBottom = 67.0;
+	
+	rgb_color whitebar = { 255, 255, 255, 0 };
+	rgb_color darkbar = { 160, 160, 160, 0 };
+	
+	SetHighColor(whitebar);
+	StrokeLine(BPoint(8,LineTop),BPoint(r.right-9,LineTop)); // top line
+	
+	SetHighColor(darkbar);
+	StrokeLine(BPoint(8,LineBottom),BPoint(r.right-9,LineBottom)); // bottom line
+
+}
+// ---------------------------------------------------------------------------------------------------------- //
+

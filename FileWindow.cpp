@@ -21,6 +21,7 @@ Released under the MIT license.
 #include <File.h>
 #include <FilePanel.h>
 #include <ListView.h>
+#include <Message.h>
 #include <MenuBar.h>
 #include <Menu.h> 
 #include <MenuItem.h>
@@ -33,7 +34,7 @@ Released under the MIT license.
 #include <StatusBar.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <String.h>
 #include <TextControl.h>
 #include <Window.h>
 #include <View.h>
@@ -76,8 +77,6 @@ const uint32 TOOLBAR_BTN_CREATEJAM = 'Tbcj';
 const uint32 TOOLBAR_BTN_COMPILE = 'Tbcp';
 const uint32 TOOLBAR_BTN_OPTIONS = 'Tbop';
 const uint32 TOOLBAR_BTN_HELP = 'Tbhp';
-
-
 // ---------------------------------------------------------------------------------------------------------- //
 
 char *kProjectName = "ProjectName";
@@ -103,11 +102,14 @@ static void TopOfScreen(BWindow* w)
 
 
 // FileWindow - Constructor
-FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.35", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
+FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Environment v0.36", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
 	ptrFileWindow = this;
 	InitWindow();
 	TopOfScreen(this);
+	
+	// add load settings here
+	
 	Show();
 }
 // ---------------------------------------------------------------------------------------------------------- //
@@ -446,6 +448,9 @@ void FileWindow::InitWindow(void)
 	AddChild(tmpBPictureView);
 	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
 	
+	delete tmpBPicture;
+	delete tmpBPicture2;
+	
 	//BrowsePanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL,	B_DIRECTORY_NODE, true);
         
     // Add Controls
@@ -464,16 +469,14 @@ void FileWindow::InitWindow(void)
 	AddChild(ptrFileWindowView = new FileWindowView(r));
 	
 	// Check for Existence of Project directory and create it if necessary
-	app_info	daInfo;
-	be_app->GetAppInfo(&daInfo);
-	BEntry	daEntry(&daInfo.ref);
-	daEntry.GetParent(&daEntry);
-	BPath	pPath(&daEntry);
-	char	apath[256];
-	::memcpy(apath, pPath.Path(), 256);	
+	if (ProjectPath.Length() == 0)
+	{
+		GetCurrentPath();
+	}
 	
+	// change this for a better bstorage function
 	char cmd[256];
-	sprintf(cmd,"mkdir %s/projects",apath);
+	sprintf(cmd,"mkdir %s/projects",ProjectPath.String());
 	system(cmd);
 }
 // ---------------------------------------------------------------------------------------------------------- //
@@ -498,39 +501,43 @@ bool FileWindow::QuitRequested()
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-void FileWindow::CreateJamFile(const char *prjname, const char *prjpath, const char *prjauthor)
+void FileWindow::CreateJamFile(void)
 {
-	FILE *f;
+/*	FILE *f;
 	char tmp[256];
 	char FileName[256];
 	int x;
-	
-	if (strcmp(prjname,"Untitled") !=0) {
-		printf("CreateJam - %s\n\n",prjname);
-	}
+	printf("Count: %i // Compare: %i\n\n",ProjectName.Length,ProjectName.Compare("Untitled"));
+	if (ProjectName.Length !=0)
+	{
+		if (ProjectName.Compare("Untitled") != 1) {
+			printf("CreateJam - %s\n\n",ProjectName.String());
+		}	
+	}*/
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-void FileWindow::CreateMakeFile(const char *prjname, const char *prjpath, const char *prjauthor)
+void FileWindow::CreateMakeFile(void)
 {
 	FILE *f;
 	char tmp[256];
 	char FileName[256];
 	int x;
 	
-	if (strcmp(prjname,"Untitled") !=0) {
-		printf("CreateMake - %s\n\n",prjname);
-		sprintf(FileName,"%s/projects/%s/makefile",prjpath,prjname);
+	if (ProjectName.Length() !=0)
+	{
+		printf("CreateMake - %s\n\n",ProjectName.String());
+		sprintf(FileName,"%s/projects/%s/makefile",ProjectPath.String(),ProjectName.String());
 		f = fopen(FileName,"w");
-		sprintf(tmp,"## BeOS Makefile for %s ##\n",prjname);
+		sprintf(tmp,"## BeOS Makefile for %s ##\n",ProjectName.String());
 		x = fputs(tmp,f);
-		sprintf(tmp,"## Author: %s\n",prjauthor);
+		sprintf(tmp,"## Author: %s\n",ProjectAuthor.String());
 		x = fputs(tmp,f);
 		x = fputs("## Created by BRIE (http://brie.sf.net/)\n\n",f);
 		x = fputs("## Application Specific Settings ---------------------------------------------\n\n",f);
 		x = fputs("# specify the name of the binary\n",f);
-		sprintf(tmp,"NAME= %s\n",prjname);
+		sprintf(tmp,"NAME= %s\n",ProjectName.String());
 		x = fputs(tmp,f);
 		x = fputs("# specify the type of binary\n",f);
 		x = fputs("#	APP:	Application\n",f);
@@ -540,7 +547,7 @@ void FileWindow::CreateMakeFile(const char *prjname, const char *prjpath, const 
 		x = fputs("TYPE= APP\n\n",f);
 		x = fputs("#	specify the source files to use\n",f);
 		x = fputs("#	Note that spaces in folder names do not work well with this makefile.\n",f);
-		sprintf(tmp,"SRCS= %s.cpp %sWindow.cpp %sView.cpp\n",prjname,prjname,prjname);
+		sprintf(tmp,"SRCS= %s.cpp %sWindow.cpp %sView.cpp\n",ProjectName.String(),ProjectName.String(),ProjectName.String());
 		x = fputs(tmp,f);
 		x = fputs("# end of srcs\n\n",f);
 		x = fputs("#	specify the resource files to use\n",f);
@@ -578,19 +585,19 @@ void FileWindow::CreateMakeFile(const char *prjname, const char *prjpath, const 
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-void FileWindow::CompileGCC(const char *prjname, const char *prjpath, const char *prjauthor)
+void FileWindow::CompileGCC(void)
 {
-	if (strcmp(prjname,"Untitled") !=0)
+	/*if (ProjectName.Length() !=0)
 	{
 		// check to see if the makefile exists
 		char cmd[256];
-		sprintf(cmd,"%s/projects/%s/makefile",prjpath,prjname);
+		sprintf(cmd,"%s/projects/%s/makefile",ProjectPath.String(),ProjectName.String());
 		FILE *f;	
     	
     	printf("CompileGCC - cmd is %s\n",cmd); //debug
     	if (!(f = fopen(cmd, "r"))) {
 			(new BAlert("","No Makefile Found.\n\nWe MUST create a new one.","Okay"))->Go();
-			CreateMakeFile(prjpath,prjname,prjauthor);
+			CreateMakeFile();
 		}
 		fclose(f);
 		
@@ -598,16 +605,16 @@ void FileWindow::CompileGCC(const char *prjname, const char *prjpath, const char
 		int x;
 		char tmp[256];
 		char FileName[256];
-		sprintf(FileName,"%s/projects/%s/compile.sh",prjpath,prjname);
+		sprintf(FileName,"%s/projects/%s/compile.sh",ProjectPath.String(),ProjectName.String());
 		f = fopen(FileName,"w");
 		x = fputs("#!/bin/sh\n",f);
 		x = fputs("# Compile and Run\n",f);
-		sprintf(tmp,"cd %s/projects/%s \n",prjpath,prjname);
+		sprintf(tmp,"cd %s/projects/%s \n",ProjectPath.String(),ProjectName.String());
 		x = fputs(tmp,f);
 		x = fputs("make clean\n",f);
 		x = fputs("make\n",f);
 		x = fputs("cd obj.x86\n",f);
-		sprintf(tmp,"%s\n",prjpath,prjname);
+		sprintf(tmp,"%s\n",ProjectPath.String(),ProjectName.String());
 		x = fputs(tmp,f);
 		fclose(f);
 		//sprintf(cmd,"Terminal -t \"Compiling %s\" %s",FileName);
@@ -615,45 +622,70 @@ void FileWindow::CompileGCC(const char *prjname, const char *prjpath, const char
 		system(FileName);
 	} else {
 		(new BAlert("","You have to create a Project first before you can Compile/Run.","Okay"))->Go();	
-	}
+	}*/
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
 
-void FileWindow::SaveProject(const char *prjname, const char *prjpath, const char *prjauthor)
+void FileWindow::SaveProject(void)
 {
-	if (strcmp(prjname,"Untitled") !=0)
+	if (ProjectName.Length() !=0)
 	{
 		FILE *f;
 		char tmp[256];
 		char FileName[256];
 		int x;
 		
-		sprintf(FileName,"%s/projects/%s.bprj",prjpath,prjname);
+		sprintf(FileName,"%s/projects/%s.bprj",ProjectPath.String(),ProjectName.String());
 		f = fopen(FileName,"w");
-		sprintf(tmp,"## BRIE Project File for %s ##\n",prjname);
+		sprintf(tmp,"## BRIE Project File for %s ##\n",ProjectName.String());
 		x = fputs(tmp,f);
-		sprintf(tmp,"ProjectName=%s\n",prjname);
+		sprintf(tmp,"ProjectName=%s\n",ProjectName.String());
 		x = fputs(tmp,f);
-		sprintf(tmp,"ProjectDir=%s/projects/%s\n",prjpath,prjname);
+		sprintf(tmp,"ProjectDir=%s/projects/%s\n",ProjectPath.String(),ProjectName.String());
 		x = fputs(tmp,f);
-		sprintf(tmp,"Author=%s\n",prjauthor);
+		sprintf(tmp,"Author=%s\n",ProjectAuthor.String());
 		x = fputs(tmp,f);
 		sprintf(tmp,"Language=%s\n","C/C++");
 		x = fputs(tmp,f);
 		x = fputs("### Files\n",f);
-		
-		// need to loop the array or whatever we store the list
-		// of cpp files in
-		
-		sprintf(tmp,"%s.cpp\n",prjname);
+		fclose(f);
+	/*	sprintf(tmp,"%s.cpp\n",prjname);
 		x = fputs(tmp,f);
 		sprintf(tmp,"%sWindow.cpp\n",prjname);
 		x = fputs(tmp,f);
 		sprintf(tmp,"%sView.cpp\n",prjname);
 		x = fputs(tmp,f);
-		fclose(f);
-		sprintf(tmp,"%s.bprj",prjname);
+		fclose(f);*/
+		/* BListItem *item; 
+   int32 selected; 
+   while ( (selected = myListView->CurrentSelection(i)) >= 0 ) { 
+       item = ItemAt(selected); */
+		
+		
+		//BListItem *item;
+		//Lock();
+		//for(z=0;z<lsvProjectFiles->CountItems();z++) {
+			//item = lsvProjectFiles->ItemAt(z);
+		//	lsvProjectFiles->DeselectAll();
+		//	lsvProjectFiles->Select(z,true);
+			//sprintf(tmp,"%s\n",lsvProjectFiles->);
+		//	x = fputs(tmp,f);
+		//}
+		//Unlock();		
+/*		### Properties:TestWindow.cpp
+0
+0
+100
+100
+###*/
+		
+		
+		// need to loop the array or whatever we store the list
+		// of cpp files in
+		
+		
+		
 	} else {
 		(new BAlert("","You have to create a Project first before you can Save.","Okay"))->Go();	
 	}
@@ -694,7 +726,7 @@ void FileWindow::MessageReceived (BMessage *message)
 			{
 				TipNumber = 1;
 				new HelpTipWindow(BRect(0.0, 0.0, 350.0, 120.0));
-				if (strlen(ProjectPath.String()) == 0)
+				if (ProjectPath.Length() == 0)
 				{
 					GetCurrentPath();
 				} 
@@ -706,19 +738,17 @@ void FileWindow::MessageReceived (BMessage *message)
 		case TOOLBAR_BTN_SAVE_PROJECT:	
 		case MENU_FILE_SAVE:
 			{
-				if (strlen(ProjectPath.String()) == 0)
-				{
-					GetCurrentPath();
-				} 	
-				if (ProjectAuthor == "") { ProjectAuthor.SetTo("DeveloperName"); }
+				//if (ProjectPath.Length() > 0 ) { GetCurrentPath(); } 	
+				//if (ProjectAuthor.Length > 0) { ProjectAuthor.SetTo("DeveloperName"); }
 				//printf("Menu Save - %s - %s - %s\n\n",ptrProjectWindow->stvProjectName->Text(),ProjectPath,ProjectAuthor);
-				SaveProject(ptrProjectWindow->stvProjectName->Text(),ProjectPath.String(),ProjectAuthor.String());
+				ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text());
+				SaveProject();
 			}
 			break;
 		case TOOLBAR_BTN_SAVEAS_PROJECT:	
 		case MENU_FILE_SAVEAS:
 			{
-				if (strlen(ProjectPath.String()) == 0)
+				if (ProjectPath.Length() == 0)
 				{
 					GetCurrentPath();
 				}
@@ -752,35 +782,38 @@ void FileWindow::MessageReceived (BMessage *message)
 		case TOOLBAR_BTN_CREATEMAKE:		
 		case MENU_TOOLS_CREATEMAKE:
 			{
-				if (strlen(ProjectPath.String()) == 0)
+				if (ProjectPath.Length() == 0)
 				{
 					GetCurrentPath();
 				}
-				if (strlen(ProjectAuthor.String()) == 0) { ProjectAuthor.SetTo("DeveloperName"); }
-				CreateMakeFile(ptrProjectWindow->stvProjectName->Text(),ProjectPath.String(),ProjectAuthor.String());
+				if (ProjectAuthor.Length() == 0) { ProjectAuthor.SetTo("DeveloperName"); }
+				ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text());
+				CreateMakeFile();
 			}
 			break;
 		case TOOLBAR_BTN_CREATEJAM:		
 		case MENU_TOOLS_CREATEJAM:
 			{
-				if (strlen(ProjectPath.String()) == 0)
+				if (ProjectPath.Length() == 0)
 				{
 					GetCurrentPath();
 				}
-				if (strlen(ProjectAuthor.String()) == 0) { ProjectAuthor.SetTo("DeveloperName"); }
-				CreateJamFile(ptrProjectWindow->stvProjectName->Text(),ProjectPath.String(),ProjectAuthor.String());
+				if (ProjectAuthor.Length() == 0) { ProjectAuthor.SetTo("DeveloperName"); }
+				ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text());
+				CreateJamFile();
 			}
 			break;	
 		case TOOLBAR_BTN_COMPILE:		
 		case MENU_TOOLS_COMPILE:
 			{
-				if (strlen(ProjectPath.String()) == 0)
+				if (ProjectPath.Length() == 0)
 				{
 					GetCurrentPath();
 				}
-				if (strlen(ProjectAuthor.String()) == 0) { ProjectAuthor.SetTo("DeveloperName"); }
+				if (ProjectAuthor.Length() == 0) { ProjectAuthor.SetTo("DeveloperName"); }
 				//Save
-				CompileGCC(ptrProjectWindow->stvProjectName->Text(),ProjectPath.String(),ProjectAuthor.String());
+				ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text());
+				CompileGCC();
 			}	
 			break;	
 		case MENU_WIN_PROJ:
@@ -826,7 +859,7 @@ void FileWindow::MessageReceived (BMessage *message)
 		case MENU_HELP_MANUAL:
 			{
 				// launch browser on local html manual
-				if (strlen(ProjectPath.String()) == 0)
+				if (ProjectPath.Length() == 0)
 				{
 					GetCurrentPath();
 				}
