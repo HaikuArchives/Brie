@@ -50,13 +50,13 @@ const uint8 url_cursor[] = { 16, 1, 1, 2,
 
 
 // The default link color, blue.
-const rgb_color blue =		{ 0, 0, 255 };
+const rgb_color blue =		{ 0, 0, 255, 255 };
 // The default clicked-link color, red.
-const rgb_color red  =		{ 255, 0, 0 };
+const rgb_color red  =		{ 255, 0, 0, 255 };
 // The default link hover color, dark blue.
-const rgb_color dark_blue =	{ 0, 0, 120 };
+const rgb_color dark_blue =	{ 0, 0, 120, 255 };
 // The default disabled color, gray.
-const rgb_color gray = { 100, 100, 100 };
+const rgb_color gray = { 100, 100, 100, 255 };
 
 
 

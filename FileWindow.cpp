@@ -155,7 +155,7 @@ void FileWindow::InitWindow(void)
     menu = new BMenu("Help");
     menu->AddItem(new BMenuItem("Help Manual", new BMessage(MENU_HELP_MANUAL), 'H'));
     menu->AddSeparatorItem();
-    menu->AddItem(new BMenuItem("About BRIE ...", new BMessage(MENU_HELP_ABOUT), NULL));
+    menu->AddItem(new BMenuItem("About BRIE ...", new BMessage(MENU_HELP_ABOUT)));
     menubar->AddItem(menu);
     
     // Sikosis's Toolbar ;)

@@ -112,7 +112,7 @@ void URLView::AttachedToWindow() {
 
 
 
-void URLView::Draw( BRect updateRect ) {
+void URLView::Draw( BRect /*updateRect*/ ) {
 	BRect rect = Frame();
 	rect.OffsetTo( B_ORIGIN );
 
@@ -231,7 +231,7 @@ void URLView::MouseMoved( BPoint point, uint32 transit,
 	if( !Window()->IsActive() ) return;
 
 	// See which mouse buttons were clicked.
-	int32 buttons = Window()->CurrentMessage()->FindInt32( "buttons" );
+	int32 buttons = message/*Window()->CurrentMessage()*/->FindInt32( "buttons" );
 	// Is the user currently dragging the link?  (i.e. is a mouse button
 	// currently down?)
 	bool alreadyDragging = (buttons != 0);

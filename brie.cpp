@@ -102,7 +102,7 @@ void BRIE::ReadyToRun (void)
 }
 
 // BRIE::RefsReceived
-void BRIE::RefsReceived (BMessage *message)
+void BRIE::RefsReceived (BMessage */*message*/)
 {
 
 }

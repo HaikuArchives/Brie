@@ -25,6 +25,7 @@ class ToolboxWindowView;
 class NewProjectWindowView;
 class AboutWindowView;
 class BRIEIconView;
+class BPictureButton;
 
 class ProjectWindow : public BWindow
 {

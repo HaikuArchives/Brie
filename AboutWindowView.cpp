@@ -43,7 +43,7 @@ BRIEIconView::BRIEIconView (BBitmap* bitmap, BRect frame) : BView (frame, "BRIEI
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
-void BRIEIconView::Draw(BRect updateRect)
+void BRIEIconView::Draw(BRect /*updateRect*/)
 {
 	DrawBitmap(icon,BPoint(6,10));
 }
