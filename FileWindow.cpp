@@ -71,6 +71,13 @@ const uint32 TOOLBAR_BTN_LOAD_PROJECT = 'Tblp';
 const uint32 TOOLBAR_BTN_SAVE_PROJECT = 'Tbsp';
 const uint32 TOOLBAR_BTN_SAVEAS_PROJECT = 'Tbsa';
 const uint32 TOOLBAR_BTN_PRINT_PROJECT = 'Tbpt';
+const uint32 TOOLBAR_BTN_CREATEMAKE = 'Tbcm';
+const uint32 TOOLBAR_BTN_CREATEJAM = 'Tbcj';
+const uint32 TOOLBAR_BTN_COMPILE = 'Tbcp';
+const uint32 TOOLBAR_BTN_OPTIONS = 'Tbop';
+const uint32 TOOLBAR_BTN_HELP = 'Tbhp';
+
+
 // ---------------------------------------------------------------------------------------------------------- //
 
 char *kProjectName = "ProjectName";
@@ -312,6 +319,133 @@ void FileWindow::InitWindow(void)
 	AddChild(tmpBPictureView);
 	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
 	
+	// Create Make Button
+    BBitmap *createmakepicture = new BBitmap(BitmapFrame,B_RGB32);
+	createmakepicture->SetBits(briemake,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(createmakepicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *createmakepicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	createmakepicture_state2->SetBits(briemakeinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(createmakepicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnCreateMake = new BPictureButton(BRect (ToolbarButtonMargin,rMenuBar.bottom+4,ToolbarButtonMargin+ToolbarButtonWidth,rMenuBar.bottom+28),
+ 					 "Create Make",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_CREATEMAKE),B_ONE_STATE_BUTTON,
+ 					 B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
+	
+	// Create Jam Button
+    BBitmap *createjampicture = new BBitmap(BitmapFrame,B_RGB32);
+	createjampicture->SetBits(briejam,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(createjampicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *createjampicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	createjampicture_state2->SetBits(briejaminverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(createjampicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnCreateJam = new BPictureButton(BRect (ToolbarButtonMargin,rMenuBar.bottom+4,ToolbarButtonMargin+ToolbarButtonWidth,rMenuBar.bottom+28),
+ 					 "Create Jam",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_CREATEJAM),B_ONE_STATE_BUTTON,
+ 					 B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
+	
+	// Compile Button
+    BBitmap *compilepicture = new BBitmap(BitmapFrame,B_RGB32);
+	compilepicture->SetBits(briecompile,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(compilepicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *compilepicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	compilepicture_state2->SetBits(briecompileinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(compilepicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnCompile = new BPictureButton(BRect (ToolbarButtonMargin,rMenuBar.bottom+4,ToolbarButtonMargin+ToolbarButtonWidth,rMenuBar.bottom+28),
+ 					 "Compile",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_COMPILE),B_ONE_STATE_BUTTON,
+ 					 B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
+	
+	// Options Button
+    BBitmap *optionspicture = new BBitmap(BitmapFrame,B_RGB32);
+	optionspicture->SetBits(brieoptions,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(optionspicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *optionspicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	optionspicture_state2->SetBits(brieoptionsinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(optionspicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnOptions = new BPictureButton(BRect (ToolbarButtonMargin,rMenuBar.bottom+4,ToolbarButtonMargin+ToolbarButtonWidth,rMenuBar.bottom+28),
+ 					 "Options",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_OPTIONS),B_ONE_STATE_BUTTON,
+ 					 B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
+	
+	// Help Button
+    BBitmap *helppicture = new BBitmap(BitmapFrame,B_RGB32);
+	helppicture->SetBits(briehelp,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(helppicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *helppicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	helppicture_state2->SetBits(briehelpinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(helppicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnHelp = new BPictureButton(BRect (ToolbarButtonMargin,rMenuBar.bottom+4,ToolbarButtonMargin+ToolbarButtonWidth,rMenuBar.bottom+28),
+ 					 "Help",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_HELP),B_ONE_STATE_BUTTON,
+ 					 B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
+	
 	//BrowsePanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL,	B_DIRECTORY_NODE, true);
         
     // Add Controls
@@ -320,6 +454,11 @@ void FileWindow::InitWindow(void)
     AddChild(btnSaveProject);
     AddChild(btnSaveAsProject);
     AddChild(btnPrintProject);
+    AddChild(btnCreateMake);
+    AddChild(btnCreateJam);
+    AddChild(btnCompile);
+    AddChild(btnOptions);
+    AddChild(btnHelp);
     
 	// Add the Drawing View
 	AddChild(ptrFileWindowView = new FileWindowView(r));
@@ -355,6 +494,20 @@ bool FileWindow::QuitRequested()
 {
    be_app->PostMessage(B_QUIT_REQUESTED);
    return true;
+}
+// ---------------------------------------------------------------------------------------------------------- //
+
+
+void FileWindow::CreateJamFile(const char *prjname, const char *prjpath, const char *prjauthor)
+{
+	FILE *f;
+	char tmp[256];
+	char FileName[256];
+	int x;
+	
+	if (strcmp(prjname,"Untitled") !=0) {
+		printf("CreateJam - %s\n\n",prjname);
+	}
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -590,11 +743,13 @@ void FileWindow::MessageReceived (BMessage *message)
 				QuitRequested();
 			}	
 			break;
+		case TOOLBAR_BTN_OPTIONS:	
 		case MENU_TOOLS_OPTIONS:
 			{
 				(new BAlert("","Coming Soon."," debug "))->Go();
 			}
-			break;	
+			break;
+		case TOOLBAR_BTN_CREATEMAKE:		
 		case MENU_TOOLS_CREATEMAKE:
 			{
 				if (strlen(ProjectPath.String()) == 0)
@@ -604,7 +759,19 @@ void FileWindow::MessageReceived (BMessage *message)
 				if (strlen(ProjectAuthor.String()) == 0) { ProjectAuthor.SetTo("DeveloperName"); }
 				CreateMakeFile(ptrProjectWindow->stvProjectName->Text(),ProjectPath.String(),ProjectAuthor.String());
 			}
+			break;
+		case TOOLBAR_BTN_CREATEJAM:		
+		case MENU_TOOLS_CREATEJAM:
+			{
+				if (strlen(ProjectPath.String()) == 0)
+				{
+					GetCurrentPath();
+				}
+				if (strlen(ProjectAuthor.String()) == 0) { ProjectAuthor.SetTo("DeveloperName"); }
+				CreateJamFile(ptrProjectWindow->stvProjectName->Text(),ProjectPath.String(),ProjectAuthor.String());
+			}
 			break;	
+		case TOOLBAR_BTN_COMPILE:		
 		case MENU_TOOLS_COMPILE:
 			{
 				if (strlen(ProjectPath.String()) == 0)
@@ -655,6 +822,7 @@ void FileWindow::MessageReceived (BMessage *message)
 				}	
 			}
 			break;
+		case TOOLBAR_BTN_HELP:	
 		case MENU_HELP_MANUAL:
 			{
 				// launch browser on local html manual
@@ -669,7 +837,7 @@ void FileWindow::MessageReceived (BMessage *message)
 				//printf("%s\n",the_url); // debug
 				result = be_roster->Launch(URL_TYPE, 1, &the_url);
 			}
-			break;				
+			break;			
 		case MENU_HELP_ABOUT:
 			{
 				aboutWindow = new AboutWindow(aboutwindowRect);

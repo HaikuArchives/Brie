@@ -15,7 +15,7 @@ Released under the MIT license.
 //#include <Alert.h>
 #include <Application.h>
 #include <Bitmap.h>
-//#include <Button.h>
+#include <Button.h>
 //#include <Entry.h>
 //#include <File.h>
 //#include <FilePanel.h>
@@ -38,7 +38,10 @@ Released under the MIT license.
 #include "BRIEViews.h"
 #include "brieconstants.h"
 // ---------------------------------------------------------------------------------------------------------- //
-const uint32 TOOLBOX_BTN_STRINGVIEW = 'tbsv';
+const uint32 TOOLBOX_BTN_STRINGVIEWCONTROL = 'tbsv';
+const uint32 TOOLBOX_BTN_TEXTCONTROL = 'tbtc';
+const uint32 TOOLBOX_BTN_BUTTONCONTROL = 'tbbc';
+const uint32 TOOLBOX_BTN_PICTURECONTROL = 'tbpc';
 
 // TopOfScreen -- Places the BWindow starting from the top of the Current Screen
 static void TopOfScreen(BWindow* w)
@@ -83,12 +86,12 @@ void ToolboxWindow::InitWindow(void)
 	r = Bounds();
     // Add Controls
     
-    // Toolbar to Add / Remove Project Files
-    int ToolbarButtonMargin = r.left+2;
-    int ToolbarButtonWidth = 24;
+    // Toolbar
+    //int ToolbarButtonMargin = 2;
+    int ToolbarButtonWidth = 22;
     int ButtonGap = 1;
 	
-	// New Project Button
+	// StringView Button
   	BRect BitmapFrame (BRect(0,0,23,23));
   	BPicture *tmpBPicture;
   	BPicture *tmpBPicture2;
@@ -114,19 +117,94 @@ void ToolboxWindow::InitWindow(void)
   	tmpBPictureView->DrawBitmap(stringviewpicture_state2,BPoint(0,0));
   	tmpBPicture2 = tmpBPictureView->EndPicture();
   		
- 	btnBrieStringView = new BPictureButton(BRect (ToolbarButtonMargin,2,ToolbarButtonMargin+ToolbarButtonWidth,26),
- 							  "StringView",tmpBPicture,tmpBPicture2, new BMessage(TOOLBOX_BTN_STRINGVIEW),B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	btnBrieStringViewControl = new BPictureButton(BRect (1,0,24,23),"StringView",tmpBPicture,tmpBPicture2, new BMessage(TOOLBOX_BTN_STRINGVIEWCONTROL),B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	 	
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+    //--------------------------------------------------------------------\\
+        
+    // TextView Button
+    BBitmap *textviewpicture = new BBitmap(BitmapFrame,B_RGB32);
+	textviewpicture->SetBits(stringviewicon,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(textviewpicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *textviewpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	textviewpicture_state2->SetBits(stringviewiconinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(textviewpicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  	
+  	btnBrieTextControl = new BPictureButton(BRect (26,0,50,23),"TextControl",tmpBPicture,tmpBPicture2, new BMessage(TOOLBOX_BTN_TEXTCONTROL),B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
  	
 	tmpBPictureView->RemoveSelf();
 	AddChild(tmpBPictureView);
-	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + ButtonGap;
+	//--------------------------------------------------------------------\\
+	
+	// Button Button
+	BBitmap *buttonpicture = new BBitmap(BitmapFrame,B_RGB32);
+	buttonpicture->SetBits(stringviewicon,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(buttonpicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *buttonpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	buttonpicture_state2->SetBits(stringviewiconinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(buttonpicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnBrieButtonControl = new BPictureButton(BRect (1,25,24,48),
+ 							  "Button",tmpBPicture,tmpBPicture2, new BMessage(TOOLBOX_BTN_BUTTONCONTROL),B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+    //--------------------------------------------------------------------\\
     
-    AddChild(btnBrieStringView);
-    
+    // Picture Button
+    BBitmap *picturepicture = new BBitmap(BitmapFrame,B_RGB32);
+	picturepicture->SetBits(stringviewicon,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(picturepicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *picturepicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	picturepicture_state2->SetBits(stringviewiconinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(picturepicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnBriePictureControl = new BPictureButton(BRect (26,25,50,48),
+ 							  "TextControl",tmpBPicture,tmpBPicture2, new BMessage(TOOLBOX_BTN_PICTURECONTROL),B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	//--------------------------------------------------------------------\\
+	
+	
+    AddChild(btnBriePictureControl);
+    AddChild(btnBrieButtonControl);
+    AddChild(btnBrieTextControl);
+    AddChild(btnBrieStringViewControl);
+	
 	// Add the Drawing View
 	AddChild(ptrToolboxWindowView = new ToolboxWindowView(r));
-	
-	//ptrToolboxWindowView->
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -144,11 +222,27 @@ void ToolboxWindow::MessageReceived (BMessage *message)
 {
 	switch(message->what)
 	{
-		case TOOLBOX_BTN_STRINGVIEW:
+		case TOOLBOX_BTN_STRINGVIEWCONTROL:
 			{
 				printf("New StringView\n");	
 			}
 			break;
+		case TOOLBOX_BTN_TEXTCONTROL:
+			{
+				printf("New TextControl\n");	
+			}
+			break;	
+		case TOOLBOX_BTN_BUTTONCONTROL:
+			{
+				printf("New ButtonControl\n");	
+				// Ask if Standard or PictureButton
+			}
+			break;
+		case TOOLBOX_BTN_PICTURECONTROL:
+			{
+				printf("New PictureControl\n");	
+			}
+			break;		
 		default:
 			BWindow::MessageReceived(message);
 			break;

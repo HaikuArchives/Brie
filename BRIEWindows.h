@@ -59,6 +59,7 @@ class AboutWindow : public BWindow
 		void InitWindow(void);
 	    AboutWindowView*   ptrAboutWindowView;
 	    BRIEIconView*      ptrBRIEIconView;
+	    
 	    BButton            *btnOkay;
 	    URLView			   *urlWebSite;
 	    URLView			   *urlEmail;
@@ -90,10 +91,9 @@ class FileWindow : public BWindow
 		void InitWindow(void);
 	    void CompileGCC(const char *prjname, const char *prjpath, const char *prjauthor);
 	    void CreateMakeFile(const char *prjname, const char *prjpath, const char *prjauthor);
+	    void CreateJamFile(const char *prjname, const char *prjpath, const char *prjauthor);
 	    void SetProject(const char *prjname);
-	    
 	    FileWindowView* 	ptrFileWindowView;
-		
 	    FileWindow*			ptrFileWindow;
 	    
 	    BMenuBar  			*menubar;
@@ -103,6 +103,11 @@ class FileWindow : public BWindow
 	    BPictureButton      *btnSaveProject;
 	    BPictureButton      *btnSaveAsProject;
 	    BPictureButton      *btnPrintProject;
+	    BPictureButton      *btnCreateMake;
+	    BPictureButton      *btnCreateJam;
+	    BPictureButton      *btnCompile;
+	    BPictureButton      *btnOptions;
+	    BPictureButton      *btnHelp;
 	    BFilePanel			*BrowsePanel;
 };
 
@@ -152,7 +157,10 @@ class ToolboxWindow : public BWindow
 		void InitWindow(void);
 	    ToolboxWindowView* ptrToolboxWindowView;
 	    
-	    BPictureButton		*btnBrieStringView; // aka Label
+	    BPictureButton		*btnBrieStringViewControl; // aka Label
+	    BPictureButton      *btnBrieTextControl;   
+	    BPictureButton      *btnBrieButtonControl;
+	    BPictureButton      *btnBriePictureControl; // aka Image 
 };
 
 
