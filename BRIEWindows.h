@@ -27,7 +27,7 @@ class NewProjectWindowView;
 class HelpTipView;
 class InputBoxView;
 class MenuCreatorView;
-
+class CompileLogView;
 
 class ProjectWindow : public BWindow
 {
@@ -51,6 +51,21 @@ class ProjectWindow : public BWindow
 };
 
 
+class CompileLogWindow : public BWindow
+{
+	public:
+    	CompileLogWindow(BRect frame);
+	    ~CompileLogWindow();
+    	virtual bool QuitRequested();
+	    virtual void MessageReceived(BMessage *message);
+	private:
+		void InitWindow(void);
+	    CompileLogView*		ptrCompileLogView;
+	    BListView		    *lsvLog;
+	    BTextView		    *txvLog;
+};
+
+
 class FileWindow : public BWindow
 {
 	public:
@@ -60,6 +75,7 @@ class FileWindow : public BWindow
 	    virtual void MessageReceived(BMessage *message);
 	    void SaveProject(void);
 	    void GetCurrentPath(void);
+	    virtual bool CloseProject(void);
 	private:
 		void InitWindow(void);
 	    void CompileGCC(void);
@@ -69,6 +85,7 @@ class FileWindow : public BWindow
 	    FileWindowView* 	ptrFileWindowView;
 	    FileWindow*			ptrFileWindow;
 	    ProjectWindow*		ptrProjectWindow;
+	    CompileLogWindow*	ptrCompileLogWindow;
 	    
 	    BMenuBar  			*menubar;
 	    BMenuItem			*menusaveproject;

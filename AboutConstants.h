@@ -1,10 +1,12 @@
 /*
 
-AboutConstants by Sikosis
+AboutConstants
+
+Coded by Sikosis
 
 Released under the MIT license.
 
-(C) 2004 http://brie.sf.net/
+(C)2004 http://sikosis.com/
 
 */
 

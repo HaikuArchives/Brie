@@ -6,7 +6,7 @@ ProjectWindow by Sikosis
 
 Released under the MIT license.
 
-(C) 2002-2003 http://brie.sf.net/
+(C) 2002-2004 http://brie.sf.net/
 
 */
 
@@ -271,6 +271,12 @@ void ProjectWindow::MessageReceived (BMessage *message)
 				//ShowProjectFiles(&ProjectFiles);
 			}
 			break;
+		case CLEAR_PROJECT_LIST:
+			{
+				(new BAlert("","Clearing Project List\n","Debug"))->Go(); // debug
+				lsvProjectFiles->RemoveItems(0,lsvProjectFiles->CountItems());
+				stvProjectName->SetText("Untitled");
+			}	
 		default:
 			{
 				BWindow::MessageReceived(message);

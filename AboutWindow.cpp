@@ -26,8 +26,6 @@ Released under the MIT license.
 #include <View.h>
 
 #include "AboutConstants.h"
-//#include "BRIEWindows.h"
-//#include "BRIEViews.h"
 #include "AboutWindow.h"
 #include "AboutWindowView.h"
 // ---------------------------------------------------------------------------------------------------------- //

@@ -73,4 +73,10 @@ class InputBoxView : public BView
 		InputBoxView(BRect frame);
 };
 
+class CompileLogView : public BView
+{
+	public:
+    	CompileLogView(BRect frame);
+};
+
 #endif

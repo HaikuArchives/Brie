@@ -58,7 +58,8 @@ AboutWindowView::AboutWindowView (BRect frame) : BView (frame, "AboutWindowView"
 		
 	stvVersion = new BStringView(BRect(LeftMarginTitles+2, r.top+43, 97, r.top+53), "Version:", "Version:");
 	//urlVersion = new URLView(BRect(LeftMarginTitles+53, r.top+43, 160, r.top+53), "urlVersion", "0.37", "http://brie.sf.net/");
-	stvVersionNumber = new BStringView(BRect(LeftMarginTitles+53, r.top+43, 160, r.top+53), "stvVersionNumber", "0.38");
+	
+	stvVersionNumber = new BStringView(BRect(LeftMarginTitles+53, r.top+43, 160, r.top+53), "stvVersionNumber", "0.4");
 		
 	stvEmail = new BStringView(BRect(LeftMarginTitles+2, r.top+57, 103, r.top+67), "Coded by", "Coded by");
 	//urlEmail = new URLView(BRect(LeftMarginTitles+53, r.top+57, LeftMarginTitles+85, r.top+67), "urlEmail", "Sikosis", "beos@gravity24hr.com");

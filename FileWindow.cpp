@@ -83,8 +83,8 @@ const uint32 TOOLBAR_BTN_OPTIONS = 'Tbop';
 const uint32 TOOLBAR_BTN_HELP = 'Tbhp';
 // ---------------------------------------------------------------------------------------------------------- //
 
-char *kProjectName = "ProjectName";
-char *kProjectFile = "ProjectFile";
+char *kProjectName = "ProjectName"; // these will be obsolete soon
+char *kProjectFile = "ProjectFile"; // so they will be removed
 
 
 // TopOfScreen -- Places the BWindow starting from the top of the Current Screen
@@ -115,7 +115,6 @@ FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Env
 	WindowCaption.SetTo(projtitle);
 	WindowCaption.Append(" ");
 	WindowCaption.Append(projversion);
-	//printf ("WindowCaption is %s\n\n",WindowCaption.String()); // debug
 	SetTitle(WindowCaption.String());
 	
 	// add load settings here
@@ -127,7 +126,7 @@ FileWindow::FileWindow(BRect frame) : BWindow (frame, "BeOS Rapid Integrated Env
 // BRIEWindow - Destructor
 FileWindow::~FileWindow()
 {
-	exit(0);
+	//exit(0); // ppl tell me this is not needed
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -649,13 +648,14 @@ void FileWindow::CompileGCC(void)
 		sprintf(tmp,"cd %s/projects/%s \n",ProjectPath.String(),ProjectName.String());
 		x = fputs(tmp,f);
 		x = fputs("make clean\n",f);
-		x = fputs("make\n",f);
+		sprintf(tmp,"make >%s/projects/%s/compile.log\n",ProjectPath.String(),ProjectName.String());
+		x = fputs(tmp,f);
 		x = fputs("cd obj.x86\n",f);
 		sprintf(tmp,"%s\n",ProjectName.String());
 		x = fputs(tmp,f);
 		fclose(f);
 		sprintf(cmd,"Terminal -t \"Compiling %s\" %s",FileName,ProjectName.String());
-		printf("now run make %s\n",cmd); //debug
+		//printf("now run make %s\n",cmd); //debug
 		system(FileName);
 	} else {
 		(new BAlert("","You have to create a Project first before you can Compile/Run.","Okay"))->Go();	
@@ -720,6 +720,41 @@ void FileWindow::SaveProject(void)
 // ---------------------------------------------------------------------------------------------------------- //
 
 
+bool FileWindow::CloseProject(void)
+{
+    BAlert *alert;
+    long result;
+	
+	// Ask to Save Current Project (make an option later to disable the ask
+    alert = new BAlert("", "Would you like to Save your Project before Closing?", "   Yes   ", "   No   ", "   Cancel   ", B_WIDTH_FROM_WIDEST, B_STOP_ALERT);
+	alert->SetShortcut(0, B_ESCAPE);
+	result = alert->Go();
+    //printf("Result is %d\n\n",result);
+    if (result != 2) {
+    	if (result == B_OK)
+	   	{
+		     SaveProject();
+		}
+		// Wipe all values
+		ProjectName.SetTo("Untitled");
+		BMessage msg(CLEAR_PROJECT_LIST);
+		msg.AddString("CLEAR_PROJECT_LIST", "CLEAR_PROJECT_LIST"); // dummy string required ?
+		BMessenger(ptrProjectWindow).SendMessage(&msg);
+		
+		BMessage msg2(SET_PROJECT_TITLE);
+	    msg2.AddString("ProjectName", ProjectName.String());
+		BMessenger(ptrFileWindow).SendMessage(&msg2);
+		BMessenger(ptrProjectWindow).SendMessage(&msg2);
+		// set properties window to show current Window from New Project
+		ptrPropertiesWindow->ShowProperties("Window",ProjectName.String());
+		
+		return true;
+	} else {
+		return false;
+	}
+}
+// ---------------------------------------------------------------------------------------------------------- //
+
 void FileWindow::GetCurrentPath(void)
 {
 	app_info	daInfo;
@@ -737,30 +772,44 @@ void FileWindow::GetCurrentPath(void)
 // FileWindow::MessageReceived -- receives messages
 void FileWindow::MessageReceived (BMessage *message)
 {
-	
+	long SendResult;
+	bool CloseTest = true;
 	NewProjectWindow* ptrNewProjectWindow;
+	CompileLogWindow* ptrCompileLogWindow;
 	
 	switch(message->what)
 	{
 		case TOOLBAR_BTN_NEW_PROJECT:	
 		case MENU_FILE_NEW:
 			{
-				ptrNewProjectWindow = new NewProjectWindow(BRect(367.0, 268.0, 657.0, 500.0));
+				// Ask to Save Open Project First (if one is open)
+				if (ProjectName.Length() !=0 && ProjectName.Compare("Untitled") != 0) {
+					CloseTest = CloseProject();
+				}	
+				if (CloseTest == true) {	
+					ptrNewProjectWindow = new NewProjectWindow(BRect(367.0, 268.0, 657.0, 500.0));
+				}	
 			}	
 			break;
 		case TOOLBAR_BTN_LOAD_PROJECT:	
 		case MENU_FILE_LOAD:
 			{
-				TipNumber = 1;
-				new HelpTipWindow(BRect(0.0, 0.0, 350.0, 120.0));
-				if (ProjectPath.Length() == 0)
-				{
-					GetCurrentPath();
-				} 
-				//PanelType = 0;	
-				//browsePanel->SetPanelDirectory(ProjectPath.String());
-				//browsePanel->Show();
-			}
+				if (ProjectPath.Length() == 0) {  GetCurrentPath();  }
+				  
+				// Ask to Save Open Project First (if one is open)
+				if (ProjectName.Length() !=0 && ProjectName.Compare("Untitled") != 0) {
+					CloseTest = CloseProject();
+				}
+				if (CloseTest == true) {	
+					TipNumber = 1;
+					new HelpTipWindow(BRect(0.0, 0.0, 350.0, 120.0));
+				
+					PanelType = 0;	
+					//browsePanel->SetPanelDirectory(ProjectPath.String());
+					//browsePanel->Show();
+					// hrmm what value is returned for me to load ?
+				}
+			}	
 			break;
 		case TOOLBAR_BTN_SAVE_PROJECT:	
 		case MENU_FILE_SAVE:
@@ -780,6 +829,9 @@ void FileWindow::MessageReceived (BMessage *message)
 				// show the panel to get the new name
 				//browsePanel->SetPanelDirectory(ProjectPath.String());
 				//browsePanel->Show();
+				// hrmm what value is returned for me to save ?
+				SaveProject(); // in the meantime, just as save as is ;)
+				
 				//SaveProject(ptrProjectWindow->stvProjectName->Text(),ProjectPath.String(),ProjectAuthor.String());
 				//SetProject(ptrProjectWindow->stvProjectName->Text());
 			}
@@ -800,7 +852,29 @@ void FileWindow::MessageReceived (BMessage *message)
 		case TOOLBAR_BTN_OPTIONS:	
 		case MENU_TOOLS_OPTIONS:
 			{
-				(new BAlert("","Coming Soon."," debug "))->Go();
+				//(new BAlert("","Coming Soon."," debug "))->Go();
+				
+				BMessage msg(CLEAR_PROJECT_LIST);
+				SendResult = BMessenger(ptrProjectWindow).SendMessage(&msg);
+				switch (SendResult) {
+					case B_OK:
+						printf("B_OK\n");
+						break;
+					case B_TIMED_OUT:
+						printf("B_TIMED_OUT\n");
+						break;
+					case B_WOULD_BLOCK:
+						printf("B_WOULD_BLOCK\n");
+						break;
+					case B_BAD_PORT_ID:
+						printf("B_BAD_PORT_ID - Message Target is Invalid.\n");
+						break;
+					case B_NO_MORE_PORTS:
+						printf("B_NO_MORE_PORTS\n");
+						break;				
+				}
+				printf("SendResult is %d\n\n",SendResult);
+				
 			}
 			break;
 		case TOOLBAR_BTN_CREATEMAKE:		
@@ -827,8 +901,29 @@ void FileWindow::MessageReceived (BMessage *message)
 			{
 				if (ProjectPath.Length() == 0) { GetCurrentPath(); }
 				if (ProjectAuthor.Length() == 0) { ProjectAuthor.SetTo("DeveloperName"); }
-				//	ProjectName.SetTo(ptrProjectWindow->stvProjectName->Text()); // crashing - seg violation
+				// Show Compile Log Window (if exists then dont create a new one - not sure how to do this yet)
+				ptrCompileLogWindow = new CompileLogWindow(BRect(0.0, 0.0, 800.0, 170.0));
 				CompileGCC();
+				
+				BMessage msg(LOAD_COMPILE_LOG);
+				SendResult = BMessenger(ptrCompileLogWindow).SendMessage(&msg);
+				switch (SendResult) {
+					case B_OK:
+						printf("B_OK\n");
+						break;
+					case B_TIMED_OUT:
+						printf("B_TIMED_OUT\n");
+						break;
+					case B_WOULD_BLOCK:
+						printf("B_WOULD_BLOCK\n");
+						break;
+					case B_BAD_PORT_ID:
+						printf("B_BAD_PORT_ID - Message Target is Invalid.\n");
+						break;
+					case B_NO_MORE_PORTS:
+						printf("B_NO_MORE_PORTS\n");
+						break;				
+				}
 			}	
 			break;	
 		case MENU_WIN_PROJ:

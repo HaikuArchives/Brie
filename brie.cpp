@@ -84,7 +84,8 @@ BRect propertieswindowRect(PropertiesFormTopDefault,PropertiesFormLeftDefault,Pr
 BRIE::BRIE() : BApplication (APP_SIGNATURE)
 {
 	propertiesWindow = new PropertiesWindow(propertieswindowRect);
-	projectWindow = new ProjectWindow(projectwindowRect);
+	//projectWindow = new ProjectWindow(projectwindowRect);
+	ptrProjectWindow = new ProjectWindow(projectwindowRect);
 	toolboxWindow = new ToolboxWindow(toolboxwindowRect);
 	fileWindow = new FileWindow(windowRect);
 	
