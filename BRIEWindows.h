@@ -26,6 +26,8 @@ class ToolboxWindowView;
 class NewProjectWindowView;
 class AboutWindowView;
 class BRIEIconView;
+class HelpTipView;
+
 
 class ProjectWindow : public BWindow
 {
@@ -87,6 +89,7 @@ class FileWindow : public BWindow
 	    BMenuBar  			*menubar;
 	    AboutWindow         *aboutWindow;
 	    BPictureButton      *btnNewProject;
+	    BPictureButton      *btnLoadProject;
 };
 
 
@@ -135,6 +138,21 @@ class ToolboxWindow : public BWindow
 	private:
 		void InitWindow(void);
 	    ToolboxWindowView* ptrToolboxWindowView;
+};
+
+
+class HelpTipWindow : public BWindow
+{
+	public:
+		HelpTipWindow(BRect frame);
+		~HelpTipWindow();
+		virtual bool QuitRequested();
+		virtual void MessageReceived(BMessage *message);
+	private:
+		void InitWindow(void);
+		BButton			*btnOkay;
+	    BStringView		*stvTipTitle;
+		HelpTipView*	ptrHelpTipView;
 };
 
 #endif

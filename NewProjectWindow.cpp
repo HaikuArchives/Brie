@@ -28,7 +28,7 @@ Released under the MIT license.
 #include <iostream.h>
 #include <fstream.h>
 
-#include "brie.h"
+//#include "brie.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
 #include "brieconstants.h"
@@ -68,7 +68,7 @@ NewProjectWindow::NewProjectWindow(BRect frame) : BWindow (frame, "NewProjectWin
 // NewProjectWindow - Destructor
 NewProjectWindow::~NewProjectWindow()
 {
-	exit(0);
+	//exit(0);
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -549,6 +549,7 @@ void NewProjectWindow::CreateNewProject(void)
 	// 7) Send Messages to other Windows to update
 	BMessage msg(SET_PROJECT_NAME);
 	msg.AddString(kProjectName, AppName);
+	//msg.AddBool(kNotSaved, true); // make this false later - true for debug purposes
 	BMessenger(ptrProjectWindow).SendMessage(&msg);
 		
 	// 8) Show Tracker and/or Continue

@@ -47,6 +47,15 @@ class BRIEIconView : public BView
 		BBitmap* icon;
 };
 
+class BRIETipIconView : public BView
+{
+	public:
+		BRIETipIconView(BBitmap* bitmap, BRect r);
+		virtual void Draw(BRect drawRect);
+	private:
+		BBitmap* icon;
+};
+
 class AboutWindowView : public BView
 {
 	public:
@@ -57,6 +66,13 @@ class NewProjectWindowView : public BView
 {
 	public:
 		NewProjectWindowView(BRect frame);
+};
+
+class HelpTipView : public BView
+{
+	public:
+		HelpTipView(BRect frame);
+		virtual void Draw(BRect updateRect);
 };
 
 #endif

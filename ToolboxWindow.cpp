@@ -28,13 +28,12 @@ Released under the MIT license.
 #include <Window.h>
 #include <View.h>
 
-#include "brie.h"
+//#include "brie.h"
 #include "BRIEWindows.h"
 #include "BRIEViews.h"
-#include "brieconstants.h"
-
-// Constants ------------------------------------------------------------------------------------------------- //
+//#include "brieconstants.h"
 // ---------------------------------------------------------------------------------------------------------- //
+
 
 // TopOfScreen -- Places the BWindow starting from the top of the Current Screen
 static void TopOfScreen(BWindow* w)
@@ -66,7 +65,7 @@ ToolboxWindow::ToolboxWindow(BRect frame) : BWindow (frame, "Toolbox", B_TITLED_
 // ToolboxWindow - Destructor
 ToolboxWindow::~ToolboxWindow()
 {
-	exit(0);
+	//exit(0);
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -89,6 +88,8 @@ bool ToolboxWindow::QuitRequested()
 {
    //be_app->PostMessage(B_QUIT_REQUESTED);
    return true;
+   //Minimize(true);
+   //Hide();
 }
 // ---------------------------------------------------------------------------------------------------------- //
 

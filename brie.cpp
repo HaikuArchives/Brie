@@ -34,12 +34,15 @@ Released under the MIT license.
 
 // Constants ------------------------------------------------------------------------------------------------ //
 const char *APP_SIGNATURE = "application/x-vnd.BRIE";  // Application Signature and Title
+int TipNumber = 0;
+ProjectWindow* ptrProjectWindow;
+char *ProjectName;
 
 // Default Window Size - even though we centre the form to the current screen size
 float FormTopDefault = 30;
 float FormLeftDefault = 5;
 float FormWidthDefault = 695;
-float FormHeightDefault = 25;
+float FormHeightDefault = 24;
 
 float ProjectFormTopDefault = 0;
 float ProjectFormLeftDefault = 0;
@@ -70,6 +73,8 @@ BRIE::BRIE() : BApplication (APP_SIGNATURE)
 	projectWindow = new ProjectWindow(projectwindowRect);
 	toolboxWindow = new ToolboxWindow(toolboxwindowRect);
 	fileWindow = new FileWindow(windowRect);
+	
+	ProjectName = "Untitled";
 }
 // ---------------------------------------------------------------------------------------------------------- //
 

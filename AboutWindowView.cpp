@@ -4,7 +4,7 @@ AboutWindowView by Sikosis
 
 Released under the MIT license.
 
-(C) 2002 http://brie.sf.net/
+(C)2002-2003 http://brie.sf.net/
 
 */
 
@@ -35,13 +35,14 @@ AboutWindowView::AboutWindowView (BRect frame) : BView (frame, "AboutWindowView"
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
+
 // BRIEIconView - Constructor
 BRIEIconView::BRIEIconView (BBitmap* bitmap, BRect frame) : BView (frame, "BRIEIconView", B_FOLLOW_NONE, B_WILL_DRAW )
 {
-	//SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	icon = bitmap;
 }
 // ---------------------------------------------------------------------------------------------------------- //
+
 
 void BRIEIconView::Draw(BRect /*updateRect*/)
 {

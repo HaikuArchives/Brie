@@ -40,7 +40,8 @@ Released under the MIT license.
 // Toolbar
 #include "brie_tool_new.h"
 #include "brie_tool_new_inverse.h"
-//#include "brie_tool_open.h"
+#include "brie_tool_load.h"
+#include "brie_tool_load_inverse.h"
 
 #include "brie.h"
 #include "BRIEWindows.h"
@@ -63,8 +64,14 @@ const uint32 MENU_TOOLS_CREATEJAM = 'Mtja';
 const uint32 MENU_WIN_PROJ = 'Mwpj';
 const uint32 MENU_HELP_MANUAL = 'Mhma';
 const uint32 MENU_HELP_ABOUT = 'Mhab';
+
+const uint32 TOOLBAR_BTN_NEW_PROJECT = 'Tbnp';
+const uint32 TOOLBAR_BTN_LOAD_PROJECT = 'Tblp';
 // ---------------------------------------------------------------------------------------------------------- //
 char *kProjectName = "ProjectName";
+char *kProjectTitle = "ProjectTitle";
+char *kProjectShortTitle = "ProjectShortTitle";
+
 
 // TopOfScreen -- Places the BWindow starting from the top of the Current Screen
 static void TopOfScreen(BWindow* w)
@@ -158,44 +165,68 @@ void FileWindow::InitWindow(void)
     menubar->AddItem(menu);
     
     // Sikosis's Toolbar ;)
-    //BRect rToolbar;
-    int ToolbarButtonMargin = 4;
-    int ToolbarButtonWidth = 36;
+    int ToolbarButtonMargin = 6;
+    int ToolbarButtonWidth = 24;
 	
-	// New Email Button
-  	BRect BitmapFrame (BRect(0,0,31,31));
+	// New Project Button
+  	BRect BitmapFrame (BRect(0,0,23,23));
   	BPicture *tmpBPicture;
   	BPicture *tmpBPicture2;
-  	//BPicture *tmpBPicture3;
   	BView    *tmpBPictureView = new BView(BitmapFrame, "tmpBPictureView",B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
-  	//rgb_color toolbar_button_background = { 255, 255, 255, 0 };
+  	rgb_color toolbar_button_background = { 255, 255, 255, 0 };
   	
   	AddChild(tmpBPictureView);
   	
   	BBitmap *newprojectpicture = new BBitmap(BitmapFrame,B_RGB32);
-	newprojectpicture->SetBits(brienew,3072,0,B_RGB32);
-  	
+	newprojectpicture->SetBits(brienew,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
   	tmpBPictureView->BeginPicture(new BPicture);
-  	tmpBPictureView->DrawBitmap(newprojectpicture,BPoint(3,0));
+  	tmpBPictureView->DrawBitmap(newprojectpicture,BPoint(0,0));
   	tmpBPicture = tmpBPictureView->EndPicture();
   	
   	tmpBPictureView->RemoveSelf();
     AddChild(tmpBPictureView);
   	
   	BBitmap *newprojectpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
-	newprojectpicture_state2->SetBits(brienewinverse,3072,0,B_RGB32);
+	newprojectpicture_state2->SetBits(brienewinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
   	tmpBPictureView->BeginPicture(new BPicture);
-  	tmpBPictureView->DrawBitmap(newprojectpicture_state2,BPoint(3,0));
+  	tmpBPictureView->DrawBitmap(newprojectpicture_state2,BPoint(0,0));
   	tmpBPicture2 = tmpBPictureView->EndPicture();
   		
- 	btnNewProject = new BPictureButton(BRect (ToolbarButtonMargin,rMenuBar.bottom+2,ToolbarButtonMargin+ToolbarButtonWidth,rMenuBar.bottom+34),"New Project",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_NEW_PROJECT),B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	btnNewProject = new BPictureButton(BRect (ToolbarButtonMargin,rMenuBar.bottom+4,ToolbarButtonMargin+ToolbarButtonWidth,rMenuBar.bottom+28),"New Project",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_NEW_PROJECT),B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+ 	
+	tmpBPictureView->RemoveSelf();
+	AddChild(tmpBPictureView);
+	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth + 4;
+    
+    // Load Project Button
+    BBitmap *loadprojectpicture = new BBitmap(BitmapFrame,B_RGB32);
+	loadprojectpicture->SetBits(brieload,1728,0,B_RGB32);
+  	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(loadprojectpicture,BPoint(0,0));
+  	tmpBPicture = tmpBPictureView->EndPicture();
+  	
+  	tmpBPictureView->RemoveSelf();
+    AddChild(tmpBPictureView);
+  	
+  	BBitmap *loadprojectpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
+	loadprojectpicture_state2->SetBits(brieloadinverse,1728,0,B_RGB32);
+	tmpBPictureView->SetLowColor(toolbar_button_background);
+  	tmpBPictureView->BeginPicture(new BPicture);
+  	tmpBPictureView->DrawBitmap(loadprojectpicture_state2,BPoint(0,0));
+  	tmpBPicture2 = tmpBPictureView->EndPicture();
+  		
+ 	btnLoadProject = new BPictureButton(BRect (ToolbarButtonMargin,rMenuBar.bottom+4,ToolbarButtonMargin+ToolbarButtonWidth,rMenuBar.bottom+28),"Load Project",tmpBPicture,tmpBPicture2, new BMessage(TOOLBAR_BTN_LOAD_PROJECT),B_ONE_STATE_BUTTON, B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
  	
 	tmpBPictureView->RemoveSelf();
 	AddChild(tmpBPictureView);
 	ToolbarButtonMargin = ToolbarButtonMargin + ToolbarButtonWidth;
-    
+        
     // Add Controls
     AddChild(btnNewProject);
+    AddChild(btnLoadProject);
     
 	// Add the Drawing View
 	AddChild(ptrFileWindowView = new FileWindowView(r));
@@ -231,7 +262,7 @@ void FileWindow::SetProject(const char *projectname, const char *shortprojectnam
 // FileWindow::QuitRequested -- Post a message to the app to quit
 bool FileWindow::QuitRequested()
 {
-   be_app->PostMessage(B_QUIT_REQUESTED);
+   be_app->PostMessage(B_QUIT_REQUESTED); // change to sendmessage
    return true;
 }
 // ---------------------------------------------------------------------------------------------------------- //
@@ -245,15 +276,29 @@ void FileWindow::MessageReceived (BMessage *message)
 	
 	switch(message->what)
 	{
-		/*case BTN_FILE_BROWSE:
-			//browsePanel->SetPanelDirectory(txtCVSRoot->Text());
-			//browsePanel->Show();
-			break;	*/
 		case TOOLBAR_BTN_NEW_PROJECT:	
 		case MENU_FILE_NEW:
 			ptrNewProjectWindow = new NewProjectWindow(BRect(367.0, 268.0, 657.0, 500.0));
-			//ptrNewProjectWindow->Show();
-			break;	
+			break;
+		case TOOLBAR_BTN_LOAD_PROJECT:	
+		case MENU_FILE_LOAD:
+			{
+			TipNumber = 1;
+			new HelpTipWindow(BRect(0.0, 0.0, 350.0, 120.0));
+			
+			app_info	daInfo;
+			be_app->GetAppInfo(&daInfo);
+			BEntry	daEntry(&daInfo.ref);
+			daEntry.GetParent(&daEntry);
+			BPath	pPath(&daEntry);
+			char	apath[256];
+			::memcpy(apath, pPath.Path(), 256);	
+			strcat(apath,"/projects/");
+			//(new BAlert("",apath," debug "))->Go(); // debug
+			//browsePanel->SetPanelDirectory(apath);
+			//browsePanel->Show();
+			}
+			break;			
 		case MENU_HELP_ABOUT:
 			aboutWindow = new AboutWindow(aboutwindowRect);
 			break;	

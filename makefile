@@ -15,7 +15,7 @@ TYPE= APP
 
 #	specify the source files to use
 #	Note that spaces in folder names do not work well with this makefile.
-SRCS= brie.cpp AboutWindow.cpp AboutWindowView.cpp FileWindow.cpp FileWindowView.cpp NewProjectWindow.cpp NewProjectWindowView.cpp ProjectWindow.cpp ProjectWindowView.cpp PropertiesWindow.cpp PropertiesWindowView.cpp ToolboxWindow.cpp ToolboxWindowView.cpp URLView.cpp
+SRCS= brie.cpp AboutWindow.cpp AboutWindowView.cpp FileWindow.cpp FileWindowView.cpp NewProjectWindow.cpp NewProjectWindowView.cpp ProjectWindow.cpp ProjectWindowView.cpp PropertiesWindow.cpp PropertiesWindowView.cpp ToolboxWindow.cpp ToolboxWindowView.cpp URLView.cpp HelpTipWindow.cpp HelpTipView.cpp
 # end of srcs
 
 #	specify the resource files to use

@@ -57,7 +57,7 @@ static void TopOfScreen(BWindow* w)
 ProjectWindow::ProjectWindow(BRect frame) : BWindow (frame, "Project Window", B_TITLED_WINDOW, B_NOT_RESIZABLE , 0)
 {
 	// Set ProjectWindow Pointer
-	ptrProjectWindow = this;
+	ptrProjectWindow = this; // causes error saying its undefined ??? but it is in brieconstants.h
 
 	InitWindow();
 	TopOfScreen(this);
