@@ -125,7 +125,7 @@ void ToolboxWindow::InitWindow(void)
         
     // TextView Button
     BBitmap *textviewpicture = new BBitmap(BitmapFrame,B_RGB32);
-	textviewpicture->SetBits(stringviewicon,1728,0,B_RGB32);
+	textviewpicture->SetBits(brietextcontrol,1728,0,B_RGB32);
   	tmpBPictureView->SetLowColor(toolbar_button_background);
   	tmpBPictureView->BeginPicture(new BPicture);
   	tmpBPictureView->DrawBitmap(textviewpicture,BPoint(0,0));
@@ -135,7 +135,7 @@ void ToolboxWindow::InitWindow(void)
     AddChild(tmpBPictureView);
   	
   	BBitmap *textviewpicture_state2 = new BBitmap(BitmapFrame,B_RGB32);
-	textviewpicture_state2->SetBits(stringviewiconinverse,1728,0,B_RGB32);
+	textviewpicture_state2->SetBits(brietextcontrolinverse,1728,0,B_RGB32);
 	tmpBPictureView->SetLowColor(toolbar_button_background);
   	tmpBPictureView->BeginPicture(new BPicture);
   	tmpBPictureView->DrawBitmap(textviewpicture_state2,BPoint(0,0));
