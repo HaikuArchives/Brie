@@ -26,8 +26,8 @@ Released under the MIT license.
 #include <TextControl.h>
 #include <Window.h>
 #include <View.h>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "brie.h"
 #include "BRIEWindows.h"

@@ -18,6 +18,13 @@ Released under the MIT license.
 #include "URLView.h"
 //#include "brieconstants.h"
 
+#include <CheckBox.h>
+#include <FilePanel.h>
+#include <ListView.h>
+#include <TextControl.h>
+#include <TextView.h>
+
+
 class BPictureButton;
 class FileWindowView; 
 class ProjectWindowView;

@@ -14,6 +14,9 @@ Released under the MIT license.
 #define __ABOUTWINDOWVIEW_H__
 
 
+#include <StringView.h>
+
+
 class AboutIconView : public BView
 {
 	public:
