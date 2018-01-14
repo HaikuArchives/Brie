@@ -612,7 +612,9 @@ void FileWindow::CreateMakeFile(void)
 		x = fputs("#	specify additional linker flags\n",f);
 		x = fputs("LINKER_FLAGS =\n\n",f);
 		x = fputs("## include the makefile-engine\n",f);
-		x = fputs("include /boot/develop/etc/makefile-engine\n",f);
+		x = fputs("DEVEL_DIRECTORY := \\\n",f);
+		x = fputs("\t$(shell findpaths -r \"makefile_engine\" B_FIND_PATH_DEVELOP_DIRECTORY)\n",f);
+		x = fputs("include $(DEVEL_DIRECTORY)/etc/makefile-engine",f);
 		fclose(f);
 	} else {
 		(new BAlert("","You have to create a Project first before you can create a Makefile.","Okay"))->Go();	
@@ -800,7 +802,7 @@ void FileWindow::MessageReceived (BMessage *message)
 				if (ProjectName.Length() !=0 && ProjectName.Compare("Untitled") != 0) {
 					CloseTest = CloseProject();
 				}
-				if (CloseTest == true) {	
+				if (CloseTest == true) {
 					TipNumber = 1;
 					new HelpTipWindow(BRect(0.0, 0.0, 350.0, 120.0));
 				
