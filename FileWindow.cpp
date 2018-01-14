@@ -648,9 +648,9 @@ void FileWindow::CompileGCC(void)
 		sprintf(tmp,"cd %s/projects/%s \n",ProjectPath.String(),ProjectName.String());
 		x = fputs(tmp,f);
 		x = fputs("make clean\n",f);
-		sprintf(tmp,"make >%s/projects/%s/compile.log\n",ProjectPath.String(),ProjectName.String());
+		sprintf(tmp,"make > compile.log OBJ_DIR=objects\n",ProjectPath.String(),ProjectName.String());
 		x = fputs(tmp,f);
-		x = fputs("cd obj.x86\n",f);
+		x = fputs("cd objects\n",f);
 		sprintf(tmp,"%s\n",ProjectName.String());
 		x = fputs(tmp,f);
 		fclose(f);

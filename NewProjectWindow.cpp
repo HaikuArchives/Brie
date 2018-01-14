@@ -788,7 +788,9 @@ void NewProjectWindow::CreateNewProject(void)
 	x = fputs("#	specify additional linker flags\n",f);
 	x = fputs("LINKER_FLAGS =\n\n",f);
 	x = fputs("## include the makefile-engine\n",f);
-	x = fputs("include /boot/develop/etc/makefile-engine\n",f);
+	x = fputs("DEVEL_DIRECTORY := \\\n",f);
+	x = fputs("\t$(shell findpaths -r \"makefile_engine\" B_FIND_PATH_DEVELOP_DIRECTORY)",f);
+	x = fputs("include $(DEVEL_DIRECTORY)/etc/makefile-engine",f);
 	fclose(f);
 	
 	// 7) Send Messages to other Windows to update
@@ -823,7 +825,7 @@ void NewProjectWindow::ShowTracker(char apath[256],char AppName[256])
 	result = alert->Go();
     if (result == B_OK)
    	{
-		sprintf(cmd,"/boot/beos/system/Tracker %s/projects/%s &",apath,AppName);
+		sprintf(cmd,"$(finddir B_SYSTEM_DIRECTORY)/Tracker %s/projects/%s",apath,AppName);
 		system(cmd);	
 	}	
 }
