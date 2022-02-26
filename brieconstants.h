@@ -47,7 +47,7 @@ const char projversion[]="v0.41";
 const char projcreation[]="Created using BRIE (http://brie.sf.net/";
 
 extern BString  ProjectName;
-extern BString  ProjectPath; // this is the current directory where brie is minus the /projects/
+extern BString  ProjectPath; // this is the current directory where brie is
 extern BString  ProjectAuthor;
 extern BMessage ProjectFiles;
 
@@ -58,5 +58,8 @@ extern int PanelType;
 
 // uses with HelpTipWindow
 extern int  TipNumber;
+
+// folder names
+#define BRIE_PROJECT_FOLDER_NAME "Brie Projects"
 
 #endif
