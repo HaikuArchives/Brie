@@ -106,7 +106,6 @@ void CompileLogWindow::MessageReceived (BMessage *message)
 			{
 				BString CompileLogFileName;
 				CompileLogFileName.SetTo(ProjectPath.String());
-				CompileLogFileName.Append("/projects/");
 				CompileLogFileName.Append(ProjectName.String());
 				CompileLogFileName.Append("/compile.log");
 				// one day ill replace this load code with bespecific stuff rather than

@@ -28,6 +28,8 @@ Released under the MIT license.
 #include <View.h>
 #include <iostream>
 #include <fstream>
+#include <FindDirectory.h>
+#include <fs_info.h>
 
 #include "brie.h"
 #include "BRIEWindows.h"
@@ -200,23 +202,24 @@ void NewProjectWindow::CreateNewProject(void)
 	UpperProjectName.ToUpper();
 	sprintf(AppName,"%s",ProjectName.String());  // this will be removed when all references are gone
 		
-	// 1) Get Current Directory
-	app_info	daInfo;
-	be_app->GetAppInfo(&daInfo);
-	BEntry	daEntry(&daInfo.ref);
-	daEntry.GetParent(&daEntry);
-	BPath	pPath(&daEntry);
-	char	apath[256];
-	::memcpy(apath, pPath.Path(), 256);			
+	// 1) Get User Directory and append the Brie Project folder
+	dev_t volume = dev_for_path("/boot");
+	char buffer[256];
+	status_t result;
+	result = find_directory(B_USER_DIRECTORY, volume, false, buffer, sizeof(buffer));
+	char	apath[257+strlen(BRIE_PROJECT_FOLDER_NAME)];
+	::memcpy(apath, buffer, 256);
+	strcat(apath, "/");
+	strcat(apath, BRIE_PROJECT_FOLDER_NAME);
 			
 	// 2) Create New Directory
-	sprintf(cmd,"mkdir %s/projects/%s",apath,ProjectName.String());
+	sprintf(cmd,"mkdir -p \"%s/%s\"",apath,ProjectName.String());
 	system(cmd);
 			
 	// 3) Create Basic Files for a Default App
 	
 	// Application Header
-	sprintf(FileName,"%s/projects/%s/%s.h",apath,ProjectName.String(),ProjectName.String());
+	sprintf(FileName,"%s/%s/%s.h",apath,ProjectName.String(),ProjectName.String());
 	FileContents.SetTo("#ifndef __");
 	FileContents.Append(UpperProjectName.String());
 	FileContents.Append("_H__\n");
@@ -235,7 +238,7 @@ void NewProjectWindow::CreateNewProject(void)
 	CreateFile(FileName,"Header",FileContents);
 		
 	// Application Constants.h
-	sprintf(FileName,"%s/projects/%s/%sConstants.h",apath,ProjectName.String(),ProjectName.String());
+	sprintf(FileName,"%s/%s/%sConstants.h",apath,ProjectName.String(),ProjectName.String());
 	FileContents.SetTo("#ifndef __");
 	FileContents.Append(UpperProjectName.String());
 	FileContents.Append("CONSTANTS_H__\n");
@@ -259,7 +262,7 @@ void NewProjectWindow::CreateNewProject(void)
 	CreateFile(FileName,"Constants",FileContents);
 	
 	// Windows Header
-	sprintf(FileName,"%s/projects/%s/%sWindows.h",apath,ProjectName.String(),ProjectName.String());
+	sprintf(FileName,"%s/%s/%sWindows.h",apath,ProjectName.String(),ProjectName.String());
 	FileContents.SetTo("#ifndef __");
 	FileContents.Append(UpperProjectName.String());
 	FileContents.Append("WINDOWS_H__\n");
@@ -346,7 +349,7 @@ void NewProjectWindow::CreateNewProject(void)
 //	fclose(f);
 	
 	// Views Header
-	sprintf(FileName,"%s/projects/%s/%sViews.h",apath,ProjectName.String(),ProjectName.String());
+	sprintf(FileName,"%s/%s/%sViews.h",apath,ProjectName.String(),ProjectName.String());
 	f = fopen(FileName,"w");
 	x = fputs("/*\n\n",f);
 	sprintf(tmp,"%s Views Header\n\n",ProjectName.String());
@@ -375,7 +378,7 @@ void NewProjectWindow::CreateNewProject(void)
 	fclose(f);
 
 	// View CPP
-	sprintf(FileName,"%s/projects/%s/%sView.cpp",apath,AppName,AppName);
+	sprintf(FileName,"%s/%s/%sView.cpp",apath,AppName,AppName);
 	f = fopen(FileName,"w");
 	x = fputs("/*\n\n",f);
 	sprintf(tmp,"%s View\n\n",AppName);
@@ -414,7 +417,7 @@ void NewProjectWindow::CreateNewProject(void)
 	fclose(f);
 	
 	// Main CPP
-	sprintf(FileName,"%s/projects/%s/%s.cpp",apath,AppName,AppName);
+	sprintf(FileName,"%s/%s/%s.cpp",apath,AppName,AppName);
 	f = fopen(FileName,"w");
 	x = fputs("/*\n\n",f);
 	sprintf(tmp,"%s\n\n",AppName);
@@ -497,7 +500,7 @@ void NewProjectWindow::CreateNewProject(void)
 	fclose(f);
 	
 	// Window CPP
-	sprintf(FileName,"%s/projects/%s/%sWindow.cpp",apath,AppName,AppName);
+	sprintf(FileName,"%s/%s/%sWindow.cpp",apath,AppName,AppName);
 	f = fopen(FileName,"w");
 	x = fputs("/*\n\n",f);
 	sprintf(tmp,"%sWindow\n\n",AppName);
@@ -684,19 +687,19 @@ void NewProjectWindow::CreateNewProject(void)
 	
 	// this step doesnt work - would be nice if rsrc files could be made from text
 	// 4) Copy newproject.rsrc to our project folder
-	//sprintf(cmd,"cp %s/newproject.rsrc %s/projects/%s/",apath,apath,AppName);
+	//sprintf(cmd,"cp %s/newproject.rsrc %s/%s/",apath,apath,AppName);
 	//system(cmd);
-	//sprintf(cmd,"mv %s/projects/%s/newproject.rsrc %s/projects/%s/%s.rsrc",apath,AppName,apath,AppName,AppName);
+	//sprintf(cmd,"mv %s/%s/newproject.rsrc %s/%s/%s.rsrc",apath,AppName,apath,AppName,AppName);
 	//system(cmd);
 	
 	// 5) Create BRIE Project File - this is required for internal use in this application only
-	sprintf(FileName,"%s/projects/%s.bprj",apath,AppName);
+	sprintf(FileName,"%s/%s.bprj",apath,AppName);
 	f = fopen(FileName,"w");
 	sprintf(tmp,"## BRIE Project File for %s ##\n",AppName);
 	x = fputs(tmp,f);
 	sprintf(tmp,"ProjectName=%s\n",AppName);
 	x = fputs(tmp,f);
-	sprintf(tmp,"ProjectDir=%s/projects/%s\n",apath,AppName);
+	sprintf(tmp,"ProjectDir=%s/%s\n",apath,AppName);
 	x = fputs(tmp,f);
 	sprintf(tmp,"Author=%s\n",txtAuthor->Text());
 	x = fputs(tmp,f);
@@ -740,7 +743,7 @@ void NewProjectWindow::CreateNewProject(void)
 	BMessenger(ptrProjectWindow).SendMessage(&pfmsg);
 	
 	// 6) Create makefile for compilation
-	sprintf(FileName,"%s/projects/%s/makefile",apath,AppName);
+	sprintf(FileName,"%s/%s/makefile",apath,AppName);
 	f = fopen(FileName,"w");
 	sprintf(tmp,"## BeOS Makefile for %s ##\n",AppName);
 	x = fputs(tmp,f);
@@ -825,7 +828,7 @@ void NewProjectWindow::ShowTracker(char apath[256],char AppName[256])
 	result = alert->Go();
     if (result == B_OK)
    	{
-		sprintf(cmd,"$(finddir B_SYSTEM_DIRECTORY)/Tracker %s/projects/%s",apath,AppName);
+		sprintf(cmd,"$(finddir B_SYSTEM_DIRECTORY)/Tracker %s/%s",apath,AppName);
 		system(cmd);	
 	}	
 }

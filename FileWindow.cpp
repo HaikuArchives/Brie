@@ -498,11 +498,6 @@ void FileWindow::InitWindow(void)
 	{
 		GetCurrentPath();
 	}
-	
-	// change this for a better bstorage function
-	char cmd[256];
-	sprintf(cmd,"mkdir %s/projects",ProjectPath.String());
-	system(cmd);
 }
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -538,7 +533,7 @@ void FileWindow::CreateJamFile(void)
 	if (ProjectName.Length() !=0 && ProjectName.Compare("Untitled") != 0)
 	{
 		printf("CreateJam - %s\n\n",ProjectName.String());
-		sprintf(FileName,"%s/projects/%s/Jamfile",ProjectPath.String(),ProjectName.String());
+		sprintf(FileName,"%s/%s/Jamfile",ProjectPath.String(),ProjectName.String());
 		f = fopen(FileName,"w");
 		sprintf(tmp,"## BeOS Jamfile for %s ##\n",ProjectName.String());
 		x = fputs(tmp,f);
@@ -564,7 +559,7 @@ void FileWindow::CreateMakeFile(void)
 	if (ProjectName.Length() !=0 && ProjectName.Compare("Untitled") != 0)
 	{
 		printf("CreateMake - %s\n\n",ProjectName.String());
-		sprintf(FileName,"%s/projects/%s/makefile",ProjectPath.String(),ProjectName.String());
+		sprintf(FileName,"%s/%s/makefile",ProjectPath.String(),ProjectName.String());
 		f = fopen(FileName,"w");
 		sprintf(tmp,"## BeOS Makefile for %s ##\n",ProjectName.String());
 		x = fputs(tmp,f);
@@ -627,7 +622,7 @@ void FileWindow::CompileGCC(void)
 	{
 		// check to see if the makefile exists
 		char cmd[256];
-		sprintf(cmd,"%s/projects/%s/makefile",ProjectPath.String(),ProjectName.String());
+		sprintf(cmd,"%s/%s/makefile",ProjectPath.String(),ProjectName.String());
 		FILE *f;	
     	
     	printf("CompileGCC - cmd is %s\n",cmd); //debug
@@ -641,11 +636,11 @@ void FileWindow::CompileGCC(void)
 		int x;
 		char tmp[256];
 		char FileName[256];
-		sprintf(FileName,"%s/projects/%s/compile.sh",ProjectPath.String(),ProjectName.String());
+		sprintf(FileName,"%s/%s/compile.sh",ProjectPath.String(),ProjectName.String());
 		f = fopen(FileName,"w");
 		x = fputs("#!/bin/sh\n",f);
 		x = fputs("# Compile and Run\n",f);
-		sprintf(tmp,"cd %s/projects/%s \n",ProjectPath.String(),ProjectName.String());
+		sprintf(tmp,"cd %s/%s \n",ProjectPath.String(),ProjectName.String());
 		x = fputs(tmp,f);
 		x = fputs("make clean\n",f);
 		sprintf(tmp,"make > compile.log OBJ_DIR=objects\n",ProjectPath.String(),ProjectName.String());
@@ -673,13 +668,13 @@ void FileWindow::SaveProject(void)
 		char FileName[256];
 		int x;
 		
-		sprintf(FileName,"%s/projects/%s.bprj",ProjectPath.String(),ProjectName.String());
+		sprintf(FileName,"%s/%s.bprj",ProjectPath.String(),ProjectName.String());
 		f = fopen(FileName,"w");
 		sprintf(tmp,"## BRIE Project File for %s ##\n",ProjectName.String());
 		x = fputs(tmp,f);
 		sprintf(tmp,"ProjectName=%s\n",ProjectName.String());
 		x = fputs(tmp,f);
-		sprintf(tmp,"ProjectDir=%s/projects/%s\n",ProjectPath.String(),ProjectName.String());
+		sprintf(tmp,"ProjectDir=%s/%s\n",ProjectPath.String(),ProjectName.String());
 		x = fputs(tmp,f);
 		sprintf(tmp,"Author=%s\n",ProjectAuthor.String());
 		x = fputs(tmp,f);
